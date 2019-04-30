@@ -1,2 +1,2 @@
 # blog
-Technologists blogs on NextGen software deliver and best practices.
+Technologists posts on NextGen software deliver and best practices.
