@@ -1,6 +1,1 @@
-[submodule "themes/sam"]
-	path = themes/sam
-	url = https://github.com/victoriadotdev/hugo-theme-sam.git
-[submodule "themes/hello-friend-ng"]
-	path = themes/hello-friend-ng
-	url = https://github.com/rhazdon/hugo-theme-hello-friend-ng.git
+
