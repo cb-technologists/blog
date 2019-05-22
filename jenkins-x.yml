@@ -41,7 +41,9 @@ pipelineConfig:
               - --enableGitInfo
 
           - image: gcr.io/jenkinsxio/builder-go
-            command: ./update-website.sh
+            name: push
+            dir: /workspace/source/cb-technologists.github.io
+            command: jx step git credentials && git config credential.helper store && git add * && git commit --allow-empty -a -m "updated site" && git push origin
 
     pullRequest:
       pipeline:
@@ -100,5 +102,5 @@ pipelineConfig:
             name: jx-preview
             args:
             - preview
-            - --app jx-docs
+            - --app blog
             - --dir ../../
