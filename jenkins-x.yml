@@ -1,4 +1,4 @@
-buildPack: none
+buildPack: go
 pipelineConfig:
   pipelines:
     release:
