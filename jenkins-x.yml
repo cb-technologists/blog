@@ -1,0 +1,104 @@
+buildPack: none
+pipelineConfig:
+  pipelines:
+    release:
+      pipeline:
+        agent:
+          image: gcr.io/kaniko-project/executor:9912ccbf8d22bbafbf971124600fbb0b13b9cbd6
+        stages:
+        - name: release
+          environment:
+          - name: GIT_COMMITTER_EMAIL
+            value: technologists@cloudbees.com
+          - name: GIT_COMMITTER_NAME
+            value: cb-technologists-bot
+          - name: GIT_AUTHOR_EMAIL
+            value: technologists@cloudbees.com
+          - name: GIT_AUTHOR_NAME
+            value: cb-technologists-bot
+          - name: HUGO_ENV
+            value: production
+          - name: HUGO_VERSION
+            value: '0.55.5'
+          steps:
+          
+          - image: gcr.io/jenkinsxio/builder-go
+            command: git
+            args:
+              - clone
+              - https://github.com/cb-technologists/cb-technologists.github.io.git
+
+          - image: gcr.io/jenkinsxio/builder-go
+            command: hugo
+            args:
+              - version
+
+          - image: gcr.io/jenkinsxio/builder-go
+            command: hugo
+            args:
+              - -d
+              - cb-technologists.github.io
+              - --enableGitInfo
+
+          - image: gcr.io/jenkinsxio/builder-go
+            command: ./update-website.sh
+
+    pullRequest:
+      pipeline:
+        options:
+          containerOptions:
+            env:
+              - name: DOMAIN
+                valueFrom:
+                  configMapKeyRef:
+                    name: ingress-config
+                    key: domain
+        agent:
+          image: gcr.io/kaniko-project
+        stages:
+        - name: build
+          environment:
+          - name: ORG
+            value: technologists
+          - name: APP_NAME
+            value: blog
+          steps:
+          - image: gcr.io/jenkinsxio/builder-go
+            name: version
+            command: hugo
+            args:
+            - version
+
+          - image: gcr.io/jenkinsxio/builder-go
+            name: build-website
+            command: hugo
+            args:
+            - -d
+            - tmp-website
+            - --enableGitInfo
+            - --baseURL http://${APP_NAME}.jx-${REPO_OWNER}-${REPO_NAME}-pr-${PULL_NUMBER}.${DOMAIN}/
+
+          - image: gcr.io/kaniko-project/executor:9912ccbf8d22bbafbf971124600fbb0b13b9cbd6
+            name: build-and-push-image
+            command: /kaniko/executor
+            args:
+            - --dockerfile=/workspace/source/Dockerfile
+            - --destination=gcr.io/technologists/blog:${inputs.params.version}
+            - --context=/workspace/source
+            - --cache-dir=/workspace
+
+          - image: gcr.io/jenkinsxio/builder-go
+            name: make-preview
+            dir: /workspace/source/charts/preview
+            command: make
+            args:
+            - preview
+
+          - image: gcr.io/jenkinsxio/builder-go
+            command: jx
+            dir: /workspace/source/charts/preview
+            name: jx-preview
+            args:
+            - preview
+            - --app jx-docs
+            - --dir ../../

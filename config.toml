@@ -1,0 +1,28 @@
+baseURL = "http://example.org/"
+languageCode = "en-us"
+title = "CloudBees Technologists"
+theme = "hello-friend-ng"
+
+[params]
+  dateformNum     = "2006-01-02"
+
+  homeSubtitle = "Continuously Learning, Continuously Teaching"
+
+  [[params.social]]
+    name = "email"
+    url  = "mailto:technologists@cloudbees.com"
+
+  [[params.social]]
+    name = "github"
+    url  = "https://github.com/cb-technologists/"
+
+# And you can even create generic menu
+[menu]
+  [[menu.main]]
+    identifier = "about"
+    name       = "About"
+    url        = "/about"
+  [[menu.main]]
+    identifier = "blog"
+    name       = "Blog"
+    url        = "/posts"
