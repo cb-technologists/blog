@@ -28,12 +28,12 @@ pipelineConfig:
               - clone
               - https://github.com/cb-technologists/cb-technologists.github.io.git
 
-          - image: gcr.io/jenkinsxio/builder-go
+          - image: jojomi/hugo:0.55.5
             command: hugo
             args:
               - version
 
-          - image: gcr.io/jenkinsxio/builder-go
+          - image: jojomi/hugo:0.55.5
             command: hugo
             args:
               - -d
