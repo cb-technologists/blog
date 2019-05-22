@@ -1,4 +1,4 @@
-buildPack: none
+buildPack: javascript
 pipelineConfig:
   pipelines:
     release:
