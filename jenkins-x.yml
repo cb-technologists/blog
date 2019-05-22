@@ -64,13 +64,13 @@ pipelineConfig:
           - name: APP_NAME
             value: blog
           steps:
-          - image: gcr.io/jenkinsxio/builder-go
+          - image: jojomi/hugo:0.55.5
             name: version
             command: hugo
             args:
             - version
 
-          - image: gcr.io/jenkinsxio/builder-go
+          - image: jojomi/hugo:0.55.5
             name: build-website
             command: hugo
             args:
