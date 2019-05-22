@@ -1,4 +1,4 @@
-buildPack: go
+buildPack: none
 pipelineConfig:
   pipelines:
     release:
@@ -41,7 +41,6 @@ pipelineConfig:
               - --enableGitInfo
 
           - image: gcr.io/jenkinsxio/builder-go
-            name: push
             dir: /workspace/source/cb-technologists.github.io
             command: jx step git credentials && git config credential.helper store && git add * && git commit --allow-empty -a -m "updated site" && git push origin
 
