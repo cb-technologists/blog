@@ -6,3 +6,4 @@ draft: true
 tags: ["blog","story"]
 ---
 
+The Technologisits are a new team of CloudBees Solution Architects.
