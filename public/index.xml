@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>CloudBees Technologists - Continuously Learning</title>
-    <link>http://example.org/</link>
-    <description>Recent content on CloudBees Technologists - Continuously Learning</description>
+    <title>CloudBees Technologists</title>
+    <link>https://cb-technologists.github.io/</link>
+    <description>Recent content on CloudBees Technologists</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <lastBuildDate>Wed, 22 May 2019 10:29:46 -0400</lastBuildDate>
     
-	<atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://cb-technologists.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>About</title>
+      <link>https://cb-technologists.github.io/about/</link>
+      <pubDate>Wed, 22 May 2019 10:29:46 -0400</pubDate>
+      
+      <guid>https://cb-technologists.github.io/about/</guid>
+      <description>Technologists eat, sleep and breath technology, continuously learning and teaching through thought leadership, providing technical direction with integrity to the Product team and driving complex technical solutions for customers.</description>
+    </item>
     
   </channel>
 </rss>

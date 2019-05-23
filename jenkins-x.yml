@@ -74,6 +74,7 @@ pipelineConfig:
             name: build-website
             command: hugo
             args:
+            - -D
             - -d
             - tmp-website
             - --enableGitInfo
