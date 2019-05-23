@@ -5,4 +5,4 @@ showDate: true
 draft: false
 ---
 
-Technologists eat, sleep and breath technology, continuously learning and teaching through thought leadership, providing technical direction with integrity to the Product team and driving complex technical solutions for customers.
+Technologists are passionate about technology, continuously learning and teaching through thought leadership, providing technical direction with integrity to the Product team and driving complex technical solutions for customers.
