@@ -1,8 +1,8 @@
 ---
 title: "Introducing the Technologists, A CloudBees Solution Architecture Team"
-date: 2019-05-22T10:29:46-04:00
+date: 2019-05-23T19:10:46-04:00
 showDate: true
-draft: true
+draft: false
 tags: ["emerging technologies","software delivery"]
 ---
 
@@ -17,5 +17,8 @@ From Cloud Native CD to microservice and even nanoservice architecture to servic
 - Native Kubernetes Continuous Delivery
 - Jenkins Plugins: The Good, the Bad and the Ugly
 - The State of DevOps Analytics
-- And a lot more!
+
+Stay tuned for more...
+
+
 
