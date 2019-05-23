@@ -6,11 +6,11 @@ draft: true
 tags: ["blog","story"]
 ---
 
-The Technologisits are a new team of CloudBees Solution Architects. Technologists have a true passion for technology and eat, sleep and breath technology, continuously learning and teaching through thought leadership, providing technical direction within CloudBees and driving complex technical solutions for customers.
+The Technologisits are a new team of CloudBees Solution Architects. Technologists have a true passion for emerging technologies, continuously learning and teaching through thought leadership, providing technical direction within CloudBees and the broader tech industry, and driving the best technical solutions for customers.
 
 - Technical integrity is of the utmost importance for a Technologist - always providing the RIGHT solution.
-- We are Technologists focused on providing best practices, solutions, and adoption paths to organizations navigating software delivery transformations. 
-- Thought Leaders internally and in the DevOps and wider Tech community - writing blog posts, speaking at conferences and meetups, contributing to open source projects on technologies and technical practices related to CloudBees products and to the DevOps space in general. 
+- We are Technologists focused on providing best practices, solutions, and adoption paths to organizations navigating software delivery transformations and leading edge technologies. 
+- Thought Leaders internally and in the DevOps and wider Tech community - writing blog posts, speaking at conferences and meetups, contributing to open source projects on technologies and technical practices related to CloudBees' products and to the DevOps space in general. 
 
-From Cloud Native CD to microservice and even nanoservice architecture to service mesh and API gateways, Technologists will research and evangelize the best of the best next generation approaches to software delivery.
+From Cloud Native CD to microservice and even nanoservice architecture to service mesh and API gateways, Technologists will research and evangelize the best of the best emerging technologies related to software delivery.
 
