@@ -6,7 +6,7 @@ draft: true
 tags: ["blog","story"]
 ---
 
-The Technologisits are a new team of CloudBees Solution Architects. Technologists have a true passion for emerging technologies, continuously learning and teaching through thought leadership, providing technical direction within CloudBees and the broader tech industry, and driving the best technical solutions for customers.
+The Technologisits are a new team of CloudBees Solution Architects. Technologists have a true passion for emerging technologies, continuously learning and teaching through thought leadership, providing technical direction within CloudBees and the broader tech community, and driving the best technical solutions for customers.
 
 - Technical integrity is of the utmost importance for a Technologist - always providing the RIGHT solution.
 - We are Technologists focused on providing best practices, solutions, and adoption paths to organizations navigating software delivery transformations and leading edge technologies. 
