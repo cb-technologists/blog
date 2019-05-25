@@ -7,6 +7,7 @@ theme = "hello-friend-ng"
   dateformNum     = "2006-01-02"
 
   homeSubtitle = "Continuously Learning, Continuously Teaching"
+  gitUrl = "https://github.com/cb-technologists/blog/commit/"
 
   [[params.social]]
     name = "email"
