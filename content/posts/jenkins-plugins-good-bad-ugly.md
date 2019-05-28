@@ -51,7 +51,40 @@ Do you really need the Docker plugin and the Yet Another Docker plugin? Or the C
 Use Jenkins Pipelines with a Jenkinsfile in source control with Pipeline Shared Libraries.
 
 ## Manage Plugins with CasC
-Never use the Jenkins UI to install plugins.
-Maintain your plugins as code in source control, where every new plugin and plugin upgrade can be tracked as commits. The easiest and best way to do this, in my opinion, is to use a customized Docker image for your plugins - in addition to other configuration.
+Never use the Jenkins UI to install plugins. Maintain your plugins as code in source control, where every new plugin and plugin upgrade can be tracked as commits. The easiest and best way to do this, in my opinion, is to use a customized Docker image for your plugins - in addition to other configuration. If you have read any of my other posts you will know that I am a big fan of containers - and have always run Jenkins with containers since I started at CloudBees back in 2015. The Jenkins GitHub Org docker project [provides a script](https://github.com/jenkinsci/docker/blob/master/install-plugins.sh) for [preinstalling plugins](https://github.com/jenkinsci/docker#preinstalling-plugins) with a simple `plugins.txt` file so your Jenkins master container image has all the plugins you want on startup. This makes it easier to test plugin changes and all of your plugin changes are captured as code commits - and a tool like Git (GitHub, BitBucket, even GitLab) is much better at tracking/auditing/controlling such changes than Jenkins was ever meant to be. Here is a simple `plugins.txt` file and Dockerfile to get you starter:
 
-If you have read any of my other posts you will know that I am a big fan of containers - and have always run Jenkins with containers since I started at CloudBees back in 2015. The Jenkins GitHub Org docker project introduced the idea of using a simple `plugins.txt` file to build the plugins you want to use right into your Jenkins master container image.
+```txt
+configuration-as-code:1.15
+configuration-as-code-support:1.15
+```
+
+
+```Dockerfile
+FROM cloudbees/cloudbees-jenkins-distribution:2.164.3.2
+
+# optional, but you might want to let everyone know who is responsible for their Jenkins ;)
+LABEL maintainer "kmadel@cloudbees.com"
+
+#set java opts variable to skip setup wizard; plugins will be installed via license activated script
+ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false"
+#skip setup wizard; per https://github.com/jenkinsci/docker/tree/master#preinstalling-plugins
+RUN echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
+
+# diable cli
+ENV JVM_OPTS -Djenkins.CLI.disabled=true -server
+# set your timezone
+ENV TZ="/usr/share/zoneinfo/America/New_York"
+
+#config-as-code plugin configuration
+COPY config-as-code.yml /usr/share/jenkins/config-as-code.yml
+ENV CASC_JENKINS_CONFIG /usr/share/jenkins/config-as-code.yml
+
+# use CloudBees' update center to ensure you don't allow any really bad plugins
+ENV JENKINS_UC http://jenkins-updates.cloudbees.com
+
+#install suggested and additional plugins
+COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
+COPY jenkins-support /usr/local/bin/jenkins-support
+COPY install-plugins.sh /usr/local/bin/install-plugins.sh
+RUN bash /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
+```
