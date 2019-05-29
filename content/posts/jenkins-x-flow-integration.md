@@ -128,10 +128,6 @@ You’ll also notice that we’re using a Jenkins X feature (`jx step credential
 
 Next, we need to tell Jenkins X to use our new build pack: 
 
-```bash
-jx edit buildpack -u https://github.com/jhendrickCB/jenkins-x-kubernetes -r master -b
-```
-
 ```shell
 $ jx edit buildpack -u https://github.com/jhendrickCB/jenkins-x-kubernetes -r master -b
 
