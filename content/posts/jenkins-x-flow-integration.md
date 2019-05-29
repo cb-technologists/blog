@@ -2,9 +2,9 @@
 author:
   name: "Josh Hendrick"
 title: "Extending Jenkins X for Traditional Deployments with CloudBees Flow"
-date: 2019-05-28T10:58:46-04:00
+date: 2019-05-29T12:47:46-04:00
 showDate: true
-draft: true
+draft: false
 tags: ["jenkins","jenkins x","cloudbees flow", "tekon", "extending jenkins x"]
 ---
 [Jenkins X](https://jenkins-x.io) is quickly becoming the de facto standard for high performing teams wanting to do CI/CD in a highly scalable and fault tolerant environment. For those who haven’t gotten the opportunity to try out Jenkins X, it allows teams to run CI/CD workloads natively in a Kubernetes environment while taking advantage of modern operating patterns like GitOps and serverless architectures. For teams wanting to modernize their continuous integration and continuous deployment capabilities, Jenkins X is the go to solution.
@@ -132,7 +132,6 @@ Next, we need to tell Jenkins X to use our new build pack:
 $ jx edit buildpack -u https://github.com/jhendrickCB/jenkins-x-kubernetes -r master -b
 
 Setting the team build pack to  repo: https://github.com/jhendrickCB/jenkins-x-kubernetes ref: master
-
 ```
 
 Since we have to authenticate when calling the [Flow REST API](http://docs.electric-cloud.com/eflow_doc/9_0/API/HTML/FlowAPI_Guide_9_0.htm), we’ll create a Kubernetes secret to store our username/password basic authentication token:
