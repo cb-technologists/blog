@@ -2,13 +2,13 @@
 author:
   name: "Kurt Madel"
 title: "Jenkins Plugins: The Good, the Bad and the Ugly"
-date: 2019-05-28T08:29:46-04:00
+date: 2019-05-29T6:29:46-04:00
 showDate: true
 photo: "/img/jenkins-plugins-good-bad-ugly/wythe-alley-electric-pole.jpg"
 photoCaption: "Photograph by Kurt Madel ©2019"
 exif: "SONY RX-100 ISO 125 32.17mm ƒ/5.6 1/400"
 draft: true
-tags: ["jenkins","plugins","containers"]
+tags: ["jenkins","plugins","containers","CasC"]
 ---
 There are over 1400 Jenkins plugins and that is both a blessing and a curse. Of those 1400 plugins only a small percentage are well maintained and tested, and even fewer (140 of 1400+) are part of the [CloudBees Assurance Program (CAP)](https://go.cloudbees.com/docs/cloudbees-documentation/assurance-program/) as verified and/or compatible plugins - well tested to interoperate with the rest of the CAP plugins (and their dependencies) and with a specific LTS version of Jenkins. Problems can arise when you use plugins that aren't part of CAP, or a plugin that isn't well maintained or tested to work with all of the other plugins you are using and the specific version of Jenkins that you are using. But the extensibility offered by plugins has helped make Jenkins the most popular CI tool on the planet.
 
@@ -54,23 +54,25 @@ This is actually considered a best practice for Jenkins Pipelines as any `step` 
 Another big plus with replacing Jenkins Pipeline plugin based steps with lightweight shell scripts is that it provides easier testing and more portability of your CD pipelines to other platforms. For example, Jenkins X Pipelines with Tekton runs every pipeline step as a command in a container - adopting that approach with Jenkins Pipelines now will make it much easier to migrate to better emerging solutions in the future.
 
 ## Use Fewer Plugins
-Using fewer plugs will reduce the amount of pain you will incur from many of the issues mentioned above. Migrating as many Jenkins Pipeline `steps` from plugins to `sh` steps running in containers not only reduces the *bad* and *ugly* above, it also makes it easier to test and reduce dependencies on the less than stellar plugin maintainers (like me), and provides better portability to other emerging CD technologies - like [Jenkins X Pipelines with Tekton](https://kurtmadel.com/posts/native-kubernetes-continuous-delivery/jenkins-x-goes-native/#re-tooling-with-tekton).
+Using fewer plugs will reduce the amount of pain you will incur from many of the *ugly* and *bad* issues mentioned above. Migrating as many Jenkins Pipeline `steps` from plugins to `sh` steps running in containers not only reduces the *bad* and *ugly* above, it also makes it easier to test and reduce dependencies on the less than stellar plugin maintainers (like me), and provides better portability to other emerging CD technologies - like [Jenkins X Pipelines with Tekton](https://kurtmadel.com/posts/native-kubernetes-continuous-delivery/jenkins-x-goes-native/#re-tooling-with-tekton).
 
 Do you really need the Docker plugin and the Yet Another Docker plugin? Or the Chuck Noris plugin? The fewer plugins that you install, the fewer plugins you have to manage and the less chance that they will have security issues or even worse, bring your Jenkins master down - Jenkins Devil and all.
 
 ## Test
-Always test any new plugin or plugin update before you put it into your production Jenkins master(s). Running Jenkins as a container can certainly make this easier - and is what I suggest - but there is no reason why you can't use Jenkins to automate this kind of testing regardless of how you deploy Jenkins.
+Always test any new plugin or plugin update before you put it into your production Jenkins master(s). Running Jenkins as a container can certainly make this easier - and is what I suggest - but there is no reason why you can't use Jenkins to automate this kind of testing regardless of how you deploy Jenkins. Just spin up a Jenkins master with a few *fake* jobs that use the plugins in a similar way to how you use them in your *real* jobs. All of this can be automated with Jenkins itself.
 
-The Jenkins X ephemeral masters basically went with this approach - extensive testing whenever a new plugin was added to the the CasC Master container image.
+The [Jenkins X ephemeral masters](https://github.com/jenkins-x/jenkins-x-serverless-filerunner) basically went with this approach - extensive testing whenever a new [plugin was added to the the CasC Master container image](https://github.com/jenkins-x/jenkins-x-serverless-filerunner/blob/master/pom.xml#L32).
 
 ## Manage Plugins with CasC
-Never use the Jenkins UI to install plugins. Maintain your plugins as code in source control, where every new plugin and plugin upgrade can be tracked as commits. The easiest and best way to do this, in my opinion, is to use a customized Docker image that includes the plugins you **absolutely need** - in addition to other configuration. If you have read any of my other posts you will know that I am a big fan of containers - and have always run Jenkins with containers since I started at CloudBees back in 2015. The Jenkins GitHub Org *docker* project [provides a script](https://github.com/jenkinsci/docker/blob/master/install-plugins.sh) for [preinstalling plugins](https://github.com/jenkinsci/docker#preinstalling-plugins) from a simple `plugins.txt` file so your Jenkins master container image has all the plugins you need on startup. This makes it easier to test plugin changes and all of your plugin changes are captured as code commits - and a tool like Git (GitHub, BitBucket, even GitLab) is much better at tracking/auditing/controlling such changes than Jenkins was ever meant to be. Here is a simple `plugins.txt` file and `Dockerfile` to get you started:
+Never use the Jenkins UI to install plugins. Maintain your plugins as code in source control, where every new plugin and plugin upgrade can be tracked as commits. The easiest and best way to do this, in my opinion, is to use a customized Docker image that includes the plugins you **absolutely need** - in addition to other configuration via JCasC (and if necessary, [`init` scripts](https://wiki.jenkins.io/display/JENKINS/Post-initialization+script)). If you have read any of my other posts you will know that I am a big fan of containers - and have always run Jenkins with containers since I started at CloudBees back in 2015. The Jenkins GitHub Org *docker* project [provides a script](https://github.com/jenkinsci/docker/blob/master/install-plugins.sh) for [preinstalling plugins](https://github.com/jenkinsci/docker#preinstalling-plugins) from a simple `plugins.txt` file so your Jenkins master container image has all the plugins you need on startup. This makes it easier to test plugin changes and all of your plugin changes are captured as code commits - and a tool like Git (GitHub, BitBucket, even GitLab) is much better at tracking/auditing/controlling such changes than Jenkins was ever meant to be. Here is a simple `plugins.txt` file and `Dockerfile` to get you started:
 
 *plugins.txt*
 ```txt
-configuration-as-code:1.15
-configuration-as-code-support:1.15
+configuration-as-code:1.17
+configuration-as-code-support:1.17
 ```
+
+Yes, only two plugins (and the `configuration-as-code-support` won't even be [needed](https://github.com/jenkinsci/configuration-as-code-plugin/pull/863) [soon](https://github.com/jenkinsci/configuration-as-code-plugin/pull/897)). The reason why we only need these two plugins is because the [CloudBees Jenkins Distribution](https://www.cloudbees.com/blog/cloudbees-jenkins-distribution-adds-stability-and-security-your-jenkins-environment) already contains a curated set of plugins for Jenkins Pipeline, Blue Ocean, source controll management and everything else we need - all well tested for us already.
 
 *Extending the CloudBees Jenkins Distribution container image with plugins and JCasC*
 ```Dockerfile
@@ -103,5 +105,5 @@ COPY install-plugins.sh /usr/local/bin/install-plugins.sh
 RUN bash /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 ```
 
-# Use Plugins Youe Need and No More
+# Use Plugins You Need and No More
 So, don't avoid Jenkins plugins - they are an important part of what makes Jenkins great and add critical features to the way you will use Jenkins - but be smart about the plugins you use and keep your application delivery your primary focus - not your CI tool.
