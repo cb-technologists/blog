@@ -2,7 +2,7 @@
 author:
   name: "Kurt Madel"
 title: "Jenkins Plugins: The Good, the Bad and the Ugly"
-date: 2019-05-29T08:29:46-04:00
+date: 2019-05-28T08:29:46-04:00
 showDate: true
 photo: "/img/jenkins-plugins-good-bad-ugly/wythe-alley-electric-pole.jpg"
 photoCaption: "Photograph by Kurt Madel ©2019"
