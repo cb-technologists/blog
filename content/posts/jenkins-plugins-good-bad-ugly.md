@@ -2,12 +2,12 @@
 author:
   name: "Kurt Madel"
 title: "Jenkins Plugins: The Good, the Bad and the Ugly"
-date: 2019-05-29T6:29:46-04:00
+date: 2019-05-30T05:50:46-04:00
 showDate: true
 photo: "/img/jenkins-plugins-good-bad-ugly/wythe-alley-electric-pole.jpg"
 photoCaption: "Photograph by Kurt Madel ©2019"
 exif: "SONY RX-100 ISO 125 32.17mm ƒ/5.6 1/400"
-draft: true
+draft: false
 tags: ["jenkins","plugins","containers","CasC"]
 ---
 There are over 1400 Jenkins plugins and that is both a blessing and a curse. Of those 1400 plugins only a small percentage are well maintained and tested, and even fewer (140 of 1400+) are part of the [CloudBees Assurance Program (CAP)](https://go.cloudbees.com/docs/cloudbees-documentation/assurance-program/) as verified and/or compatible plugins - well tested to interoperate with the rest of the CAP plugins (and their dependencies) and with a specific LTS version of Jenkins. Problems can arise when you use plugins that aren't part of CAP, or a plugin that isn't well maintained or tested to work with all of the other plugins you are using and the specific version of Jenkins that you are using. But the extensibility offered by plugins has helped make Jenkins the most popular CI tool on the planet.
