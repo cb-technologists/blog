@@ -26,7 +26,7 @@ buildExpored = false
 canonifyURLs = true
 
 enableRobotsTXT = true
-enableGitInfo   = false
+enableGitInfo   = true
 enableEmoji     = true
 enableMissingTranslationPlaceholders = false
 disableRSS     = false
@@ -54,14 +54,14 @@ disableHugoGeneratorInject = false
   dateformNumTime = "2006-01-02 15:04 -0700"
 
   # Metadata mostly used in document's head
-  description = "Nice theme for homepages and blogs"
+  description = "Technologists, Continuously Learning, Continuously Teaching"
   keywords = ""
   images = [""]
 
-  homeSubtitle = "Hello Friend NG"
+  homeSubtitle = "Constantly Exploring Emerging Technologies for Software Delivery"
 
   # Prefix of link to the git commit detail page. GitInfo must be enabled.
-  # gitUrl = ""
+  gitUrl = "https://github.com/cb-technologists/blog/commit/"
 
   # Integrate Javascript files or stylesheets by adding the url to the external assets or by
   # linking local files with their path relative to the static folder, e.g. "css/styles.css"

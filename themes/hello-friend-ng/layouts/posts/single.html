@@ -29,6 +29,18 @@
             {{ with .Params.Cover }}
                 <img src="/img/{{ . }}" class="post-cover" />
             {{ end }}
+            
+            {{ if .Params.photo }}
+            <div class="box">
+              <figure class="series-photo" itemprop="associatedMedia" itemscope="" itemtype="http://schema.org/ImageObject">
+                <div class="img">
+                  <img itemprop="thumbnail" src="{{ .Params.photo }}" alt="{{ .Params.exif }}">
+                </div>
+                <a href="{{ .Params.photo }}" itemprop="contentUrl"></a>
+                <figcaption>{{ .Params.photoCaption | safeHTML }}</figcaption>
+              </figure>
+            </div>
+            {{ end }}
 
             <div class="post-content">
                 {{ .Content }}

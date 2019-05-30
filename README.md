@@ -1,2 +1,2 @@
 # blog
-Technologists posts on NextGen software delivery and best practices. 
+Technologists posts on emerging technologies related to software delivery and other technologies of interest. 
