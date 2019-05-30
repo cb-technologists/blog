@@ -4,6 +4,7 @@ title = "CloudBees Technologists"
 theme = "hello-friend-ng"
 
 googleAnalytics = "UA-141077309-1"
+enableAuthor = true
 
 [params]
   dateformNum     = "2006-01-02"

@@ -50,7 +50,7 @@
         <hr />
 
         <div class="post-info">
-            {{ if (and (.IncludAuthor) (isset .Params.author.name)) }}
+            {{ if (and (.Author) (isset .Params.author.name)) }}
                 <p>{{ .Params.author.name }}</p>
             {{- end }}
             {{- with .Params.tags }}
