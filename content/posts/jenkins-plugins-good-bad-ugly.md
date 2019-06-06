@@ -10,7 +10,7 @@ exif: "SONY RX-100 ISO 125 32.17mm ƒ/5.6 1/400"
 draft: false
 tags: ["jenkins","plugins","containers","CasC"]
 ---
-There are over 1400 Jenkins plugins and that is both a blessing and a curse. Of those 1400 plugins only a small percentage are well maintained and tested, and even fewer (140 of 1400+) are part of the [CloudBees Assurance Program (CAP)](https://go.cloudbees.com/docs/cloudbees-documentation/assurance-program/) as verified and/or compatible plugins - well tested to interoperate with the rest of the CAP plugins (and their dependencies) and with a specific LTS version of Jenkins. Problems can arise when you use plugins that aren't part of CAP, or a plugin that isn't well maintained or tested to work with all of the other plugins you are using and the specific version of Jenkins that you are using. But the extensibility offered by plugins has helped make Jenkins the most popular CI tool on the planet.
+There are over 1600 Jenkins plugins and that is both a blessing and a curse. Of those 1600 plugins only a small percentage are well maintained and tested, and even fewer (140 of 1600+) are part of the [CloudBees Assurance Program (CAP)](https://go.cloudbees.com/docs/cloudbees-documentation/assurance-program/) as verified and/or compatible plugins - well tested to interoperate with the rest of the CAP plugins (and their dependencies) and with a specific LTS version of Jenkins. Problems can arise when you use plugins that aren't part of CAP, or a plugin that isn't well maintained or tested to work with all of the other plugins you are using and the specific version of Jenkins that you are using. But the extensibility offered by plugins has helped make Jenkins the most popular CI tool on the planet.
 
 I typically like to end posts on a good note, so I will start with *The Ugly* and end with *The Good* - and then offer some opinionated ideas/best practices on Jenkins plugin management and usage.
 
@@ -68,11 +68,12 @@ Never use the Jenkins UI to install plugins. Maintain your plugins as code in so
 
 *plugins.txt*
 ```txt
-configuration-as-code:1.17
-configuration-as-code-support:1.17
+configuration-as-code:1.19
+credentials:2.2.0
 ```
 
-Yes, only two plugins (and the `configuration-as-code-support` won't even be [needed](https://github.com/jenkinsci/configuration-as-code-plugin/pull/863) [soon](https://github.com/jenkinsci/configuration-as-code-plugin/pull/897)). The reason why we only need these two plugins is because the [CloudBees Jenkins Distribution](https://www.cloudbees.com/blog/cloudbees-jenkins-distribution-adds-stability-and-security-your-jenkins-environment) already contains a curated set of plugins for Jenkins Pipeline, Blue Ocean, source controll management and everything else we need - all well tested for us already.
+Yes, only two plugins. The reason why we only need these two plugins is because the [CloudBees Jenkins Distribution](https://www.cloudbees.com/blog/cloudbees-jenkins-distribution-adds-stability-and-security-your-jenkins-environment) already contains a curated set of plugins for Jenkins Pipeline, Blue Ocean, source control management and everything else we need - all well tested for us already.
+Credentials plugin is the only exception, because the recent version of the plugin with JCasC support has not been integrated into CAP yet (coming soon!).
 
 *Extending the CloudBees Jenkins Distribution container image with plugins and JCasC*
 ```Dockerfile
