@@ -15,7 +15,7 @@ There are over [1600 Jenkins plugins](http://updates.jenkins.io/pluginCount.txt)
 I typically like to end posts on a good note, so I will start with *The Ugly* and end with *The Good* - and then offer some opinionated ideas/best practices on Jenkins plugin management and usage.
 
 # The Ugly
-There are a almost always a number of Jenkins plugins that have security vulnerabilities. Over 55 plugins were listed as part of the [2019-04-03 Jenkins Security Advisory](https://jenkins.io/security/advisory/2019-04-03/). Even worse is when you find out that a plugin that you are using has a security vulnerability and you also find out that the plugin is not maintained anymore. You could search the 1600+ Jenkins plugins to see if there is another plugin that is maintained and that does what you need, or you could become a plugin maintainer - not exactly what you intended to sign up for when you first started using Jenkins. Are you developing your own applications or are you looking to become a Jenkins plugin developer?
+There are almost always a number of Jenkins plugins that have security vulnerabilities. Over 55 plugins were listed as part of the [2019-04-03 Jenkins Security Advisory](https://jenkins.io/security/advisory/2019-04-03/). Even worse is when you find out that a plugin that you are using has a security vulnerability and you also find out that the plugin is not maintained anymore. You could search the 1600+ Jenkins plugins to see if there is another plugin that is maintained and that does what you need, or you could become a plugin maintainer - not exactly what you intended to sign up for when you first started using Jenkins. Are you developing your own applications or are you looking to become a Jenkins plugin developer?
 
 Another *ugly* issue arises when you have numerous Jenkins masters in your organization. These Jenkins instances are often snowflakes comprised of many different plug-ins. So managing more than one Jenkins master with disparate sets of plugins can become very ugly, very quickly. CloudBees can certainly help you with this through CAP and something we call [Team Masters - easily provisioned and managed team specific Jenkins masters](https://go.cloudbees.com/docs/cloudbees-documentation/admin-cje/cje-ux/#_when_to_use_a_team_master_when_to_use_a_managed_master) with an opinionated set of very stable and tested plugins. However, there is nothing stopping individual Jenkins master admins from manually installing a plugin and sometimes ending up with an unusable Jenkins master.
 
@@ -73,7 +73,8 @@ credentials:2.2.0
 ```
 
 Yes, only two plugins. The reason why we only need these two plugins is because the [CloudBees Jenkins Distribution](https://www.cloudbees.com/blog/cloudbees-jenkins-distribution-adds-stability-and-security-your-jenkins-environment) already contains a curated set of plugins for Jenkins Pipeline, Blue Ocean, source control management and everything else we need - all well tested for us already.
-This version of the Credentials plugin is the only exception, because the recent version of the plugin with JCasC support has not been integrated into CAP yet (coming soon!).
+
+This version of the Credentials plugin is an exception, because the recent version of the plugin with JCasC support has not been integrated into CAP yet (coming soon!).
 
 *Extending the CloudBees Jenkins Distribution container image with plugins and JCasC*
 ```Dockerfile
