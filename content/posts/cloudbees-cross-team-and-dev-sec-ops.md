@@ -1,7 +1,7 @@
 ---
 author:
   name: "Kurt Madel"
-title: "CloudBees' Cross Team Collaboration for Ansynchronous DevSecOps"
+title: "CloudBees' Cross Team Collaboration for Asynchronous DevSecOps"
 date: 2019-06-08T05:50:46-04:00
 showDate: true
 photo: "/img/cloudbees-cross-team-dev-sec-ops/locks.png"
@@ -11,13 +11,14 @@ draft: true
 tags: ["jenkins","plugins","containers","CasC","DevSecOps","security","anchore","container scanning"]
 ---
 ## What is Cross Team Collaboration?
+CloudBees' Cross Team Collaboration provides the ability to publish an event from a Jenkins job that triggers any other Jenkins job on the same master or different masters that are listening for that event. It is basically a light-weight [**PubSub**](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) for CloudBees Core Masters connected to [CloudBees Operations Center](https://go.cloudbees.com/docs/cloudbees-core/cloud-admin-guide/operating/#managing-operation-center). Jenkins has had the ability to [trigger other jobs](https://jenkins.io/doc/pipeline/steps/pipeline-build-step/) for quite a while now (and [with CloudBees this is even easy to do across Masters](https://support.cloudbees.com/hc/en-us/articles/226408088-Trigger-jobs-across-masters)), but it always required that the upstream job be aware of the downstream job(s) to be triggered. The Cross Team Collaboration feature provides a loosely coupled link between upstream and downstream Jenkins jobs - so that any job that is interested in a certain event, for whatever reason, can subscribe to that event and get triggered whenever that event is published.
+
+
 There are a few good CloudBees' blog posts and CloudBees' documentation on CloudBees' Cross Team Collaboration: 
 
 - [Cross Team Collaboration (Part 1)](https://www.cloudbees.com/blog/cross-team-collaboration-part-1)
 - [Cross Team Collaboration (Part 2)](https://www.cloudbees.com/blog/cross-team-collaboration-part-2)
 - [Cross Team Collaboration documentation](https://go.cloudbees.com/docs/cloudbees-core/cloud-admin-guide/cross-team-collaboration/)
-
-But basically, CloudBees' Cross Team Collaboration provides the ability to publish an event from a Jenkins job that triggers any other Jenkins job on the same master or different masters that are listening for that event. It is basically a light-weight [**PubSub**](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) for CloudBees Core Masters connected to [CloudBees Operations Center](https://go.cloudbees.com/docs/cloudbees-core/cloud-admin-guide/operating/#managing-operation-center). Jenkins has had the ability to [trigger other jobs](https://jenkins.io/doc/pipeline/steps/pipeline-build-step/) for quite a while now (and [with CloudBees this is even easy to do across Masters](https://support.cloudbees.com/hc/en-us/articles/226408088-Trigger-jobs-across-masters)), but it always required that the upstream job be aware of the downstream job(s) to be triggered. The Cross Team Collaboration feature provides a loosely coupled link between upstream and downstream Jenkins jobs - so that any job that is interested in a certain event, for whatever reason, can subscribe to that event and get triggered whenever that event is published.
 
 ## DevSecOps
 [DevSecOps](https://tech.gsa.gov/guides/understanding_differences_agile_devsecops/) - the idea of shifting security left in your Continuous Delivery pipelines - is becoming a vital component of successful CD. DevSecOps is all about speeding up software delivery, while maintaining, or even improving, the level of security for delivered application code. However, even though you should be shifting automated security left - you still don't want it to impede developers trying to deliver software more quickly. CloudBees' Cross Team Collaboration feature is a perfect capability for automating security while at the same time getting out of the way of developers - improving the security and quality of your software delivery while minimizing the impact on delivery speed.
@@ -36,10 +37,10 @@ There are basically two types of Cross Team Collaboration events:
 For this example we will be using the more verbose JSON event. The problem with the **Simple Event** approach is that the triggered job would have to subscribe to a single `string` value and in this case a specific container image. But what we really want is to run an Anchore scan for all container images being pushed to our DEV container registry. The **JSON Event** approach allows us to subscribe to a more generic event, `containerImagePush`, while passing the exact container image being pushed as an additional JSON value for the key `image`.  But to use this approach the triggered job(s) must retrieve the value of the `image` key from the event payload.
 
 ### Capturing the Cross Team Collaboration Event Payload
-Groovy code vs a `curl` REST call to get the JSON event payload:
+Groovy code vs a `curl` REST call against the [Jenkins REST API](https://wiki.jenkins.io/display/JENKINS/Remote+access+API) to get the JSON event payload:
 
 - You could get the event JSON with the following: `currentBuild.getBuildCauses()[0].event.toString()`. But that will run on the Jenkins Master, not the Jenkins agent and will impact performance when you are scanning hundreds or even thousands of container images.
-- Using `sh` steps with [**jq**](https://stedolan.github.io/jq/) for acquiring the event payload in a Jenkins Pipeline: `curl -u 'beedemo-admin':$TOKEN --silent ${BUILD_URL}/api/json| jq '.actions[0].causes[0].event.image'`. The advantages of this approach are:
+- Using `sh` step with a `curl` call against the Jenkins REST API with a [Jenkins API token](https://jenkins.io/blog/2018/07/02/new-api-token-system/) to get the JSON representation of the current build, and then piping the JSON response to [**jq**](https://stedolan.github.io/jq/) to get the value for the `image` key from the event payload in a Jenkins Pipeline triggered by the `EventTriggerCause`: `curl -u 'beedemo-admin':$TOKEN --silent ${BUILD_URL}/api/json| jq '.actions[0].causes[0].event.image'`. `BUILD_URL` is one of many [Pipeline global variables](https://jenkins.io/doc/book/pipeline/getting-started/#global-variable-reference) available to all Jenkins Pipeline jobs. The advantages of this approach are:
   - The `sh` step will run on the agent, not the Jenkins Master, allowing you to scale across as many agents as needed for your container scans with very little impact on the performance of the Jenkins Master.
   - Using lightweight shell scripts provide easier testing and more portability of your CD pipelines to other platforms.
 
@@ -69,12 +70,13 @@ spec:
       path: /var/run/docker.sock
 ```
 
-Even though there is an [Anchore plugin for Jenkins](https://plugins.jenkins.io/anchore-container-scanner), there is no reason to install another plugin when you can accomplish the same thing with a very simple `sh` step. Again, as mentioned in my [last post here on the Technologists site](./jenkins-plugins-good-bad-ugly/) - using fewer Jenkins plugins is a **good** thing.
+Even though there is an [Anchore plugin for Jenkins](https://plugins.jenkins.io/anchore-container-scanner), there is no reason to install another plugin when you can accomplish the same thing with a very simple `sh` step. As mentioned in my [last post here on the Technologists site](./jenkins-plugins-good-bad-ugly/) - using fewer Jenkins plugins is a **good** thing.
 
 ```groovy
-      container('docker-client'){
-        sh "curl -s https://ci-tools.anchore.io/inline_scan-v0.3.3 | bash -s -- -f -b ./.anchore_policy.json -p ${containerImage}"
-      }
+container('docker-client'){
+  sh "curl -s https://ci-tools.anchore.io/inline_scan-v0.3.3 \
+  | bash -s -- -f -b ./.anchore_policy.json -p ${containerImage}"
+}
 ```
 
 Again, the only thing required to run the scan above is a Docker daemon. So you could just as easily run that command on your laptop running Docker as on a Jenkins agent that has access to a Docker daemon.
@@ -116,19 +118,19 @@ Note the `publishEvent` step at the end - after the container image has been suc
 
 *The JSON output for the `publishEvent` step - note the `image` key value is the container image just built and pushed by Kaniko:*
 ```json
- {
-    "eventType": "containerImagePush",
-    "image": "gcr.io/core-workshop/helloworld-nodejs:beeops-cb-days-7",
-    "source":     {
-        "type": "JenkinsTeamBuild",
-        "buildInfo":         {
-            "build": 7,
-            "job": "template-jobs/beedemo-admin-helloworld-nodejs/master",
-            "jenkinsUrl": "https://********/teams-sec/",
-            "instanceId": "d37a81cc1906b6fe684f253a8a07834c",
-            "team": "sec"
-        }
-    }
+{
+  "eventType": "containerImagePush",
+  "image": "gcr.io/core-workshop/helloworld-nodejs:beeops-cb-days-7",
+  "source":     {
+      "type": "JenkinsTeamBuild",
+      "buildInfo":         {
+          "build": 7,
+          "job": "template-jobs/beedemo-admin-helloworld-nodejs/master",
+          "jenkinsUrl": "https://********/teams-sec/",
+          "instanceId": "d37a81cc1906b6fe684f253a8a07834c",
+          "team": "sec"
+      }
+  }
 }
 ```
 
