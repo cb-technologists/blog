@@ -33,16 +33,14 @@ There are basically [two types of Cross Team Collaboration events](https://go.cl
 
 1. **Simple Event:** 
 
-```groovy
-publishEvent simpleEvent("${dockerReg}/helloworld-nodejs:${repoName}-${BUILD_NUMBER}")
-```
-
+      ```groovy
+      publishEvent simpleEvent("${dockerReg}/helloworld-nodejs:${repoName}-${BUILD_NUMBER}")
+      ```
 2. **JSON Event:** 
 
-```groovy
-publishEvent event:jsonEvent("{'eventType':'containerImagePush', 'image':'${dockerReg}/helloworld-nodejs:${repoName}-${BUILD_NUMBER}'}"), verbose: true
-```
-
+      ```groovy
+      publishEvent event:jsonEvent("{'eventType':'containerImagePush', 'image':'${dockerReg}/helloworld-nodejs:${repoName}-${BUILD_NUMBER}'}"), verbose: true
+      ```
 
 For this example we will be using the more verbose JSON event. The problem with the **Simple Event** approach is that the triggered job would have to subscribe to a single `string` value and in this case a specific container image. But what we really want is to run an Anchore scan for all container images being pushed to our DEV container registry. The **JSON Event** approach allows us to subscribe to a more generic event, `containerImagePush`, while passing the exact container image being pushed as an additional JSON value for the key `image`.  But to use this approach the triggered job(s) must retrieve the value of the `image` key from the event payload.
 
