@@ -29,10 +29,10 @@ As containers become a more and more ubiquitous method for delivering your appli
 Cross Team Collaboration enables you to publish an event from a [Pipeline Shared Library](https://jenkins.io/doc/book/pipeline/shared-libraries/) for securely building container images and then asynchronously triggering *not-so-quick* security related jobs listening for events, making it very easy to provide security as part of the CD pipelines for an entire organization.
 
 ### Cross Team Collaboration Events
-There are basically two types of Cross Team Collaboration events:
+There are basically [two types of Cross Team Collaboration events](https://go.cloudbees.com/docs/cloudbees-core/cloud-admin-guide/cross-team-collaboration/#cross-team-event-types):
 
-1. Simple Event: `publishEvent simpleEvent("${dockerReg}/helloworld-nodejs:${repoName}-${BUILD_NUMBER}")`
-2. JSON Event: `publishEvent event:jsonEvent("{'eventType':'containerImagePush', 'image':'${dockerReg}/helloworld-nodejs:${repoName}-${BUILD_NUMBER}'}"), verbose: true`
+1. **Simple Event:** `publishEvent simpleEvent("${dockerReg}/helloworld-nodejs:${repoName}-${BUILD_NUMBER}")`
+2. **JSON Event:** `publishEvent event:jsonEvent("{'eventType':'containerImagePush', 'image':'${dockerReg}/helloworld-nodejs:${repoName}-${BUILD_NUMBER}'}"), verbose: true`
 
 For this example we will be using the more verbose JSON event. The problem with the **Simple Event** approach is that the triggered job would have to subscribe to a single `string` value and in this case a specific container image. But what we really want is to run an Anchore scan for all container images being pushed to our DEV container registry. The **JSON Event** approach allows us to subscribe to a more generic event, `containerImagePush`, while passing the exact container image being pushed as an additional JSON value for the key `image`.  But to use this approach the triggered job(s) must retrieve the value of the `image` key from the event payload.
 
@@ -47,9 +47,9 @@ Now let's compare using groovy code vs a `curl` call against the [Jenkins REST A
 ### Anchore Inline Scan
 Earlier this year, [Anchore](https://anchore.com/) provided some new tools and scripts to make it easier to execute Anchore scans without constantly running an Anchore Engine. The [Anchore **inline scan**](https://anchore.com/inline-scanning-with-anchore-engine/) provides the same analysis/vulnerability/policy evaluation and reporting as a statically managed Anchore engine and is used in this example to highlight how easy and fast you can add container security scanning to your own CD pipelines. However, a better long-term approach would be to stand-up your own centralized, managed and stable Anchore engine to use across all of you dev teams. The advantages of a static, always running Anchore Engine include:
 
-- Faster scans: since you don't have to wait for the Anchore engine to start-up for each job.
-- Reduced infrastructure costs: if you only do a few scans a day then this is less of an advantage as you will have a constant infrastructure cost for the static Anchore engine. But if you are doing 100s of scan per day then you will defintely realize savings with this approach.
-- More secure: as we will see in the **inline scan** example below, the Anchore `inline_scan` script requires access to a Docker daemon. And in this example we are using the [Jenkins Kubernetes plugin](https://github.com/jenkinsci/kubernetes-plugin) to provide dynamic and ephemeral agent pods for the Anchore inline scan job. A quick and dirty approach - that has a number of security implications - for providing a K8s pod agent access to the Docker daemon is to mount the Docker socket as a `volume` on the pod.
+- **Faster scans:** since you don't have to wait for the Anchore engine to start-up for each job.
+- **Reduced infrastructure costs:** if you only do a few scans a day then this is less of an advantage as you will have a constant infrastructure cost for the static Anchore engine. But if you are doing 100s of scan per day then you will defintely realize savings with this approach.
+- **More secure:** as we will see in the **inline scan** example below, the Anchore `inline_scan` script requires access to a Docker daemon. And in this example we are using the [Jenkins Kubernetes plugin](https://github.com/jenkinsci/kubernetes-plugin) to provide dynamic and ephemeral agent pods for the Anchore inline scan job. A quick and dirty approach - that has a number of security implications - for providing a K8s pod agent access to the Docker daemon is to mount the Docker socket as a `volume` on the pod.
 
 *Anchore inline scan Pod* - `dockerClientPod.yml`
 ```yaml
