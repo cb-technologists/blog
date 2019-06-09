@@ -269,4 +269,4 @@ I'm also a big fan of the Jenkins Config-as-Code plugin. However, currently, the
 
 
 ## Add DevSecOps to Your CD with CloudBees Now
-So there is really no execuse NOT to add asynchronous container security scans to your container image CD pipelines when it is as easy as this with CloudBees Core v2, Cross Team Collaboration and the Anchore **inline scan** - when it is as easy as this!
+So there is really no execuse NOT to add asynchronous container security scans to your container image CD pipelines with CloudBees Core v2, Cross Team Collaboration and the Anchore **inline scan** - when it is as easy as this!
