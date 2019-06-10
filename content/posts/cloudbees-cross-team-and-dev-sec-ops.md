@@ -61,10 +61,10 @@ Now let's compare using groovy code vs a `curl` call against the [Jenkins REST A
 Earlier this year, [Anchore](https://anchore.com/) provided some new tools and scripts to make it easier to execute Anchore scans without constantly running an Anchore Engine. The [Anchore **inline scan**](https://anchore.com/inline-scanning-with-anchore-engine/) provides the same analysis/vulnerability/policy evaluation and reporting as a statically managed Anchore engine and is used in this example to highlight how easy and fast you can add container security scanning to your own CD pipelines. However, a better long-term approach would be to stand-up your own centralized, managed and stable Anchore engine to use across all of you dev teams. The advantages of a static, always running Anchore Engine include:
 
 - **Faster scans:** since you don't have to wait for the Anchore engine to start-up for each job.
-- **Reduced infrastructure costs:** if you only do a few scans a day then this is less of an advantage as you will have a constant infrastructure cost for the static Anchore engine. But if you are doing 100s of scan per day then you will defintely realize savings with this approach.
+- **Reduced infrastructure costs:** if you only do a few scans a day then this is less of an advantage as you will have a constant infrastructure cost for the static Anchore engine. But if you are doing 100s of scan per day then you will definitely realize savings with this approach.
 - **More secure:** as we will see in the **inline scan** example below, the Anchore `inline_scan` script requires access to a Docker daemon. And in this example we are using the [Jenkins Kubernetes plugin](https://github.com/jenkinsci/kubernetes-plugin) to provide dynamic and ephemeral agent pods for the Anchore inline scan job. A quick and dirty approach - that has a number of security implications - for providing a K8s pod agent access to the Docker daemon is to mount the Docker socket as a `volume` on the pod.
 
-But again, we will use the newer Anchore **inline scan** in this example to highlight how fast you can add container scans to your own Jenkisn Pipelines.
+But again, we will use the newer Anchore **inline scan** in this example to highlight how fast you can add container scans to your own Jenkins Pipelines.
 
 *Anchore inline scan Pod* - `dockerClientPod.yml`
 ```yaml
@@ -99,7 +99,7 @@ Again, the only thing required to run the scan above is a Docker daemon. So you 
 ### Putting It All Together
 *CloudBees' Pipeline Template Catalog, Pipeline Shared Library, and Cross Team Collaboration*
 
-By combining the new [CloudBees' Pipeline Template Catalogs](https://go.cloudbees.com/docs/cloudbees-core/cloud-admin-guide/pipeline/#_setting_up_a_pipeline_template_catalog) with a Pipeline Shared Library and CloudBees' Cross Team Collaboration we are able to provide robust DevSecOps application delivery Pipeleins that are very easy for development teams to adopt quickly.
+By combining the new [CloudBees' Pipeline Template Catalogs](https://go.cloudbees.com/docs/cloudbees-core/cloud-admin-guide/pipeline/#_setting_up_a_pipeline_template_catalog) with a Pipeline Shared Library and CloudBees' Cross Team Collaboration we are able to provide robust DevSecOps application delivery Pipelines that are very easy for development teams to adopt quickly.
 
 First we have the Pipeline Shared Library for building our container images with [Kaniko](https://github.com/GoogleContainerTools/kaniko):
 
@@ -216,7 +216,7 @@ pipeline {
 }
 ```
 
-Note the `eventTrigger` step uses `jmespathQuery` to listen for the `containerImagePush` `eventType`. Also note the `triggerdBy` condition `EventTriggerCause` in the [`when` directive](https://jenkins.io/doc/book/pipeline/syntax/#when) - this will result in the `Anchore Scan` stage only running (and the provisioning of a K8s pod based agent used for the scan) if this job is triggered by a Cross Team Collaboration event.
+Note the `eventTrigger` step uses `jmespathQuery` to listen for the `containerImagePush` `eventType`. Also note the `triggeredBy` condition `EventTriggerCause` in the [`when` directive](https://jenkins.io/doc/book/pipeline/syntax/#when) - this will result in the `Anchore Scan` stage only running (and the provisioning of a K8s pod based agent used for the scan) if this job is triggered by a Cross Team Collaboration event.
 
 If the newly built container image doesn't pass all of the policies specified in the [`.anchore_policy.json`](https://github.com/cloudbees-days/anchore-scan/blob/master/.anchore_policy.json) file then the job will fail.
 
@@ -247,7 +247,7 @@ As you can see from the above output the scan failed because of the `effective_u
 
 ### Some Improvements
 
-- One improvement would be to run this without mounting the Docker socket in the [`docker-client` container](https://github.com/cloudbees-days/anchore-scan/blob/declarative/dockerClientPod.yml). The Anchore inline-scan script runs a number of Docker commands that requires a Docker daemon - but this is not good security. Using a static Anchore engine would allows us to do container scans without mounting the Docker socket.
+- One improvement would be to run this without mounting the Docker socket in the [`docker-client` container](https://github.com/cloudbees-days/anchore-scan/blob/declarative/dockerClientPod.yml). The Anchore inline-scan script runs a number of Docker commands that requires a Docker daemon - but this is not good security. Using a static Anchore engine would allow us to do container scans without mounting the Docker socket.
 - Another improvement would be to extend the `anchore-scan` job to push the container image to a **Prod** container registry on success and notify interested dev teams that their image is now available for production deployments.
 
 ### CasC for Cross Team Collaboration Configuration for your CloudBees Core v2 Masters
@@ -275,4 +275,4 @@ I'm also a big fan of the Jenkins Config-as-Code plugin. However, currently, the
 
 
 ## Add DevSecOps to Your CD with CloudBees Now
-So there is really no execuse NOT to add asynchronous container security scans to your container image CD pipelines with CloudBees Core v2, our Cross Team Collaboration feature and the Anchore **inline scan** - when it is as easy as this!
+So there's really no excuse NOT to add asynchronous container security scans to your container image CD pipelines with CloudBees Core v2, our Cross Team Collaboration feature and the Anchore **inline scan** - when it is as easy as this!
