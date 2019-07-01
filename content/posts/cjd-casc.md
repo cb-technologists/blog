@@ -7,7 +7,6 @@ showDate: true
 draft: true
 tags: ["jenkins","cloudbees jenkins distribution","gitops","kubernetes","kaniko","docker","cert-manager"]
 ---
-# Self-Updating Jenkins: GitOps for Jenkins Configuration
 
 In this blog post, we'll walk through creating a self-updating instance of [CloudBees Jenkins Distribution](https://www.cloudbees.com/products/cloudbees-jenkins-distribution) fully configured-as-code stored in a Git repository.
 
@@ -537,11 +536,12 @@ To ensure the `cjd-casc` Pipeline job is triggered automatically upon each commi
 
 With this in place, we now have all of our Jenkins configuration stored as code in our GitHub repository, including the process for updating the configuration. Whenever a change is pushed to the repository, those changes will automatically be applied to our Jenkins master.
 
-![successful run of cjd-casc Pipeline](/static/img/cjd-casc/cjd-casc-pipeline.png)
+![successful run of cjd-casc Pipeline](/img/cjd-casc/cjd-casc-pipeline.png)
 
 ## Further enhancements
 
 This approach moves us much closer to the practice of GitOps for our Jenkins configuration. However, there are certainly areas for enhancement going forward. A few immediate examples that come to mind include:
+
 - Non-master branch Pipeline runs could deploy the CJD resources & config to a staging namespace. This would allow for the vetting of changes in a non-production environment before merging to master - a workflow critical for use in any scenario supporting mission-critical workloads.
 - Some level of smoke testing should be introduced for either/both of the non-prod/prod namespaces as a third Pipeline stage. This could range from a simple `curl` command to check the Jenkins system messsage in order to verify Jenkins is up and running, all the way to more complex cases that verify the latest configuration has been appropriately applied.
 - `post` blocks could be introduced for notification to the appropriate Slack channel, email list, etc., that a Jenkins update has commenced/succeeded/failed.
