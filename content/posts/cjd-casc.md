@@ -2,20 +2,20 @@
 author:
   name: "Matt Elgin"
 title: "Self-Updating Jenkins: GitOps for Jenkins Configuration"
-date: 2019-07-01T17:00:00-04:00
+date: 2019-07-03T17:00:00-04:00
 showDate: true
-draft: true
-tags: ["jenkins","cloudbees jenkins distribution","gitops","kubernetes","kaniko","docker","cert-manager"]
+draft: false
+tags: ["jenkins","cloudbees jenkins distribution","gitops","kubernetes","kaniko","docker","cert-manager","google cloud platform"]
 ---
 
-In this blog post, we'll walk through creating a self-updating instance of [CloudBees Jenkins Distribution](https://www.cloudbees.com/products/cloudbees-jenkins-distribution) fully configured-as-code stored in a Git repository.
+In this blog post, we'll walk through creating a self-updating instance of the [CloudBees Jenkins Distribution](https://www.cloudbees.com/products/cloudbees-jenkins-distribution), with all configuration stored as code in a GitHub repository.
 
-We'll deploy the CJD master as a StatefulSet in a Kubernetes cluster, configure the master using the [Jenkins Configuration as Code plugin](https://github.com/jenkinsci/configuration-as-code-plugin), and set up a TLS certificate through [cert-manager](https://github.com/jetstack/cert-manager). Finally, we'll seed a Pipeline job that updates the master upon commit to the [Git repository](https://github.com/cb-technologists/cjd-casc) that contains the configuration - enabling GitOps for Jenkins itself.
+We'll deploy the CJD master as a `StatefulSet` in a Kubernetes cluster, configure the master using the [Jenkins Configuration as Code plugin](https://github.com/jenkinsci/configuration-as-code-plugin), and set up a TLS certificate through [cert-manager](https://github.com/jetstack/cert-manager). Finally, we'll seed a Pipeline job that updates the master upon commit to the [Git repository](https://github.com/cb-technologists/cjd-casc) that contains the configuration - enabling GitOps for Jenkins itself.
 
 ## Deploying CloudBees Jenkins Distribution in Kubernetes
 First, we'll need to deploy a Jenkins instance into a Kubernetes cluster. In this case, we'll use [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/) to deploy a containerized version of CJD. To provision a cluster, we'll follow the Google Cloud documentation [here](https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-cluster). (**Note:** this blog post assumes prior installation of and basic familiarity with using `kubectl` to interact with a Kubernetes cluster.)
 
-Once the cluster has been provisioned and `kubectl` has been configured, we'll create a dedicated namespace for our CJD resources and update our `kubectl config` to use it by default:
+Once the cluster has been provisioned and `kubectl` has been configured, we'll create a dedicated `namespace` for our CJD resources and update our `kubectl config` to use it by default:
 
 ```bash
 kubectl create namespace cjd
@@ -34,7 +34,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/mast
 
 Next, let's look at the manifest file that will deploy the necessary resources for CJD using the [cjd.yaml](https://github.com/cb-technologists/cjd-casc/blob/master/cjd.yaml) manifest file.
 
-First, we create a ServiceAccount, a Role with the necessary permissions to manage agents and perform the required update actions, and a RoleBinding to connect the two.
+First, we create a `ServiceAccount`, a `Role` with the necessary permissions to manage agents and perform the required update actions, and a `RoleBinding` to connect the two.
 
 ```yaml
 apiVersion: v1
@@ -79,13 +79,12 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: cjd
-  # namespace: cjd
 subjects:
 - kind: ServiceAccount
   name: cjd
 ```
 
-Next, we create a Service that exposes ports for access to the web interface and for master-agent communication:
+Next, we create a `Service` that exposes ports for access to the CJD web interface and for master-agent communication:
 ```yaml
 ---
 apiVersion: v1
@@ -107,7 +106,7 @@ spec:
   type: ClusterIP
 ```
 
-Next, we set up an Ingress to allow access to our CJD instance from outside of the cluster. We'll examine this in more detail in a later section where we walk through the setup of `cert-manager`.
+Next, we set up an `Ingress` to allow access to our CJD instance from outside of the cluster. We'll examine this in more detail in a later section where we walk through the setup of `cert-manager`.
 
 ```yaml
 ---
@@ -141,9 +140,9 @@ We'll also need to make sure that we create a DNS A Record through our hosting p
 kubectl get svc -n ingress-nginx
 ```
 
-Finally, we provision the StatefulSet that controls the CJD Pod and Persistent Volume Claim. The container image we use here is a custom image inheriting from the [official CJD Docker image](https://hub.docker.com/r/cloudbees/cloudbees-jenkins-distribution/). We'll examine the Dockerfile for this image in the next section, when we detail the configuration.
+Finally, we provision the `StatefulSet` that controls the CJD Pod and `PersistentVolumeClaim`. The container image we use here is a custom image inheriting from the [official CJD Docker image](https://hub.docker.com/r/cloudbees/cloudbees-jenkins-distribution/). We'll examine the `Dockerfile` for this image in the next section, when we detail the configuration.
 
-Additionally, you'll notice the creation of a few `secretRef` environment variables, as well as the setting of the `CASC_JENKINS_CONFIG` environment variable and the mounting of a `jenkins-casc` ConfigMap - these again will be expanded upon in the configuration section.
+Additionally, you'll notice the creation of a few `secretRef` environment variables, as well as the setting of the `CASC_JENKINS_CONFIG` environment variable and the mounting of a `jenkins-casc` `ConfigMap` - these again will be expanded upon in the configuration section.
 
 ```yaml
 ---
@@ -163,7 +162,7 @@ spec:
     spec:
       containers:
       - name: cjd
-        image: mattelgin/cjd-casc:0.4.14
+        image: gcr.io/melgin/cjd-casc:d176f38b289d0437a2503c83af473f57b25a4d26
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -202,7 +201,7 @@ spec:
 
 ## Configuring with Jenkins Configuration-as-Code Plugin
 
-With the YAML for the required CJD Kubernetes resources laid out, we'll now go into the code handling the configuration of the master . While detailing the StatefulSet above, we mentioned that a custom Docker image is used for the CJD container. The Dockerfile for this image can be found below:
+With the YAML for the required CJD Kubernetes resources laid out, we'll now go into the code handling the configuration of the master. While detailing the `StatefulSet` above, we mentioned that a custom Docker image is used for the CJD container. The `Dockerfile` for this image can be found below:
 
 ```Dockerfile
 FROM cloudbees/cloudbees-jenkins-distribution:2.164.3.2
@@ -232,7 +231,7 @@ RUN bash /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 USER jenkins
 ```
 
-In this Dockerfile, we add custom configuration to the official CJD Docker image. We first set the `JENKINS_UC` environment variable to use the CloudBees update center, as well as the `CASC_JENKINS_CONFIG` variable to point to the location we'll mount our configuration file. Finally, we leverage the [Jenkins Docker `install-plugins.sh` script](https://github.com/jenkinsci/docker#preinstalling-plugins) to install a list of plugins from our `plugins.txt` file. These plugins include:
+In this `Dockerfile`, we add custom configuration to the official CJD Docker image. We first set the `JENKINS_UC` environment variable to use the CloudBees update center, as well as the `CASC_JENKINS_CONFIG` variable to point to the location we'll mount our configuration file. Finally, we leverage the [Jenkins Docker `install-plugins.sh` script](https://github.com/jenkinsci/docker#preinstalling-plugins) to install a list of plugins from our `plugins.txt` file. These plugins include:
 
 ```txt
 configuration-as-code:1.20
@@ -249,7 +248,7 @@ github-oauth:0.32
 
 This will handle the initial installation of the plugins we need, including resolving any dependencies.
 
-Next, we'll need to use the Configuration as Code plugin to handle the configuration of the master itself. To do so, we'll mount the configuration YAML as a ConfigMap that our CJD StatefulSet will use. Here's what our `jenkinsCasc.yaml` file looks like:
+Next, we'll need to use the Configuration as Code plugin to handle the configuration of the master itself. To do so, we'll mount the configuration YAML as a `ConfigMap` that our CJD `StatefulSet` will use. Here's what our `jenkinsCasc.yaml` file looks like:
 
 ```yaml
 ---
@@ -320,9 +319,9 @@ data:
 
 This config file sets up a handful of basic Jenkins settings like allowed agent protocols, security settings, and an example system message.
 
-Three config items in particular are worth additional exploration. First, the security realm is set to use a GitHub organization for authentication (see [the Jenkins GitHub OAuth Plugin page](https://wiki.jenkins.io/display/JENKINS/GitHub+OAuth+Plugin) for details on setting up a GitHub OAuth application). To avoid hardcoding our Client ID and Client Secret in our GitHub repository, we take advantage of Kubernetes secrets.
+Three config items in particular are worth additional exploration. First, the security realm is set to use a GitHub organization for authentication (see [the Jenkins GitHub OAuth Plugin page](https://wiki.jenkins.io/display/JENKINS/GitHub+OAuth+Plugin) for details on setting up a GitHub OAuth application). To avoid hardcoding our Client ID and Client Secret in our GitHub repository, we take advantage of Kubernetes `Secrets`.
 
-Recall from our StatefulSet above that we load a few environment variables from secrets. These include our GitHub OAuth application ID & secret, as well as the username and API token used by our Pipeline job to communicate with our repository.
+Recall from our `StatefulSet` above that we load a few environment variables from `Secrets`. These include our GitHub OAuth application ID & secret, as well as the username and API token used by our Pipeline job to communicate with our repository.
 
 To create these, we use the following `kubectl` commands (replacing the placeholder variables with the actual credentials):
 
@@ -336,12 +335,12 @@ The second config item to note is the creation of a simple Kubernetes cloud that
 
 The third and final detail to call out is the `jobs` section, which uses the [Job DSL plugin](https://github.com/jenkinsci/job-dsl-plugin) to seed a Multibranch Pipeline job. The Jenkinsfile for this Pipeline is stored in the same GitHub repository as the rest of our config files. We'll detail the contents of this Pipeline script in a later section.
 
-To apply this configuration, we apply the ConfigMap manifest file to our cluster:
+To apply this configuration, we apply the `ConfigMap` manifest file to our cluster:
 
 ```bash
 kubectl apply -f jenkinsCasc.yaml
 ```
-With our ConfigMap and related secrets created, we can now apply the manifest file from the previous section to deploy the remainder of the CJD resources:
+With our `ConfigMap` and related `Secrets` created, we can now apply the manifest file from the previous section to deploy the remainder of the CJD resources:
 
 ```bash
 kubectl apply -f cjd.yaml
@@ -349,13 +348,15 @@ kubectl apply -f cjd.yaml
 
 ## Securing with cert-manager
 
-At this point, our CJD instance is not accessible through HTTPS. To remedy this and enhance the security of our environment, we'll be using `cert-manager` to manage our TLS certificate issuance from [Let's Encrypt](https://letsencrypt.org/).
+At this point, our CJD instance is not accessible through HTTPS. To remedy this and enhance the security of our environment, we'll be using [`cert-manager`](https://docs.cert-manager.io/en/latest/), a Kubernetes tool used to automate the management of certificates within a cluster. In this case, we'll use it to manage our TLS certificate issuance from [Let's Encrypt](https://letsencrypt.org/).
 
 Our setup process for `cert-manager` loosely follows their [Quick-Start guide](https://github.com/jetstack/cert-manager/blob/master/docs/tutorials/acme/quick-start/index.rst). Because we've already configured an ingress controller with a corresponding DNS entry along with deploying the CJD resources, we can [ensure Helm](https://github.com/jetstack/cert-manager/blob/master/docs/tutorials/acme/quick-start/index.rst#step-0---install-helm-client) [& Tiller](https://github.com/jetstack/cert-manager/blob/master/docs/tutorials/acme/quick-start/index.rst#step-1---installer-tiller) are installed on the cluster, then skip to the [step of actually deploying `cert-manager`](https://github.com/jetstack/cert-manager/blob/master/docs/tutorials/acme/quick-start/index.rst#step-5---deploy-cert-manager).
 
-Once `cert-manager` has been deployed in its new namespace, we'll next need to deploy the Issuer to our `cjd` namespace. (**Note**: on initial setup of `cert-manager`, it's probably prudent to heed the Quick-Start's recommendation to create a staging Issuer first to minimize the risk of being rate limited by Let's Encrypt. For brevity, we'll only walk through the production Issuer creation here.)
+Once `cert-manager` has been deployed in its new `namespace`, we'll next need to deploy the `Issuer` to our `cjd` `namespace`.
 
-Using the provided [example Issuer manifest file](https://raw.githubusercontent.com/jetstack/cert-manager/release-0.8/docs/tutorials/acme/quick-start/example/production-issuer.yaml), we'll swap in our actual email address before creating the resource in our `cjd` namespace:
+>**Note**: on initial setup of `cert-manager`, it's probably prudent to heed the Quick-Start's recommendation to create a staging `Issuer` first to minimize the risk of being rate limited by Let's Encrypt. For brevity, we'll only walk through the production `Issuer` creation here.
+
+Using the provided [example `Issuer` manifest file](https://raw.githubusercontent.com/jetstack/cert-manager/release-0.8/docs/tutorials/acme/quick-start/example/production-issuer.yaml), we'll swap in our actual email address before creating the resource in our `cjd` `namespace`:
 
 ```yaml
 apiVersion: certmanager.k8s.io/v1alpha1
@@ -379,7 +380,7 @@ spec:
 kubectl apply -f production-issuer.yaml
 ```
 
-Once created, this Issuer relies on annotations on our Ingress to manage the TLS certificate creation. Recall that we briefly discussed the Ingress manifest in a previous section:
+Once created, this `Issuer` relies on annotations on our `Ingress` to manage the TLS certificate creation. Recall that we briefly discussed the `Ingress` manifest in a previous section:
 
 ```yaml
 ---
@@ -407,7 +408,7 @@ spec:
           servicePort: 80
 ```
 
-The lines with comments referencing `cert-manager` are required for the TLS certificate to be successfully issued. These include specifying the Issuer, the challenge type, as well as the hostname and secretName.
+The lines with comments referencing `cert-manager` are required for the TLS certificate to be successfully issued. These include specifying the `Issuer`, the challenge type, as well as the hostname and `secretName`.
 
 You can confirm that the certificate has been successfully issued by running `kubectl get certificate` and verifying that `READY` is `True` for our `cjd-tls` certificate. Once this process has been completed, CJD should now be accessible via HTTPS.
 
@@ -420,15 +421,16 @@ With CJD now running in our cluster and accessible via HTTPS, we'll next take a 
 
 We represent these two procedures as stages within our Pipeline script. 
 
-For the first stage, we will use [kaniko](https://github.com/GoogleContainerTools/kaniko) to build and push our Docker image to a Docker Hub registry. Because we'll be using different agents for each stage, we'll start the Pipeline with `agent none`. Within the first stage, we define our agent using YAML, which specifies the [Google-provided kaniko image](https://gcr.io/kaniko-project/executor:debug) as the container we will use. 
+For the first stage, we will use [kaniko](https://github.com/GoogleContainerTools/kaniko) to build and push our Docker image to [Google Container Registry](https://cloud.google.com/container-registry/). Because we'll be using different agents for each stage, we'll start the Pipeline with `agent none`. Within the first stage, we define our agent using YAML, which specifies the [Google-provided kaniko image](https://gcr.io/kaniko-project/executor:debug) as the container we will use. 
 
-Note that the use of kaniko requires the creation of another Kubernetes secret to allow for authentication to the correct Docker Hub registry (again replacing placeholders with real values):
+To use kaniko, we'll first need to [follow this kaniko documentation](https://github.com/GoogleContainerTools/kaniko#kubernetes-secret) to create a Google Cloud service account with appropriate permissions and download the related JSON key. Assuming we've renamed the key `kaniko-secret.json`, we can [follow this procedure from Heptio](http://docs.heptio.com/content/private-registries/pr-gcr.html) to create another Kubernetes `Secret` to allow for authentication to Google Container Registry (again replacing the placeholder email with the real service account email address):
 
 ```bash
-kubectl create secret docker-registry docker-credentials \
-    --docker-username=${username}  \
-    --docker-password=${password} \
-    --docker-email=${email-address}
+kubectl create secret docker-registry gcr-secret \
+    --docker-server=https://gcr.io \
+    --docker-username=_json_key \
+    --docker-email=${SERVICE_ACCOUNT@PROJECT.iam.gserviceaccount.com} \
+    --docker-password="$(cat kaniko-secret.json)"
 ```
 
 Within the `step` block, we are accomplishing two main things:
@@ -439,7 +441,7 @@ Within the `step` block, we are accomplishing two main things:
 pipeline {
   agent none
   stages {
-    stage('Build and Push with kaniko') {
+    stage('Build and push with kaniko') {
       agent {
         kubernetes {
           label "kaniko-${UUID.randomUUID().toString()}"
@@ -451,7 +453,7 @@ spec:
   serviceAccountName: cjd
   containers:
   - name: kaniko
-    image: gcr.io/kaniko-project/executor:debug
+    image: gcr.io/kaniko-project/executor:debug-v0.10.0
     imagePullPolicy: Always
     command:
     - /busybox/cat
@@ -464,7 +466,7 @@ spec:
     projected:
       sources:
       - secret:
-          name: docker-credentials
+          name: gcr-secret
           items:
             - key: .dockerconfigjson
               path: config.json
@@ -482,7 +484,7 @@ spec:
         }
         container(name: 'kaniko', shell: '/busybox/sh') {
           sh """#!/busybox/sh
-                /kaniko/executor --context `pwd` --destination mattelgin/cjd-casc:${env.COMMIT_ID} --cache=true
+                /kaniko/executor --context `pwd` --destination gcr.io/melgin/cjd-casc:${env.COMMIT_ID} --cache=true
           """
         }
       }
@@ -491,7 +493,7 @@ spec:
 
 In the subsequent stage, we now apply changes to our CJD configuration to the resources running in our Kubernetes cluster.
 
-First, we use a `when` directive to ensure we only run this stage when the Pipeline is running off of the *master* branch. We then use a [Docker image with `kubectl` installed](https://hub.docker.com/r/lachlanevenson/k8s-kubectl) for our stage agent pod template. Within this container, we apply changes to our `jenkins-casc` ConfigMap, the resources specified in `cjd.yaml`, and finally set the image for our CJD StatefulSet to the latest one just pushed to Docker Hub:
+First, we use a `when` directive to ensure we only run this stage when the Pipeline is running off of the *master* branch. We then use the [Google-provided kubectl image](https://gcr.io/cloud-builders/kubectl) for our stage agent pod template. Within this container, we apply changes to our `jenkins-casc` `ConfigMap`, the resources specified in `cjd.yaml`, and finally set the image for our CJD `StatefulSet` to the latest one we've just pushed to Google Container Registry:
 
 ```groovy
     stage('Update CJD') {
@@ -510,7 +512,7 @@ spec:
   serviceAccountName: cjd
   containers:
   - name: kubectl
-    image: lachlanevenson/k8s-kubectl:v1.11.2-bash
+    image: gcr.io/cloud-builders/kubectl@sha256:50de93675e6a9e121aad953658b537d01464cba0e4a3c648dbfc89241bb2085e
     imagePullPolicy: Always
     command:
     - cat
@@ -523,7 +525,7 @@ spec:
           sh """
             kubectl apply -f jenkinsCasc.yaml
             kubectl apply -f cjd.yaml
-            kubectl set image statefulset cjd cjd=mattelgin/cjd-casc:${env.COMMIT_ID}
+            kubectl set image statefulset cjd cjd=gcr.io/melgin/cjd-casc:${env.COMMIT_ID}
           """
         }
       }
@@ -542,7 +544,7 @@ With this in place, we now have all of our Jenkins configuration stored as code 
 
 This approach moves us much closer to the practice of GitOps for our Jenkins configuration. However, there are certainly areas for enhancement going forward. A few immediate examples that come to mind include:
 
-- Non-master branch Pipeline runs could deploy the CJD resources & config to a staging namespace. This would allow for the vetting of changes in a non-production environment before merging to master - a workflow critical for use in any scenario supporting mission-critical workloads.
-- Some level of smoke testing should be introduced for either/both of the non-prod/prod namespaces as a third Pipeline stage. This could range from a simple `curl` command to check the Jenkins system messsage in order to verify Jenkins is up and running, all the way to more complex cases that verify the latest configuration has been appropriately applied.
+- Non-master branch Pipeline runs could deploy the CJD resources & config to a staging `namespace`. This would allow for the vetting of changes in a non-production environment before merging to master - a workflow critical for use in any scenario supporting mission-critical workloads.
+- Some level of smoke testing should be introduced for either/both of the non-prod/prod `namespaces` as a third Pipeline stage. This could range from a simple `curl` command to check the Jenkins system message in order to verify Jenkins is up and running, all the way to more complex cases that verify the latest configuration has been appropriately applied.
 - `post` blocks could be introduced for notification to the appropriate Slack channel, email list, etc., that a Jenkins update has commenced/succeeded/failed.
-- Right now, the Docker image is rebuilt on every Pipeline run - even if no changes have been committed to the Dockerfile or related files. It would be much more efficient to check for changes to those specific files, then selectively skip or run the `Build and Push with kaniko` stage (though this does somewhat complicate the tagging of the Docker image each time a commit triggers a build).
+- Right now, the Docker image is rebuilt on every Pipeline run - even if no changes have been committed to the `Dockerfile` or related files. While caching is in place, it would be even more efficient to check for changes to those specific files, then selectively skip or run the `Build and push with kaniko` stage (though this does somewhat complicate the tagging of the Docker image each time a commit triggers a build).
