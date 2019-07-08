@@ -7,7 +7,14 @@
     content="{{ if .IsHome }}{{ .Site.Params.homeSubtitle }}{{ else }}{{ .Summary | plainify }}{{ end }}" />
 <meta name="keywords" content="{{ .Site.Params.keywords }}" />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="{{ .Permalink }}" />
+<!-- allow content from other original sites, like a private blog site -->
+{{ if or (eq .Kind "home") (eq .Kind "page")}}
+    {{ if isset .Params "canonical" }}
+<link rel="canonical" href="{{ .Params.Canonical}}" />
+    {{ else }}
+<link rel="canonical" href="{{ .Permalink}}" />
+    {{ end }}
+{{ end }}
 
 {{ block "title" . }}
 <title>
