@@ -9,8 +9,8 @@
 <meta name="robots" content="noodp" />
 <!-- allow content from other original sites, like a private blog site -->
 {{ if or (eq .Kind "home") (eq .Kind "page")}}
-    {{ if isset .Params "canonical" }}
-<link rel="canonical" href="{{ .Params.Canonical}}" />
+    {{ if isset .Params "canonicalUrl" }}
+<link rel="canonical" href="{{ .Params.canonicalUrl}}" />
     {{ else }}
 <link rel="canonical" href="{{ .Permalink}}" />
     {{ end }}
