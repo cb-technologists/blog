@@ -14,6 +14,7 @@
             })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
             ga('create', '{{.Site.GoogleAnalytics}}', 'auto');
             {{ if .Params.author }}ga('set', 'dimension1', '{{ .Params.author }}');{{ end }}
+            {{ if isset .Params "date" }}ga('set', 'dimension2', '{{ if .Site.Params.dateformNumTime }}{{ dateFormat .Site.Params.dateformNumTime .Date.Local }}{{ else }}{{ dateFormat "2006-01-02 15:04 -0700" .Date.Local }}{{ end }}');{{ end }}
             ga('send', 'pageview');
         </script>
     {{- end}}
