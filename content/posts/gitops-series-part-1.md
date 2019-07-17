@@ -8,17 +8,17 @@ draft: false
 tags: ["jenkins","gitops","gitops","kubernetes","cert-manager","google cloud platform"]
 ---
 
-GitOps is a concept that was first coined by weaveworks in their [GitOps - Operations by Pull Request](https://www.weave.works/blog/gitops-operations-by-pull-request) post. The idea itself wasn't anything particularly new, people had been doing automated operations with infrastructure-as-code for years. But now that there was a descriptive new name for this concept, the DevOps community has really started to embrace it. Especially with the ever growing prevalence of Kubernetes.
+GitOps is a concept that was first coined by Weaveworks in their [GitOps - Operations by Pull Request](https://www.weave.works/blog/gitops-operations-by-pull-request) post. The idea itself wasn't anything particularly new, people had been doing automated operations with infrastructure-as-code for years. But now that there was a descriptive new name for this concept, the DevOps community has really started to embrace it. Especially with the ever growing prevalence of Kubernetes.
 
 ![GitOps Trend](/img/gitops-series/part-1/trend.png)
 
-If you haven't already done so, I'd recommend reading that weaveworks post since it is always good to understand the origination of a concept. But simply put, GitOps is a way for you to manage your operations from a source code repo. With GitOps you won't be doing any manual steps when you want to change something. On a commit to your master branch, a job will get kicked off and will make the necessary changes.
+If you haven't already done so, I'd recommend reading that Weaveworks post since it is always good to understand the origination of a concept. But simply put, GitOps is a way for you to manage your operations from a source code repo. With GitOps you won't be doing any manual steps when you want to change something. On a commit to your master branch, a job will get kicked off and will make the necessary changes.
 
 ## Why would you want this?
 
 If you have any experience on an operations team with little or no automation, you no doubt know the frustration of manual configuration and snowflake servers. It this sort of environment it is easy to quickly get overwhelmed. And when things go wrong, they can spin out of control.
 
-As you move to infrastructure-as-code by using configuration management tools you're able to get away from most of that headache. Now that you have code which describes your desired environment state you have an easy way to manage and maintain the environment. When you need to change something, submit a pull request and have someone review it. Once the change is merged, go ahead and run the automation and the change will propogate. Should something disasterous happen to your environment, you can get your environment back up in no time by rerunning the automation.
+As you move to infrastructure-as-code by using configuration management tools you're able to get away from most of that headache. Now that you have code which describes your desired environment state you have an easy way to manage and maintain the environment. When you need to change something, submit a pull request and have someone review it. Once the change is merged, go ahead and run the automation and the change will propogate. Should something disastrous happen to your environment, you can get your environment back up in no time by rerunning the automation.
 
 But you are still missing something if these commits to master don't automatically kick off a job to make the change. You should always want your environment to 100% match the configuration in your repo. If the automation isn't automatically run, you will drift away from the target state. 
 
@@ -42,19 +42,19 @@ By necessity the resulting assets are based on my configuration and preferences.
 
 # Time to get down to business
 
-With all of that setup out of the way, let's dive right in.
+With that background out of the way, let's dive right in.
 
 ## What's the plan?
 
 ![Plan of attack](/img/gitops-series/part-1/plan.svg)
 
-1. Pull latest changes - we'll leave this to Jenkins.
-2. Kubernetes cluster - for this I have decided to use [Terraform](https://www.terraform.io/) to provision/manage the Kubernetes cluster. We'll be using [(GKE) Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/) since it is my favorite managed Kubernetes platform.
-3. Namespace and permissions - will use `kubectl` to handle this.
+1. Pull latest changes - we'll leave this to Jenkins
+2. Kubernetes cluster - for this I have decided to use [Terraform](https://www.terraform.io/) to provision/manage the Kubernetes cluster. We'll be using [(GKE) Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/) since it is my favorite managed Kubernetes platform
+3. Namespace and permissions - will use `kubectl` to handle this
 4. Ingress controller - Will use the recommended nginx ingress controller
-5. Set DNS record - Will take advantage of the Ansible role to do this easily.
+5. Set DNS record - Will take advantage of the Ansible role to do this easily
 6. Cert manager - Will use Kubectl to install
-7. Ensure CJD/Core are running - This is where we will fork into the next 2 posts. 
+7. Ensure CJD/Core are running - This is where we will fork into the next 2 posts
 
 
 ### Already there is an issue
@@ -159,7 +159,7 @@ Since this is where we are setting the environment specific variables, go ahead 
 
 ### Cluster definition file
 
-Now with the variables out of the way, it's time to build out the actual definition of what the cluster is going to look like. This is the stuff that isn't likely to change as much. If you're following along you shouldn't need to make any changes except for one specific spot I'll point.
+Now with the variables out of the way, it's time to build out the actual definition of what the cluster is going to look like. This is the stuff that isn't likely to change as much. If you're following along you shouldn't need to make any changes except for one specific spot I'll point out.
 
 We're going to create a `cluster.tf` file.
 
@@ -268,6 +268,8 @@ terraform {
   }
 }
 ```
+
+By default, when you are using Terraform it stores the state of your environment to the local system. Since we are going to be running this from Jenkins in an ephemeral agent, we don't want this. Instead, this block tells Terraform to store the state to a GCS storage bucket so the state will persist between runs.
 
 If you're following along, you can follow these [instructions](https://cloud.google.com/storage/docs/creating-buckets) to create a GCS bucket here.
 
@@ -435,7 +437,7 @@ kubectl apply -f cert-manager/staging-issuer.yaml
 kubectl apply -f cert-manager/production-issuer.yaml
 ```
 
-Now when we create an ingress for our applications, we can add some metadata to the ingress definition and the certificates will automatically be generated and stored in secrets.
+Now when we create an ingress for our applications, we can add some metadata to the ingress definition and the certificates will automatically be generated and stored as [K8s Secrets](https://kubernetes.io/docs/concepts/configuration/secret/).
 
 ## Setting up CloudBees Core or CJD
 
@@ -492,7 +494,7 @@ spec:
       - name: GCP_CLUSTER_NAME
         value: "my_cluster_name"
   - name: kubectl
-    image: google/cloud-sdk:latest
+    image: google/cloud-sdk:252.0.0-slim
     command:
     - cat
     tty: true
@@ -613,4 +615,4 @@ pipeline {
 
 This is not a particularly elegant solution at this point, but for an initial attempt it should be sufficient.
 
-In the next segments of this series we will be taking a look at how to extend this to actually deploy and maintain CloudBees Core or CloudBees Jenkins Distribution.
+In the next parts of this series we will be taking a look at how to extend this to actually deploy and maintain CloudBees Core or CloudBees Jenkins Distribution.
