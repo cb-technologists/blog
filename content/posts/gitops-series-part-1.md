@@ -16,7 +16,7 @@ If you haven't already done so, I'd recommend reading that Weaveworks post since
 
 ## Why would you want this?
 
-If you have any experience on an operations team with little or no automation, you no doubt know the frustration of manual configuration and snowflake servers. It this sort of environment it is easy to quickly get overwhelmed. And when things go wrong, they can spin out of control.
+If you have any experience on an operations team with little or no automation, you no doubt know the frustration of manual configuration and snowflake servers. In this sort of environment it is easy to quickly get overwhelmed. And when things go wrong, they can spin out of control.
 
 As you move to infrastructure-as-code by using configuration management tools you're able to get away from most of that headache. Now that you have code which describes your desired environment state you have an easy way to manage and maintain the environment. When you need to change something, submit a pull request and have someone review it. Once the change is merged, go ahead and run the automation and the change will propogate. Should something disastrous happen to your environment, you can get your environment back up in no time by rerunning the automation.
 
@@ -33,7 +33,7 @@ In this first part we will take a look at building out the infrastructure automa
 
 In the second part we will add the automation of our [CloudBees Jenkins Distribution](https://www.cloudbees.com/products/cloudbees-jenkins-distribution). This will include plugin management, configuration, and more.
 
-In the final part we will look at [CloudBees Core](https://www.cloudbees.com/products/cloudbees-core) and some cool stuff we can do there with custom Operations Center and Managed Master images.
+In the final part we will look at [CloudBees Core](https://www.cloudbees.com/products/cloudbees-core) and some cool stuff we can do with custom Operations Center and Managed Master images.
 
 Overall, while the goal of this series is educational, I hope it is also useful and that the assets are useable. As I write this I am using this automation daily to make my life easier as I play around with new features and try new configurations.
 
