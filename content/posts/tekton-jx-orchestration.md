@@ -19,6 +19,7 @@ In this post, we are showing the power of Tekton as a decoupled CI/CD pipeline e
 Why then Tekton is a cool CI/CD engine?
 
 First of all, Tekton is built on and for Kubernetes. This means that containers are the building blocks of any pipeline definition and execution. Kubernetes orchestrates the container's magic. One step, one container. But it's more than that:
+
 - Everything is decoupled. So for example, a group of steps, or any pipeline resource can be shared and reused through different pipeline executions.
 - Kubernetes is the platform, meaning that pipelines can be deployed and executed basically anywhere.
 - Sequential execution of `Tasks` defines a `Pipeline`. So creating a pipeline conceptually is as easy as defining the order of the tasks that we want to run and that may be already deployed in our Kubernetes cluster.
@@ -40,6 +41,7 @@ If we start designing reusable components, then the resources, the pipeline flow
 ## An orchestration engine to manage pipelines
 
 We might think about how to orchestrate this. Let's then think about three decoupling best practices for pipelines in containerized ecosystems:
+
 - The CI/CD execution  must be flexible, reusable and decoupled.
 - The pipeline orchestration must be manageable, understandable and easy to deploy.
 - Resources configuration for pipeline components needs to be standardized and easy to manage.
@@ -55,6 +57,7 @@ We are using an example of building an application by defining and running CI/CD
 To do that we are using a well known Spring Boot application like the [Spring Petclinic example](https://projects.spring.io/spring-petclinic/). And let's use a repo that is using traditional Jenkins pipeline to build the application, create a Docker container and deploy into Kubernetes cluster.
 
 In my traditional Jenkins example I use two pipelines in fact that are automated using [CloudBees Core Cross Team Collaboration](https://go.cloudbees.com/docs/cloudbees-core/cloud-admin-guide/cross-team-collaboration/) features:
+
 - [Repo with a Jenkins pipeline to build](https://github.com/dcanadillas/petclinic-kaniko) the app, the Docker container and push it into Docker Registry
 - A simple [Jenkins pipeline repo to deploy](https://github.com/dcanadillas/petclinic-kaniko-deploy) the previous container published
 
@@ -63,6 +66,7 @@ But in our case, we are putting those pipeline steps into one pipeline to do the
 ### The pure Tekton way
 
 So let's try to configure and execute the pipeline from a pure Tekton pipeline point of view. That means:
+
 - Creating [`PipelineResources`](https://github.com/tektoncd/pipeline/blob/master/docs/resources.md) that are going to be used by `Tasks`
 - Defining and creating [`Tasks`](https://github.com/tektoncd/pipeline/blob/master/docs/tasks.md) that contains the steps to be executed in the `Pipeline`
 - Defining and creating the [`Pipeline`](https://github.com/tektoncd/pipeline/blob/master/docs/pipelines.md) that orchestrates the execution of `Tasks` with `Resources`
@@ -695,6 +699,7 @@ petclinic-service   LoadBalancer   10.23.240.64   35.195.126.19   9090:31194/TCP
 ![Petclinic deployed with JX pipeline](/img/tekton-jx-orchestration/petclinic-jx-pipeline.png)
 
 We can conclude about the following about simulating the same Tekton configuration with Jenkins X Pipelines:
+
 - CI/CD pipeline was designed in one YAML file of a couple of lines, instead of defining several YAML files with linked definitions (we could have defined one YAML file for the Tekton example, but would have been very big file and not very manageable).
 - Jenkins X, from that monilithic simple definition, creates automatically all Tekton decoupled components (`Tasks`, `Pipeline`, `PipelineResources`, `PipelineRuns`, etc.)
 - There is **no need to define any secret or serviceAccount**. Jenkins X configures the platform parameters automatically when installing, passing those parameters to the pipeline Tekton components at execution creation. You can also change parameters in the pipeline with `jx create variable` command if needed
