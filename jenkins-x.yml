@@ -70,12 +70,12 @@ pipelineConfig:
             args:
             - version
 
-          - image: node:12.6.0-alpine
-            name: write-good
-            dir: /workspace/source/content/posts
-            command: npx
+          - image: tmaier/markdown-spellcheck
+            name: mdspell
+            dir: /workspace/source
+            command: mdspell
             args:
-            - write-good *.md
+            - -n -a --en-us -r "content/posts/*.md"
 
           - image: jojomi/hugo:0.55.5
             name: build-website
