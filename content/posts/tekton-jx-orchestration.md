@@ -8,7 +8,7 @@ draft: false
 tags: ["jenkins x","tekton", "CI/CD pipelines"]
 ---
 
-We may know [Jenkins X]() as a new pure CI/CD cloud native implementation slightly different than [Jenkins](https://jenkins.io). It is based on the use of Kubernetes Custom Resource Definitions (CRD's) to experience a seamless execution of CI/CD pipelines. This happens by leveraging the power of Kubernetes in terms of scalability, infrastructure abstraction and velocity.
+We may know [Jenkins X](https://jenkins-x.io) as a new pure CI/CD cloud native implementation slightly different than [Jenkins](https://jenkins.io). It is based on the use of Kubernetes Custom Resource Definitions (CRD's) to experience a seamless execution of CI/CD pipelines. This happens by leveraging the power of Kubernetes in terms of scalability, infrastructure abstraction and velocity.
 
 The new main approach of Jenkins X is about a serverless experience, because there is no more traditional Jenkins engine running. So, it relies on a CI/CD pipeline engine that can run on any standard Kubernetes deployment. This engine is the [Tekton CD project ](https://github.com/tektoncd/pipeline), a Google project that is also - like Jenkins X - part of the [Continuous Delivery Foundation](https://cd.foundation/).
 
@@ -414,6 +414,7 @@ A Tekton `CRD` is then created to run the pipeline.
 pipelinerun.tekton.dev/petclinic-pipelinerun created
 ```
 Different things are going to happen in this case:
+
 - The `PipelineRun` is going to create a `TaskRun` per `Task`. Than means that every stage of the pipeline is going to be executed within the `Task` definition already deployed, depending on the `Pipeline` flow created
 - Every `TaskRun` is going to be executed in a Kubernetes `Pod`, using inside the containers specified in the different `Steps` in the `Tasks`. Remember about Tekton: One step. One container.
 - `PipelineResources` are just "consumed or produced" by `Tasks` depending on the parameters used during `TaskRuns` 
@@ -506,7 +507,7 @@ tekton-pipelines-webhook      ClusterIP      10.31.242.231   <none>          443
 
 We then confirmed that this kind of pipeline definition and execution in Kubernetes can be extremely powerful in terms of reusability and extensibility. Everything is about playing with Cloud Native resources to deal with CI/CD pipeline objects and executions.
 
-But let's face it. This is not a very easy way of executing pipelines. Powerful, but complex from a conceptual pipeline design
+But let's face it. This is not a very easy way of executing pipelines. Powerful, but complex from a conceptual pipeline design.
 
 ### Playing with Jenkins X Serverless Pipelines
 
@@ -701,11 +702,11 @@ petclinic-service   LoadBalancer   10.23.240.64   35.195.126.19   9090:31194/TCP
 We can conclude about the following about simulating the same Tekton configuration with Jenkins X Pipelines:
 
 - CI/CD pipeline was designed in one YAML file of a couple of lines, instead of defining several YAML files with linked definitions (we could have defined one YAML file for the Tekton example, but would have been very big file and not very manageable).
-- Jenkins X, from that monilithic simple definition, creates automatically all Tekton decoupled components (`Tasks`, `Pipeline`, `PipelineResources`, `PipelineRuns`, etc.)
-- There is **no need to define any secret or serviceAccount**. Jenkins X configures the platform parameters automatically when installing, passing those parameters to the pipeline Tekton components at execution creation. You can also change parameters in the pipeline with `jx create variable` command if needed
-- It is much easier to create a Jenkins X pipeline to orchestrate Tekton components than creating the isolated components by itself and then deploying the execution
-- All GitHub "dirty work" like webhooks, credentials or updates required are already configured by Jenkins X to work only on code changes
-- We could see that pipeline execution is much faster because Jenkins X takes care about artifact caching and optimizing Kubernetes resources used
+- Jenkins X, from that monilithic simple definition, creates automatically all Tekton decoupled components (`Tasks`, `Pipeline`, `PipelineResources`, `PipelineRuns`, etc.).
+- There is **no need to define any secret or serviceAccount**. Jenkins X configures the platform parameters automatically when installing, passing those parameters to the pipeline Tekton components at execution creation. You can also change parameters in the pipeline with `jx create variable` command if needed.
+- It is much easier to create a Jenkins X pipeline to orchestrate Tekton components than creating the isolated components by itself and then deploying the execution.
+- All GitHub "dirty work" like webhooks, credentials or updates required are already configured by Jenkins X to work only on code changes.
+- We could see that pipeline execution is much faster because Jenkins X takes care about artifact caching and optimizing Kubernetes resources used.
 
 As seen before, the following diagram represents how a Jenkins X pipeline definition is translated into Tekton components:
 
@@ -721,8 +722,8 @@ As did before, for demonstration purposes I am cloning first the original repo a
 
 Because I don't want to change the [original repo](https://github.com/dcanadillas/petclinic-kaniko), let's then do the following
 
-- Clone original repo from the terminal with `git clone https://github.com/dcanadillas/petclinic-kaniko petclinic-jx`
-- Remove git references `rm -rf petclinic-jx/.git*`
+- Clone original repo from the terminal with `git clone https://github.com/dcanadillas/petclinic-kaniko petclinic-jx`.
+- Remove git references `rm -rf petclinic-jx/.git*`.
 - Now, create Jenkins X project importing from the local repo into a new GitHub repository:
   
   ```bash
@@ -733,11 +734,11 @@ It's important no note that we are using `-m YAML` to force Jenkins X creating a
 
 Different things happen when importing the project with Jenkins X:
 
-- Creates a local git repo (similar to `git init`)
-- Selects a [Draft](https://draft.sh/) build pack from Jenkins X. (*In this case takes a [maven build pack](https://github.com/jenkins-x-buildpacks/jenkins-x-kubernetes/tree/master/packs/maven)*)
-- Pushes the new repository with changes applied from the build pack to a repo in the GitHub organization specified in the `--org` parameter 
-- Creates a GitHub webhook for Jenkins X to be able to trigger pipelines automatically wit any code change
-- Runs the pipeline to build the application and promote to Staging using GitOps
+- Creates a local git repo (similar to `git init`).
+- Selects a [Draft](https://draft.sh/) build pack from Jenkins X. (*In this case takes a [maven build pack](https://github.com/jenkins-x-buildpacks/jenkins-x-kubernetes/tree/master/packs/maven)*).
+- Pushes the new repository with changes applied from the build pack to a repo in the GitHub organization specified in the `--org` parameter.
+- Creates a GitHub webhook for Jenkins X to be able to trigger pipelines automatically wit any code change.
+- Runs the pipeline to build the application and promote to Staging using GitOps.
 
 Basically, Jenkins X already did everything about configuring the CI/CD pipeline just by importing the project. So now there is already a pipeline running. All steps executed by the pipeline build can be seen with `jx get activity -f petclinic-jx -w` . Once it succeeded:
 
@@ -815,7 +816,7 @@ Namespace:          jx-staging
   Warning  BackOff    38s (x1719 over 9h)   kubelet, gke-dcanadillas-cloudbee-default-pool-98606002-b9hc  Back-off restarting failed container
   ```
 
-When the project was imported from Jenkins X and the build pack was applied, some components were added to the original project. Like`helm charts` required to deploy and promote through environments. Looking at previous error logs in the `Pod`  seems to be about changing the `probePath` in the file `petclinic-jx/charts/petclinic-jx/values.yaml`. We need to change it from `/actuator/health` to `/` :
+When the project was imported from Jenkins X and the build pack was applied, some components were added to the original project. Like`helm charts` required to deploy and promote through environments. Looking at previous error logs in the `Pod`  seems to be about changing the `probePath` in the file `petclinic-jx/charts/petclinic-jx/values.yaml`. We need to change it from `/actuator/health` to `/`:
 
 ```bash
 cat charts/petclinic-jx/values.yaml | sed 's/\/actuator\/health/\//g' | tee charts/petclinic-jx/values.yaml
