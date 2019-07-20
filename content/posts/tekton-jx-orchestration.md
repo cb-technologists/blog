@@ -1,4 +1,12 @@
-# Jenkins X orchestration: More than Tekton on steroids
+---
+author:
+  name: "David Cañadillas"
+title: "Jenkins X orchestration: More than Tekton on steroids"
+date: 2019-07-20T19:39:10+01:00
+showDate: true
+draft: false
+tags: ["jenkins x","tekton", "CI/CD pipelines"]
+---
 
 We may know [Jenkins X]() as a new pure CI/CD cloud native implementation slightly different than [Jenkins](https://jenkins.io). It is based on the use of Kubernetes Custom Resource Definitions (CRD's) to experience a seamless execution of CI/CD pipelines. This happens by leveraging the power of Kubernetes in terms of scalability, infrastructure abstraction and velocity.
 
@@ -480,11 +488,21 @@ Status:
 Events:              <none>
 ```
 
+We check that the application has been deployed:
+
+```bash
+$ kubectl get svc
+NAME                          TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)          AGE
+petclinic-service             LoadBalancer   10.31.240.225   35.240.80.216   9090:31261/TCP   12m
+tekton-pipelines-controller   ClusterIP      10.31.254.32    <none>          9090/TCP         11d
+tekton-pipelines-webhook      ClusterIP      10.31.242.231   <none>          443/TCP          11d
+```
+
+![Petclinic deployment with Tekton](../../static/img/tekton-jx-orchestration/petclinic-tekton.png)
+
 We then confirmed that this kind of pipeline definition and execution in Kubernetes can be extremely powerful in terms of reusability and extensibility. Everything is about playing with Cloud Native resources to deal with CI/CD pipeline objects and executions.
 
 But let's face it. This is not a very easy way of executing pipelines. Powerful, but complex from a conceptual pipeline design
-
-
 
 ### Playing with Jenkins X Serverless Pipelines
 
@@ -518,6 +536,7 @@ jx create cluster gke \
 --no-tiller \
 -b
 ```
+
 Once having the Jenkins X installation (serverless mode), you can check that Tekton `CRDs` are already there:
 
 ```bash
@@ -539,6 +558,7 @@ If we clone the same [petclinic-kaniko repo](https://github.com/dcanadillas/petc
 
 - Deleting any Git repo reference from the local cloned directory with `rm -r ./.git*` so we are working for sure from a local copy
 - Create the following `jenkins-x.yml` file that simulates de `maven-build`, `kaniko-build` and `kubectl-deploy` tasks from our previous Tekton example:
+  
   ```yaml
   buildPack: none
   pipelineConfig:
@@ -664,6 +684,16 @@ tekton-pipelines-webhook-7fd7f8cdcc-pqv4c                                 1/1   
 tide-5f8fb5964c-29pgt                                                     1/1     Running     0          5d10h
 ```
 
+And we can check that same application has been deployed in the namespace `jx-staging`:
+
+```bash
+$ kubectl get svc petclinic-service -n jx-staging
+NAME                TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)          AGE
+petclinic-service   LoadBalancer   10.23.240.64   35.195.126.19   9090:31194/TCP   10m
+```
+
+![Petclinic deployed with JX pipeline](../../static/img/tekton-jx-orchestration/petclinic-jx-pipeline.png)
+
 We can conclude about the following about simulating the same Tekton configuration with Jenkins X Pipelines:
 - CI/CD pipeline was designed in one YAML file of a couple of lines, instead of defining several YAML files with linked definitions (we could have defined one YAML file for the Tekton example, but would have been very big file and not very manageable).
 - Jenkins X, from that monilithic simple definition, creates automatically all Tekton decoupled components (`Tasks`, `Pipeline`, `PipelineResources`, `PipelineRuns`, etc.)
@@ -689,6 +719,7 @@ Because I don't want to change the [original repo](https://github.com/dcanadilla
 - Clone original repo from the terminal with `git clone https://github.com/dcanadillas/petclinic-kaniko petclinic-jx`
 - Remove git references `rm -rf petclinic-jx/.git*`
 - Now, create Jenkins X project importing from the local repo into a new GitHub repository:
+  
   ```bash
   jx import --git-username dcanadillas --org jx-dcanadillas --name petclinic-jx -m YAML
   ```
