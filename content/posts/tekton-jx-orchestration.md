@@ -274,9 +274,9 @@ spec:
       value: https://github.com/dcanadillas/petclinic-kaniko-deploy.git
 ```
 
-As `PipelineResources` we are using two GitHub repositories as inputs (one for the application and the other for deployment definitions), and one container image as output to be built.
+As `PipelineResources` we are using the two GitHub repositories from the original repos as inputs (one for the application and the other for deployment definitions), and one container image as output to be built.
 
-Next, let's define the `PipelineRun`, that executes and instantiate the pipeline in a file `petclinic-run.yaml`:
+Next, let's define the `PipelineRun`, that executes and instantiate the pipeline, in a file `petclinic-run.yaml`:
 
 ```yaml
 apiVersion: tekton.dev/v1alpha1
@@ -302,9 +302,9 @@ spec:
       name: petclinic-deploy
 ```
 
-In the `PipelineRun` object is important to understand that is intended in the way of defining the specific running instance of a deployed pipeline. So it's a perfect time to assign running input/output parameter values, specify `serviceAccounts` to be used, or referencing the right `PipelieResources` to be used.
+In the `PipelineRun` object is important to understand that is intended in the way of defining the specific running instance of a deployed pipeline. It's the right place to assign running input/output parameter values, specify `serviceAccounts` to be used, or referencing the right `PipelieResources` to be used.
 
-Once we have the YAML definitions, it's only a matter of Kubernetes deployment of the Tekton CRD objects. So, to deploy them we can use `kubectl` command line tool:
+Once we have the YAML definitions, it's only a matter of Kubernetes deployment of the Tekton CRD objects. We can use then `kubectl` command line tool to deploy first the two YAML files with `PipelineResources`, `Tasks` and `Pipeline`:
 
 ```bash
 $ kubectl apply -f petclinic-resources.yaml,petclinic-pipeline.yaml
@@ -335,7 +335,7 @@ pipelineresource.tekton.dev/petclinic-git      2s
 pipelineresource.tekton.dev/petclinic-image    2s
 ```
 
-So we can check our pipeline to be executed:
+And we can check the pipeline to be executed:
 
 ```bash
 $ kubectl describe pipeline.tekton.dev/petclinic-pipeline
@@ -398,14 +398,14 @@ Spec:
 Events:      <none>
 ```
 
-We can see that the `Pipeline` object is going to execute in order the tasks already existing in K8s cluster: `build-maven`, `build-kaniko` and `deploy-kubectl`. And for that we are setting as inputs and outputs the different `PipelineResources`. 
+`Pipeline` object is going to execute in order the tasks already existing in K8s cluster: `build-maven`, `build-kaniko` and `deploy-kubectl`. And for that we are setting as inputs and outputs the different `PipelineResources`. 
 
-But, we are using some resources expected in the cluster that are not created at pipeline definition, like `Secrets` for pushing into private Docker Registry (GCR in my case), `ServiceAccount`, `Roles` and `RoleBindings` to deploy in Kubernetes with the specific permissions. I am not focusing on doing this at this post, but you can read how to do it in my [original repo documentation](https://github.com/dcanadillas/petclinic-tekton/blob/master/README.md#configuration-requirements).
+But we are using some resources expected in the cluster that are not created at pipeline definition, like `Secrets` for pushing into private Docker Registry (GCR in my case), `ServiceAccount`, `Roles` and `RoleBindings` to deploy in Kubernetes with the specific permissions. I am not focusing on doing this at this post, but you can read how to do it in my [original repo documentation](https://github.com/dcanadillas/petclinic-tekton/blob/master/README.md#configuration-requirements).
 
 Now, running the pipeline is just about deploying the `PipelineRun` definition in our `pipeline-run.yaml` file:
 
 ```bash
-$ kubectl apply -f petclinic-run.yaml
+kubectl apply -f petclinic-run.yaml
 ```
 
 A Tekton `CRD` is then created to run the pipeline.
@@ -413,6 +413,7 @@ A Tekton `CRD` is then created to run the pipeline.
 ```
 pipelinerun.tekton.dev/petclinic-pipelinerun created
 ```
+
 Different things are going to happen in this case:
 
 - The `PipelineRun` is going to create a `TaskRun` per `Task`. Than means that every stage of the pipeline is going to be executed within the `Task` definition already deployed, depending on the `Pipeline` flow created
@@ -420,7 +421,7 @@ Different things are going to happen in this case:
 - `PipelineResources` are just "consumed or produced" by `Tasks` depending on the parameters used during `TaskRuns` 
 - Different `ServiceAccounts` are going to be used for `Tasks` depending on the definition of the `PipelineRun` (it makes sense that different roles are needed for different tasks)
 
-So, if we take a look about our execution this is what happened after the complete run:
+So, if we take a look about our execution after the complete run:
 
 ```bash
 $ kubectl get pods
@@ -443,7 +444,7 @@ petclinic-pipelinerun-petclinic-kaniko-s4nnw   True        Succeeded   2h       
 petclinic-pipelinerun-petclinic-maven-9gnpf    True        Succeeded   2h          2h
 ```
 
-If we take a look to one of them we can see the execution status and completion:
+Looking inside at one of them we can see the execution status and completion:
 
 ```bash
 $ kubectl describe taskrun/petclinic-pipelinerun-petclinic-kaniko-s4nnw
@@ -493,7 +494,7 @@ Status:
 Events:              <none>
 ```
 
-We check that the application has been deployed:
+Finally, the application should have been deployed. Let's check:
 
 ```bash
 $ kubectl get svc
@@ -505,7 +506,7 @@ tekton-pipelines-webhook      ClusterIP      10.31.242.231   <none>          443
 
 ![Petclinic deployment with Tekton](/img/tekton-jx-orchestration/petclinic-tekton.png)
 
-We then confirmed that this kind of pipeline definition and execution in Kubernetes can be extremely powerful in terms of reusability and extensibility. Everything is about playing with Cloud Native resources to deal with CI/CD pipeline objects and executions.
+We then confirmed that this kind of pipeline definition and execution in Kubernetes can be extremely powerful in terms of reusability and extensibility. We've just deployed tasks definitions, ordering and resources descriptions, and running specification. Everything is about playing with Cloud Native resources to deal with CI/CD pipeline objects and executions.
 
 But let's face it. This is not a very easy way of executing pipelines. Powerful, but complex from a conceptual pipeline design.
 
@@ -513,15 +514,14 @@ But let's face it. This is not a very easy way of executing pipelines. Powerful,
 
 We can think about orchestrating the previous application pipeline with Tekton to simplify it's usage and make it "manageable". Jenkins X is a very good solution to do that, because:
 
-- Jenkins X [buildpacks](https://jenkins-x.io/architecture/build-packs/) give you pre-set pipelines for your applications. You can then start with a prepared and curated conceptual design that is easy to manage.
-- Jenkins X is not a pipeline engine, it's a CI/CD solution. So all resources like Git repos, users, `serviceAccounts`, environment `namespaces`, `ingress rules`, Docker Registry credentials, etc. are already configured to be able to orchestrate pipeline execution
+- Jenkins X [build packs](https://jenkins-x.io/architecture/build-packs/) give you pre-set pipelines (among other things) for your applications. You can then start with a prepared and curated conceptual design that is easy to manage.
+- Jenkins X is not a pipeline engine, it's a CI/CD solution. So all resources like Git repos, users, `serviceAccounts`, environment `namespaces`, `ingress` rules, Docker Registry credentials, etc. are already configured to be able to orchestrate pipeline execution.
 - Configuring or extending pipeline definitions is just a matter of defining the flow of stages with their steps/containers to be executed. And Tekton is used automatically to decouple run definition and execution. Monolithic abstraction, decoupled execution. 
 - [Jenkins X Pipelines](https://jenkins-x.io/architecture/jenkins-x-pipelines/) simplify any pipeline process to develop features, release or promote/deploy your code through environment.
 
+To understand what we mean about Tekton orchestration, let's try to simulate the same tasks and steps in our previous Tekton example, but defining a basic Jenkins X serverless pipeline without using build packs.
 
-To understand what we mean about Tekton orchestration, let's try to simulate the same specific tasks and steps defining a Jenkins X serverless pipeline without using buildpacks.
-
-*NOTE: This is not yet the standard way to work with Jenkins X, but using a standalone `jenkins-x.yml` pipeline we can show the relation of Tekton objects created and orchestrated automatically by Jenkins X.*
+*NOTE: Don't think about this as a standard way to work with Jenkins X. We are showing first a standalone `jenkins-x.yml` pipeline to demonstrate how Tekton objects are created and orchestrated automatically by Jenkins X.*
 
 Jenkins X cluster creation and installation it's just a matter of minutes. So, to start executing pipelines we'll start to deploy a Jenkins X cluster from scracth in GKE after [installing the Jenkins X CLI](https://jenkins-x.io/getting-started/install/) (showing parameters instead of values):
 
@@ -542,7 +542,7 @@ jx create cluster gke \
 -b
 ```
 
-Once having the Jenkins X installation (serverless mode), you can check that Tekton `CRDs` are already there:
+Once having the Jenkins X installation (serverless mode with [Prow](https://jenkins-x.io/architecture/prow/) and Tekton), you can check that Tekton `CRDs` are already there:
 
 ```bash
 $ kubectl get crd
@@ -557,12 +557,12 @@ tasks.tekton.dev                               2019-07-10T11:38:50Z
 [...]
 ```
 
-Right now, let's try to simulate the Tekton pipeline that we executed before from a "standalone" Jenkins X YAML pipeline. This means that we are not using any `Build Packs`.
+Right now, let's try to simulate the Tekton pipeline that we executed before from a "standalone" Jenkins X YAML pipeline. This means, as mentioned before, that we are not using any Jenkins X `Build Packs`.
 
 If we clone the same [petclinic-kaniko repo](https://github.com/dcanadillas/petclinic-kaniko) into a local directory `petclinic-jenkins-x` we can do the following (working from local):
 
 - Deleting any Git repo reference from the local cloned directory with `rm -r ./.git*` so we are working for sure from a local copy
-- Create the following `jenkins-x.yml` file that simulates de `maven-build`, `kaniko-build` and `kubectl-deploy` tasks from our previous Tekton example:
+- Create in the local directory the following `jenkins-x.yml` file that simulates de `maven-build`, `kaniko-build` and `kubectl-deploy` tasks from our previous Tekton example (for simplicity we are not adding the step used before to check deployment):
   
   ```yaml
   buildPack: none
@@ -616,7 +616,7 @@ If we clone the same [petclinic-kaniko repo](https://github.com/dcanadillas/petc
   [...]
   ```
 
-*NOTE: We could have imported first the project and then changed the `jenkins-x.yml`. In that case Jenkins X would have detected to apply a Maven `Build Pack` doing the first run with it. But I wanted to force Jenkins X to not recognize any `Build Pack` from the beggining.*
+*NOTE: We could have imported first the project and then changed the `jenkins-x.yml`. In that case Jenkins X would have detected to apply a Maven `Build Pack` doing the first run with it. But I wanted to force Jenkins X to not recognize any `Build Pack` from the beggining, so there is no pipeline execution different than the one we want to simulate.*
 
 Then the first pipeline execution is automatically run, because Jenkins X creates for you the GitHub repo with its webhook. The status of the execution can be seen by:
 
@@ -672,7 +672,7 @@ NAME                                                             AGE
 pipelinerun.tekton.dev/jx-dcanadillas-petclinic-jenkin-rhg88-2   7m
 ```
 
-These are the same components that were created "manually" in our previous Tekton example. Truth is that `Tasks` configurations in this case are kind of different inside in terms of parameters used. But that is the thing. Just because Jenkins X is orchestrating the pipeline execution from a simpler definition it's abstracting some configurations for you.
+There they are. The same components that were created "manually" in our previous Tekton example. Truth is that `Tasks` configurations in this case use more parameters inside (`DOCKER_REGISTRY`, `REPO_OWNER`, `PIPELINE_KIND`, `BUILD_NUMBER`, `APP_NAME`, `VERSION`... and more) that are configured by Jenkins X. But that is the thing. Just because Jenkins X is orchestrating the pipeline execution from a simpler definition it's abstracting some configurations for you and using some parameters to make it easier.
 
 If we check the pods used by the pipeline execution we will find again three of them (one pod per Tekton task):
 
@@ -701,14 +701,14 @@ petclinic-service   LoadBalancer   10.23.240.64   35.195.126.19   9090:31194/TCP
 
 We can conclude about the following about simulating the same Tekton configuration with Jenkins X Pipelines:
 
-- CI/CD pipeline was designed in one YAML file of a couple of lines, instead of defining several YAML files with linked definitions (we could have defined one YAML file for the Tekton example, but would have been very big file and not very manageable).
+- CI/CD pipeline was designed in one YAML file of a couple of lines, instead of defining several YAML files with cross-reference definitions (we could have defined one YAML file for the Tekton example, but would have been very big file with lots of lines of code and not very manageable).
 - Jenkins X, from that monilithic simple definition, creates automatically all Tekton decoupled components (`Tasks`, `Pipeline`, `PipelineResources`, `PipelineRuns`, etc.).
-- There is **no need to define any secret or serviceAccount**. Jenkins X configures the platform parameters automatically when installing, passing those parameters to the pipeline Tekton components at execution creation. You can also change parameters in the pipeline with `jx create variable` command if needed.
+- There is **no need to define any secret or serviceAccount**. Jenkins X configures the platform parameters automatically when installing, passing those parameters to the pipeline Tekton components at execution creation. You can also change default parameters in the pipeline with an easy commang line execution `jx create variable`, or just adding them in the YAML file.
 - It is much easier to create a Jenkins X pipeline to orchestrate Tekton components than creating the isolated components by itself and then deploying the execution.
 - All GitHub "dirty work" like webhooks, credentials or updates required are already configured by Jenkins X to work only on code changes.
-- We could see that pipeline execution is much faster because Jenkins X takes care about artifact caching and optimizing Kubernetes resources used.
+- We could see also that pipeline execution is faster because Jenkins X takes care about artifact caching and optimizing Kubernetes resources used.
 
-As seen before, the following diagram represents how a Jenkins X pipeline definition is translated into Tekton components:
+Let's use the following diagram to show how a Jenkins X pipeline definition is translated into Tekton components, like also happened in our example:
 
 ![Jenkins X Pipelines to Tekton](/img/tekton-jx-orchestration/jx_pipeline-to-tekton.png)
 
@@ -716,28 +716,28 @@ As seen before, the following diagram represents how a Jenkins X pipeline defini
 
 But let's be honest. If we want to take advantadge of a real pipeline orchestration platform like Jenkins X, previous configuration of `jenkins-x.yml` is not the best way to go. That was intended to understand how a Jenkins X pipeline definition is abstracting Tekton components to run CI/CD pipelines.
 
-The real value of a CI/CD pipeline orchestration platform is about something else than abstracting a powerful decoupled CI/CD engine like Tekton. So let's try to understand what I am talking about by doing CI/CD with the same [petclinic-kaniko repo](https://github.com/dcanadillas/petclinic-kaniko) in a *pure Jenkins X way*
+The real value of a CI/CD pipeline orchestration platform is about something else than abstracting a powerful decoupled CI/CD engine like Tekton. So let's try to understand what I am talking about by doing CI/CD with the same [petclinic-kaniko repo](https://github.com/dcanadillas/petclinic-kaniko) in a *pure Jenkins X way*. We are then using Jenkins X build packs.
 
-As did before, for demonstration purposes I am cloning first the original repo and then importing from local to create automatically a new repo in GitHub. I could import directly from the GitHub repo, but that case would be if I want to continue with the same original repo, creating then a new commit with the changes to continue to do CI/CD with Jenkins X (for example changing my old `Jenkinsfile` for a new `jenkins-x.yaml`).
+As shown before, for demonstration purposes I am cloning first the original repo and then importing from local to create automatically from Jenkins X a new repo in GitHub. I could import directly from the GitHub repo, creating then a new commit with the changes to continue to do CI/CD with Jenkins X (for example changing my old `Jenkinsfile` for a new `jenkins-x.yaml`).
 
 Because I don't want to change the [original repo](https://github.com/dcanadillas/petclinic-kaniko), let's then do the following
 
 - Clone original repo from the terminal with `git clone https://github.com/dcanadillas/petclinic-kaniko petclinic-jx`.
 - Remove git references `rm -rf petclinic-jx/.git*`.
-- Now, create Jenkins X project importing from the local repo into a new GitHub repository:
+- Now, create Jenkins X project by importing from the local repo into a new GitHub repository:
   
   ```bash
   jx import --git-username dcanadillas --org jx-dcanadillas --name petclinic-jx -m YAML
   ```
 
-It's important no note that we are using `-m YAML` to force Jenkins X creating a new Jenkins X serverless pipeline project instead of a Static `Jenkinsfile` one.
+Note that we are using `-m YAML` to force Jenkins X creating a new Jenkins X serverless pipeline project instead of a Static `Jenkinsfile` one.
 
-Different things happen when importing the project with Jenkins X:
+Different things are going on when importing the project with Jenkins X:
 
 - Creates a local git repo (similar to `git init`).
 - Selects a [Draft](https://draft.sh/) build pack from Jenkins X. (*In this case takes a [maven build pack](https://github.com/jenkins-x-buildpacks/jenkins-x-kubernetes/tree/master/packs/maven)*).
 - Pushes the new repository with changes applied from the build pack to a repo in the GitHub organization specified in the `--org` parameter.
-- Creates a GitHub webhook for Jenkins X to be able to trigger pipelines automatically wit any code change.
+- Creates a GitHub webhook for Jenkins X to be able to trigger pipelines automatically with any code change.
 - Runs the pipeline to build the application and promote to Staging using GitOps.
 
 Basically, Jenkins X already did everything about configuring the CI/CD pipeline just by importing the project. So now there is already a pipeline running. All steps executed by the pipeline build can be seen with `jx get activity -f petclinic-jx -w` . Once it succeeded:
@@ -773,9 +773,9 @@ buildPack: maven
 ```
 
 It's a **one line pipeline** that it's just "inheriting" the pipeline from the [maven build pack pipeline](https://github.com/jenkins-x-buildpacks/jenkins-x-kubernetes/blob/master/packs/maven/pipeline.yaml).
-Bottomline here is that build packs are kind of templates for building your application. So developers don't need to think about how to conceptually design the CI/CD pipelines or components needed to do Kubernetes managament to promote the application. But you can extend using the `jenkins-x.yaml` or by executing `jx create step` command. In this case Jenkins X already propose a [pipeline lifecycle](https://jenkins-x.io/architecture/build-packs/#lifecycles), that it is translated on how Tekton decouples the pipeline execution objects.
+Bottom line here is that build packs are kind of templates for building your application. So developers don't need to think about how to conceptually design the CI/CD pipelines, or components needed to managame Kubernetes in order to promote the application. But you can extend using the `jenkins-x.yaml` or by executing `jx create step` command. In this case Jenkins X already propose a [pipeline lifecycle](https://jenkins-x.io/architecture/build-packs/#lifecycles), that it is translated on how Tekton decouples the pipeline execution objects.
 
-Coming back to our execution, the application is just automatically deployed into `Staging` environment at version `0.0.1`:
+Coming back to our execution, the application is just automatically deployed and versioned into `Staging` environment at version `0.0.1`:
 
 ```bash
 $ jx get version
@@ -784,7 +784,7 @@ petclinic                1/1
 petclinic-jx     0.0.1        http://petclinic-jx.jx-staging.cbjx.dcanadillas.com
 ```
 
-In this output we can see our previous `petclinic` application deployed with our "customized" Jenkins X pipeline and our recent Jenkins X application `petclinic-jx`. One difference here is that we needed to define deployment in the first pipeline example (non-pure Jenkins X way), but there is no versioning or promotion lifecycle. In the other hand, our last application build - just by importing it with Jenkins X - it is versioned, deployed in the right environment and with an access url. This means that the Kubernetes `service`, `deployyment` and `ingress` have been configured automatically. And it also used GitOps promotion to track and audit all versioning and promotion environment.
+In this output we can see also our previous `petclinic` application deployed with our previous example with "customized" Jenkins X pipeline. And our recently deployed Jenkins X application `petclinic-jx`. Some differences between them are that we needed to define deployment in the first pipeline example (non-pure Jenkins X way), but there is no versioning or promotion lifecycle. In the other hand, our last application build - just by importing it with Jenkins X - it is versioned, deployed in the right environment and with an access url. This means that the Kubernetes `service`, `deployyment` and `ingress` have been configured automatically. And it also used GitOps promotion to track and audit all versioning and promotion environment.
 
 But, last application deployment wasn't really successful:
 
@@ -816,13 +816,14 @@ Namespace:          jx-staging
   Warning  BackOff    38s (x1719 over 9h)   kubelet, gke-dcanadillas-cloudbee-default-pool-98606002-b9hc  Back-off restarting failed container
   ```
 
-When the project was imported from Jenkins X and the build pack was applied, some components were added to the original project. Like`helm charts` required to deploy and promote through environments. Looking at previous error logs in the `Pod`  seems to be about changing the `probePath` in the file `petclinic-jx/charts/petclinic-jx/values.yaml`. We need to change it from `/actuator/health` to `/`:
+When the project was imported from Jenkins X and the build pack was applied, some components were added to the original project. Like`helm charts` required to deploy and promote through environments.
+Looking at previous error logs in the `Pod`, the problem seems to be about changing the `probePath` in the file `petclinic-jx/charts/petclinic-jx/values.yaml`. Let's fix it. We need to change it from `/actuator/health` to `/`:
 
 ```bash
 cat charts/petclinic-jx/values.yaml | sed 's/\/actuator\/health/\//g' | tee charts/petclinic-jx/values.yaml
 ```
 
-Then, we appy the changes to the repo and the pipeline will be triggered automatically:
+Then, we apply the changes to the repo and the pipeline will be triggered automatically:
 
 ```bash
 $ git commit -am "probePath changed to the right value"
@@ -863,6 +864,7 @@ APPLICATION      STAGING PODS URL
 petclinic                1/1
 petclinic-jx     0.0.2   1/1  http://petclinic-jx.jx-staging.cbjx.dcanadillas.com
 ```
+
 And opening the new version:
 
 ```bash
@@ -878,7 +880,7 @@ Pure Jenkins X way then is just about:
 - Kubernetes objects management required for pipeline execution
 - Pipeline extensions using easy pipeline definition with `jenkins-x.yml`
 
-We can confirm then that it's a simpler and better complete experience of CI/CD pipelines than trying to deal with Tekton itself. It is a real orchestration of all resources to develop, build and promote from real cloud native environment.
+We can confirm then that it's also a simpler and better complete experience of CI/CD pipelines than trying to deal with Tekton itself. It is a real orchestration of all resources to develop, build and promote from real cloud native environment.
 
 And last, to demonstrate that all Tekton orchestrarion happened also, let's check all components created for all our Jenkins X executions:
 
@@ -942,7 +944,7 @@ pipelineresource.tekton.dev/jx-dcanadillas-petclinic-jx-mas-ndtfh   27m
 
 Decoupling pipelines to scale is then one of the best approaches to build new modern applications and microservices. But it can be very hard to work on these decoupled objects to define a pipeline, which conceptually is a sequential and "monolithic" tasks execution.
 
-So, Tekton is demonstrating its power of decoupling CI/CD pipelines and builds to scale. And it needs also a powerful orchestrator to simplify the complexity underneath, and even more when dealing with a platform like Kubernetes, that can also add more complexity.
+So, Tekton is demonstrating its power of decoupling CI/CD pipelines and builds to scale. But it needs also a powerful orchestrator to simplify the complexity underneath, and even more when dealing with a platform like Kubernetes, that can also add more complexity.
 
 I like to say that the best way to build and run CI/CD pipelines for modern (and also traditional, why not!) software applications is to make it simple and "abstract the abstraction". I believe Jenkins X is about that. It is about applying the simplicity of trational Jenkins pipelines from a powerful and scalable engine.
 
