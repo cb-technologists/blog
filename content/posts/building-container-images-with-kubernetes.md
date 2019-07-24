@@ -188,5 +188,3 @@ Other solutions that allow you to build and push container images using a Kubern
   - **jib** only supports building container images for Java applications with Maven and Gradle support.
 
 If you aren't already, start building your container images with Kaniko on Kubernetes - with Pod Security Policies. And again, if you want to get Kaniko up and running quickly and easily then you should checkout Jenkins X. Jenkins X will automatically set up Kaniko, along with the necessary configuration to push container images to the Docker registry of your choice (GCR, ECR, Docker Hub, etc). You can go from a Dockerfile in GitHub to container image in your registry in minutes with Jenkins X.
-
-{{< load-photoswipe >}}
