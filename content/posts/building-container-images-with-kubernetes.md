@@ -2,7 +2,7 @@
 title: Securely Building Container Images on Kubernetes
 author:
   name: "Kurt Madel"
-date: 2019-07-24T08:05:15-04:00
+date: 2019-07-24T06:05:15-04:00
 showDate: true
 tags: ["Kubernetes","CI","CD","DinD","security","kaniko","containers"]
 photo: "/img/building-container-images-with-kubernetes/secure-containers.jpg"
