@@ -9,7 +9,7 @@ photoCaption: "Logo by Josh Hendrick ©2019"
 draft: true
 tags: ["jenkins","plugins","containers","CasC","kubernetes","security","GitOps","multi-cluster","jenkins-x","synk"]
 ---
-The Technologists will be giving a bunch of lightning talks in the DevOps Theater at this years DevOps World | Jenkins World in San Francisco. Some of the topics we will be covering include (many of which we have [already blogged about](https://cb-technologists.github.io/posts/)):
+The Technologists will be giving a bunch of lightning talks in the DevOps Theater at this years [DevOps World | Jenkins World in San Francisco](https://www.cloudbees.com/devops-world/san-francisco/). Some of the topics we will be covering include (many of which we have [already blogged about](https://cb-technologists.github.io/posts/)):
 
 - [**Self-Updating Jenkins: GitOps for Jenkins Configuration**](https://cb-technologists.github.io/posts/cjd-casc/)
   - This Lightning Talk will explore using GitOps to automate config updates for the CloudBees Jenkins Distribution.
