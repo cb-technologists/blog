@@ -6,7 +6,7 @@ date: 2019-07-27T10:50:46-04:00
 showDate: true
 photo: "/img/technologists.png"
 photoCaption: "Logo by Josh Hendrick ©2019"
-draft: true
+draft: false
 tags: ["jenkins","plugins","containers","CasC","kubernetes","security","GitOps","multi-cluster","jenkins-x","synk"]
 ---
 The Technologists will be giving a bunch of lightning talks in the DevOps Theater at this years [DevOps World | Jenkins World in San Francisco](https://www.cloudbees.com/devops-world/san-francisco/). Some of the topics we will be covering include (many of which we have [already blogged about](https://cb-technologists.github.io/posts/)):
