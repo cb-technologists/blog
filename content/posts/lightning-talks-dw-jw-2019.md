@@ -11,7 +11,7 @@ tags: ["jenkins","plugins","containers","CasC","kubernetes","security","GitOps",
 ---
 The Technologists will be giving a bunch of lightning talks in the DevOps Theater at this years DevOps World | Jenkins World in San Francisco. Some of the topics we will be covering include (many of which we have [already blogged about](https://cb-technologists.github.io/posts/)):
 
-- **[Self-Updating Jenkins: GitOps for Jenkins Configuration]**(https://cb-technologists.github.io/posts/cjd-casc/)
+- [**Self-Updating Jenkins: GitOps for Jenkins Configuration**](https://cb-technologists.github.io/posts/cjd-casc/)
   - This Lightning Talk will explore using GitOps to automate config updates for the CloudBees Jenkins Distribution.
 - [**Jenkins Plugin Management as Code**](https://cb-technologists.github.io/posts/jenkins-plugins-good-bad-ugly/)
   -  Let’s admit it, Jenkins Plugin management can be a pain. In this talk we will explore using CasC for Jenkins Plugin management. We will also get a preview of some exciting improvements around Plugin Management being built by CloudBees.
