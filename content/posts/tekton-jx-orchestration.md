@@ -716,7 +716,7 @@ Let's use the following diagram to show how a Jenkins X pipeline definition is t
 
 But let's be honest. If we want to take advantadge of a real pipeline orchestration platform like Jenkins X, previous configuration of `jenkins-x.yml` is not the best way to go. That was intended to understand how a Jenkins X pipeline definition is abstracting Tekton components to run CI/CD pipelines.
 
-The real value of a CI/CD pipeline orchestration platform is about something else than abstracting a powerful decoupled CI/CD engine like Tekton. So let's try to understand what I am talking about by doing CI/CD with the same [petclinic-kaniko repo](https://github.com/dcanadillas/petclinic-kaniko) in a *pure Jenkins X way*. We are then using Jenkins X build packs.
+The real value of a CI/CD pipeline orchestration platform is about something else than abstracting a powerful decoupled CI/CD engine like Tekton. So let's try to understand what I am talking about by doing CI/CD with the same [petclinic-kaniko repo](https://github.com/dcanadillas/petclinic-kaniko) in a *pure Jenkins X way* using Jenkins X build packs.
 
 As shown before, for demonstration purposes I am cloning first the original repo and then importing from local to to automatically create from Jenkins X a new repo in GitHub. I could import directly from the GitHub repo, creating then a new commit with the changes to continue to do CI/CD with Jenkins X (for example changing my old `Jenkinsfile` for a new `jenkins-x.yaml`).
 
