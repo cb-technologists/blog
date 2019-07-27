@@ -28,7 +28,7 @@ First of all, Tekton is built on and for Kubernetes. This means that containers 
 - Every pipeline component is a CRD, so pipeline execution is a matter of containers orchestration, something that Kubernetes does really well and pretty fast. It is reliable, stable, scalable and performant.
 
 Let's try to understand Tekton pipelines decoupled architecture in the following diagram :
-![Tekton Pipeline Architecture](/img/tekton-jx-orchestration/TektonPipelineArch.png)
+![Tekton Pipeline Architecture](/img/tekton-jx-orchestration/TektonPipeline_Arch.png)
 
 In terms of scalability, it's a nice way to isolate objects that can be reused easily, right?
 
@@ -504,7 +504,7 @@ tekton-pipelines-controller   ClusterIP      10.31.254.32    <none>          909
 tekton-pipelines-webhook      ClusterIP      10.31.242.231   <none>          443/TCP          11d
 ```
 
-![Petclinic deployment with Tekton](/img/tekton-jx-orchestration/petclinic-tekton.png)
+![Petclinic deployment with Tekton](/img/tekton-jx-orchestration/petclinic_tekton.png)
 
 We then confirmed that this kind of pipeline definition and execution in Kubernetes can be extremely powerful in terms of reusability and extensibility. We've just deployed tasks definitions, ordering and resources descriptions, and running specification. Everything is about playing with Cloud Native resources to deal with CI/CD pipeline objects and executions.
 
@@ -697,7 +697,7 @@ NAME                TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)       
 petclinic-service   LoadBalancer   10.23.240.64   35.195.126.19   9090:31194/TCP   10m
 ```
 
-![Petclinic deployed with JX pipeline](/img/tekton-jx-orchestration/petclinic-jx-pipeline.png)
+![Petclinic deployed with JX pipeline](/img/tekton-jx-orchestration/petclinic-jx_pipeline.png)
 
 We can conclude about the following about simulating the same Tekton configuration with Jenkins X Pipelines:
 
@@ -710,7 +710,7 @@ We can conclude about the following about simulating the same Tekton configurati
 
 Let's use the following diagram to show how a Jenkins X pipeline definition is translated into Tekton components, like also happened in our example:
 
-![Jenkins X Pipelines to Tekton](/img/tekton-jx-orchestration/jx_pipeline-to-tekton.png)
+![Jenkins X Pipelines to Tekton](/img/tekton-jx-orchestration/jxpipeline-to-tekton.png)
 
 ### The pure Jenkins X way
 
@@ -796,7 +796,7 @@ petclinic-jx: http://petclinic-jx.jx-staging.cbjx.dcanadillas.com
 
 We get a `503` error from the application.
 
-![Petclinic error 503](/img/tekton-jx-orchestration/petclinic-jx-503.png)
+![Petclinic error 503](/img/tekton-jx-orchestration/petclinic-jx_503.png)
 
 If we check what is going on:
 
@@ -871,7 +871,7 @@ And opening the new version:
 ```bash
 $ jx open petclinic-jx -n jx-staging
 ```
-![Petclinic deployed](/img/tekton-jx-orchestration/petclinic-jx-staging.png)
+![Petclinic deployed](/img/tekton-jx-orchestration/petclinic-jx_staging.png)
 
 The pure Jenkins X way is about:
 
