@@ -718,7 +718,7 @@ But let's be honest. If we want to take advantadge of a real pipeline orchestrat
 
 The real value of a CI/CD pipeline orchestration platform is about something else than abstracting a powerful decoupled CI/CD engine like Tekton. So let's try to understand what I am talking about by doing CI/CD with the same [petclinic-kaniko repo](https://github.com/dcanadillas/petclinic-kaniko) in a *pure Jenkins X way*. We are then using Jenkins X build packs.
 
-As shown before, for demonstration purposes I am cloning first the original repo and then importing from local to create automatically from Jenkins X a new repo in GitHub. I could import directly from the GitHub repo, creating then a new commit with the changes to continue to do CI/CD with Jenkins X (for example changing my old `Jenkinsfile` for a new `jenkins-x.yaml`).
+As shown before, for demonstration purposes I am cloning first the original repo and then importing from local to to automatically create from Jenkins X a new repo in GitHub. I could import directly from the GitHub repo, creating then a new commit with the changes to continue to do CI/CD with Jenkins X (for example changing my old `Jenkinsfile` for a new `jenkins-x.yaml`).
 
 Because I don't want to change the [original repo](https://github.com/dcanadillas/petclinic-kaniko), let's do the following:
 
@@ -738,7 +738,7 @@ Different things are going on when importing the project with Jenkins X:
 - Selects a [Draft](https://draft.sh/) build pack from Jenkins X. (*In this case takes a [maven build pack](https://github.com/jenkins-x-buildpacks/jenkins-x-kubernetes/tree/master/packs/maven)*).
 - Pushes the new repository with changes applied from the build pack to a repo in the GitHub organization specified in the `--org` parameter.
 - Creates a GitHub webhook for Jenkins X to be able to trigger pipelines automatically with any code change.
-- Runs the pipeline to build the application and promote to Staging using GitOps.
+- Runs the pipeline to build the application and promotes to Staging using GitOps.
 
 Basically, Jenkins X already configured the CI/CD pipeline just by importing the project. So now there is already a pipeline running. All steps executed by the pipeline build can be seen with `jx get activity -f petclinic-jx -w` . Once it succeeded:
 
@@ -774,9 +774,9 @@ buildPack: maven
 
 It's a **one line pipeline** that it's just "inheriting" from the [maven build pack pipeline](https://github.com/jenkins-x-buildpacks/jenkins-x-kubernetes/blob/master/packs/maven/pipeline.yaml).
 
-Bottom line here is that build packs are kind of templates for building your application. So developers don't need to think about how to conceptually design the CI/CD pipelines, or components needed to managame Kubernetes in order to promote the application. But you can extend using the `jenkins-x.yaml` or by executing `jx create step` command. In this case Jenkins X already propose a [pipeline lifecycle](https://jenkins-x.io/architecture/build-packs/#lifecycles), that it is translated on how Tekton decouples the pipeline execution objects.
+Bottom line here is that build packs are templates for building your application. So developers don't need to think about how to conceptually design the CI/CD pipelines, or components needed to manage Kubernetes in order to promote the application. But you can extend using the `jenkins-x.yaml` or by executing `jx create step` command. In this case Jenkins X already propose a [pipeline lifecycle](https://jenkins-x.io/architecture/build-packs/#lifecycles), that it is translated on how Tekton decouples the pipeline execution objects.
 
-Coming back to our execution, the application is just automatically deployed and versioned into `Staging` environment at version `0.0.1`:
+Coming back to our execution, the application is just automatically deployed and versioned into the `Staging` environment at version `0.0.1`:
 
 ```bash
 $ jx get version
@@ -785,7 +785,7 @@ petclinic                1/1
 petclinic-jx     0.0.1        http://petclinic-jx.jx-staging.cbjx.dcanadillas.com
 ```
 
-In this output we can see also our previous `petclinic` application deployed with our previous example with "customized" Jenkins X pipeline. And our recently deployed Jenkins X application `petclinic-jx`. Some differences between them are that we needed to define deployment in the first pipeline example (non-pure Jenkins X way), but there is no versioning or promotion lifecycle. In the other hand, our last application build - just by importing it with Jenkins X - it is versioned, deployed in the right environment and with an access url. This means that the Kubernetes `service`, `deployyment` and `ingress` have been configured automatically. And it also used GitOps promotion to track and audit all versioning and promotion environment.
+In this output we can see also our previous `petclinic` application deployed with our previous example  with the "customized" Jenkins X pipeline. And our recently deployed Jenkins X application `petclinic-jx`. Some differences between them are that we needed to define deployment in the first pipeline example (non-pure Jenkins X way), but there is no versioning or promotion lifecycle. In the other hand, our last application build - just by importing it with Jenkins X - it is versioned, deployed in the right environment and with an access url. This means that the Kubernetes `service`, `deployyment` and `ingress` have been configured automatically. And it also used GitOps promotion to track and audit all versioning and promotion environment.
 
 But, the last application deployment wasn't really successful:
 
@@ -881,7 +881,7 @@ The pure Jenkins X way is about:
 - Kubernetes objects management required for pipeline execution
 - Pipeline extensions using easy pipeline definition with `jenkins-x.yml`
 
-We can confirm then that it's also a simpler and better complete experience of CI/CD pipelines than trying to deal with Tekton itself. It is a real orchestration of all resources to develop, build and promote from real cloud native environment.
+It is a simpler and more complete experience of CI/CD pipelines than trying to deal with Tekton itself. It is a real orchestration of all resources to develop, build and promote from real cloud native environment.
 
 And last, to demonstrate that all Tekton orchestration happened, let's check all components created for all our Jenkins X executions:
 
