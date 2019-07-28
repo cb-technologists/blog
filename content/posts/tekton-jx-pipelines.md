@@ -2,7 +2,7 @@
 author:
   name: "David Cañadillas"
 title: "Jenkins X Orchestration: More than Tekton on Steroids"
-date: 2019-07-20T19:39:10+01:00
+date: 2019-07-29T00:44:10+01:00
 showDate: true
 draft: false
 tags: ["jenkins x","tekton", "CI/CD pipelines"]
