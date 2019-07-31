@@ -357,5 +357,5 @@ We've presented several different ways to integrate Snyk and Jenkins using diffe
 
 Join CloudBees and Snyk at DevOps World.
 
-[![](img/jenkins-snyk/dwjw.png "DevOps World - Jenkins World")](https://www.cloudbees.com/devops-world/)
+[![](/img/jenkins-snyk/dwjw.png "DevOps World - Jenkins World")](https://www.cloudbees.com/devops-world/)
 
