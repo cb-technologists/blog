@@ -16,7 +16,7 @@ In this post, we are showing the power of Tekton as a decoupled CI/CD pipeline e
 
 ## The Tekton base
 
-Why then Tekton is a cool CI/CD engine?
+Why then is Tekton a cool CI/CD engine?
 
 First of all, Tekton is built on and for Kubernetes. This means that containers are the building blocks of any pipeline definition and execution. Kubernetes orchestrates the container's magic. One step, one container. But it's more than that:
 
@@ -302,7 +302,7 @@ spec:
       name: petclinic-deploy
 ```
 
-In the `PipelineRun` object is important to understand that is intended in the way of defining the specific running instance of a deployed pipeline. It's the right place to assign running input/output parameter values, specify `serviceAccounts` to be used, or referencing the right `PipelieResources` to be used.
+In the `PipelineRun` object it's important to understand that it is intended in the way of defining the specific running instance of a deployed pipeline. It's the right place to assign running input/output parameter values, specify `serviceAccounts` to be used, or referencing the right `PipelineResources` to be used.
 
 Once we have the YAML definitions, it's only a matter of Kubernetes deployment of the Tekton CRD objects. We can use then `kubectl` command line tool to deploy first the two YAML files with `PipelineResources`, `Tasks` and `Pipeline`:
 
@@ -947,8 +947,8 @@ Decoupling and scaling pipelines is one of the best approaches for building new 
 
 So, Tekton is demonstrating its power of decoupling CI/CD pipelines and builds to scale. But it also needs a powerful orchestrator to simplify the complexity underneath, and even more when dealing with a platform like Kubernetes, that can also add more complexity.
 
-I like to say that the best way to build and run CI/CD pipelines for modern (and also traditional, why not!) software applications is to make it simple and "abstract the abstraction". I believe Jenkins X is about that. It is about applying the simplicity of trational Jenkins pipelines from a powerful and scalable engine.
+I like to say that the best way to build and run CI/CD pipelines for modern (and also traditional, why not!) software applications is to make it simple and "abstract the abstraction". I believe Jenkins X is about that. It is about applying the simplicity of traditional Jenkins pipelines from a powerful and scalable engine.
 
-Most development companies are realizing that CI/CD next iteration is already here and that it's not only about cloud native pipelines, YAML object definintions or Kubernetes containers orchestration. It is about orchestrating all the complexity while adopting best practices. We are talking about build packs templating, simple YAML pipelines, seamless Git integration, scalable team management, flexible and standard deployments, extensible platform engine, standard packaging and promotion, etc.
+Most development companies are realizing that the next iteration of CI/CD is already here and that it's not only about cloud native pipelines, YAML object definintions or Kubernetes containers orchestration. It is about orchestrating all the complexity while adopting best practices. We are talking about build packs templating, simple YAML pipelines, seamless Git integration, scalable team management, flexible and standard deployments, extensible platform engine, standard packaging and promotion, etc.
 
 We've seen from a very basic point of view in our examples what it means to orchestrate this. And ... it is more than Tekton on steroids.
