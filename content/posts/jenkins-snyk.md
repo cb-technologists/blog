@@ -114,15 +114,18 @@ After choosing Synk Security Task, several options will need to be configured.
 
 ![configure snyk](/img/jenkins-snyk/configure-build-step-snyk.png)
 
+
 **When issues are found**
 
 * Fail on Build if severity is high, medium or low or continue regardless of vulnerability severity (We’ve chosen high).
+
 
 **Monitor project on build**
 
 * Continue monitoring project will scan the repo once a day and provide notifications outside of Jenkins.
 
 >This is a good feature if you’re not always building your project or code that isn’t changed often. Developers can continue to get access to vulnerability notifications regardless of mean lead time or deploy frequency.
+
 
 **Snyk details**
 
@@ -131,12 +134,14 @@ After choosing Synk Security Task, several options will need to be configured.
 * Organization
 * Name of the project you’re scanning (We’re using git repo name)
 
+
 **Advanced**
 
 * Snyk Install (Added in the global configuration in Step 1)
 * Snyk CLI arguments
 	* [Snyk CLI cheat sheet](https://snyk.io/blog/snyk-cli-cheat-sheet/)
 
+    
 Once the project is configured it’s time to build. Trigger or start a build 
 
 **PASS:**
