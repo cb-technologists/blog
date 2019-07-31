@@ -21,7 +21,7 @@ Many of the products getting built today contain or rely on sensitive consumer d
 
 The Equifax Breach, which resulted in an up to $700 million settlement last week, could have likely been avoidable had a mechanism existed that made mitigating security issues reliable and straightforward for developers. In this case, a lapse in process and legacy code get attributed with the blame.  
 
-Recent supply chain and typosquatting attacks against popular open-source libraries and repositories are also becoming a more significant attack vector. A simple typo or desire to stay current with the latest stable release can have a significant impact on business security and customer privacy.
+Recent supply chain and [typo squatting](https://www.techrepublic.com/article/malicious-libraries-in-package-repositories-reveal-a-fundamental-security-flaw/) attacks against popular open-source libraries and repositories are also becoming a more significant attack vector. A simple typo or desire to stay current with the latest stable release can have a significant impact on business security and customer privacy.
 
 ### Enter Snyk
 
@@ -88,7 +88,7 @@ The plugin has one additional requirement. You must configure Snyk with a global
 
 #### 2. **Add your Snyk token to Jenkins**
 
-Get your snyk token from https://app.snyk.io/account
+Get your Snyk token from https://app.snyk.io/account
 
 Add a global credential in Jenkins. Under the kind option make sure you choose Snyk API Token. (Credentials -> Global -> Add Credentials)	
 
@@ -115,20 +115,24 @@ After choosing Synk Security Task, several options will need to be configured.
 ![configure snyk](/img/jenkins-snyk/configure-build-step-snyk.png)
 
 **When issues are found**
+
 * Fail on Build if severity is high, medium or low or continue regardless of vulnerability severity (We’ve chosen high).
 
 **Monitor project on build**
+
 * Continue monitoring project will scan the repo once a day and provide notifications outside of Jenkins.
 
 >This is a good feature if you’re not always building your project or code that isn’t changed often. Developers can continue to get access to vulnerability notifications regardless of mean lead time or deploy frequency.
 
 **Snyk details**
+
 * Snyk API token
 * Target file (We’re using a requirements.txt file and assuming python)
 * Organization
 * Name of the project you’re scanning (We’re using git repo name)
 
 **Advanced**
+
 * Snyk Install (Added in the global configuration in Step 1)
 * Snyk CLI arguments
 	* [Snyk CLI cheat sheet](https://snyk.io/blog/snyk-cli-cheat-sheet/)
@@ -353,5 +357,5 @@ We've presented several different ways to integrate Snyk and Jenkins using diffe
 
 Join CloudBees and Snyk at DevOps World.
 
-![DevOps World - Jenkins World](/img/jenkins-snyk/dwjw.png)
+[![](img/jenkins-snyk/dwjw.png "DevOps World - Jenkins World")](https://www.cloudbees.com/devops-world/)
 
