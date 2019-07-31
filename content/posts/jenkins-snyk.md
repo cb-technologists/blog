@@ -349,8 +349,6 @@ The CLI wizard feature of Snyk enables developers to take action and update depe
 
 We've presented several different ways to integrate Snyk and Jenkins using different types of technology and all of it fits together well. This is exactly the type of testing that could have prevented recent data breaches. This is also the type of development self-service that actually empowers developers and security teams to take the proper mitigation steps.
 
-There isn't a good reason
-
 **Last but not Least**
 
 Join CloudBees and Snyk at DevOps World.
