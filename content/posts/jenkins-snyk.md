@@ -4,7 +4,7 @@ author:
 title: "Safety First with Jenkins and Snyk"
 date: 2019-07-31T07:00:00-00:00
 showDate: true
-draft: true
+draft: false
 tags: ["cloudbees","jenkins","snyk","security","vulnerability","infosec", "devsecops"]
 ---
 
@@ -34,7 +34,7 @@ Snyk is a SaaS offering that manages it's own vulnerability database and provide
 
 The Snyk offering focuses on 5 specific actions when encountering a vulnerability. These actions include monitoring, prevention, finding, fixing, and alerting.
 
-I chose to explore Snyk because it offers a free, open-source tier available to the public and also because it provides different ways of interacting with the service depending on your use case. Snyk has support for quite a few languages (Java, Ruby, Node, Python, Scala, Golang, .NET, and PHP) and integrates with other popular services like Github, 	Docker Hub, Slack, Jira and of course Jenkins.
+I chose to explore Snyk because it offers a free, open-source tier available to the public and also because it provides different ways of interacting with the service depending on your use case. Snyk has support for quite a few languages (Java, Ruby, Node, Python, Scala, Golang, .NET, and PHP) and integrates with other popular services like Github, Docker Hub, Slack, Jira and of course Jenkins.
 
 ### Jenkins and CloudBees CI/CD
 ![cloudbees](/img/jenkins-snyk/cloudbees-logo.png)
