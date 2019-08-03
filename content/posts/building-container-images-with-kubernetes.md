@@ -2,7 +2,7 @@
 title: Securely Building Container Images on Kubernetes
 author:
   name: "Kurt Madel"
-date: 2019-07-24T06:05:15-04:00
+date: 2019-08-03T10:05:15-04:00
 showDate: true
 tags: ["Kubernetes","CI","CD","DinD","security","kaniko","containers"]
 photo: "/img/building-container-images-with-kubernetes/secure-containers.jpg"
@@ -133,7 +133,7 @@ Kaniko is a tool that is capable of building and pushing container images withou
 
 >[**From Kaniko's docs**](https://github.com/GoogleContainerTools/kaniko#security): If you have a minimal base image (SCRATCH or similar) that doesn't require permissions to unpack, and your Dockerfile doesn't execute any commands as the root user, you can run Kaniko without root permissions. It should be noted that Docker runs as root by default, so you still require (in a sense) privileges to use Kaniko.
 
->You may be able to achieve the same default seccomp profile that Docker uses in your Pod by setting seccomp profiles with annotations on a PodSecurityPolicy to create or update security policies on your cluster. 
+>You may be able to achieve the same default seccomp profile that Docker uses in your Pod by setting `seccomp` profiles with annotations on a PodSecurityPolicy to create or update security policies on your cluster. 
 
 As we already mentioned above, running as `root` is an attack vector that many consider to be an unacceptable security hole - but the use of Pod Security Policies will reduce the attack surface of the Kaniko container running as part of a K8s Pod and provides greater security than the Docker based approaches we have already dismissed.
 
