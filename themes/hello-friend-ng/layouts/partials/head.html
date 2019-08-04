@@ -8,8 +8,8 @@
 <meta name="keywords" content="{{ .Site.Params.keywords }}" />
 <meta name="robots" content="noodp" />
 <!-- allow content from other original sites, like a private blog site -->
-{{ if or (eq .Kind "home") (eq .Kind "page")}}
-    {{ if isset .Params "canonicalUrl" }}
+{{ if or (eq .Kind "home") (eq .Kind "page") (eq .Type "posts")}}
+    {{ if .Params.canonicalUrl }}
 <link rel="canonical" href="{{ .Params.canonicalUrl}}" />
     {{ else }}
 <link rel="canonical" href="{{ .Permalink}}" />
