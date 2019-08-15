@@ -1,9 +1,9 @@
 {{ define "main" }}
     <main class="posts">
-        <h1>{{ .Title }}</h1>
+        <h2>{{ .Title }}</h2>
 
-        {{- if .Content }}
-            <div class="content">{{ .Content }}</div>
+        {{- if .Description }}
+            <div class="content">{{ if .Params.photo }}<figure class="series-photo"><img src="{{ .Params.photo }}" /><figcaption>{{ .Params.photoCaption | safeHTML }}</figcaption></figure>{{ end }}<div class="series-desc">{{ .Description }}</div></div>
         {{- end }}
 
         {{- range .Data.Pages.GroupByDate "2006" }}

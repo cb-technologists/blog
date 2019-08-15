@@ -30,3 +30,7 @@ enableAuthor = true
     identifier = "blog"
     name       = "Blog"
     url        = "/posts"
+
+[taxonomies]
+  tags = "tags"
+  series = "series"

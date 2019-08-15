@@ -3,7 +3,7 @@
   max-width: 800px;
   text-align: left;
   padding: 20px;
-  margin: 20px auto;
+  margin: 0px auto;
 
   @media #{$media-size-tablet} {
     max-width: 600px;
@@ -56,7 +56,7 @@
   }
 
   &-info {
-    margin-top: 30px;
+    margin-top: 10px;
     font-size: .8rem;
     line-height: normal;
     @include dimmed;
@@ -190,19 +190,10 @@
   }
 }
 
-.series-photo {
-  float: right;
-  width: 220px;
-  figcaption {
-    font-size: 50%;
-    font-style: italic;
-    line-height: 120%;
-  }
-}
-
 article .series-photo {
   width: 320px;
   padding-left: 10px;
+  float: right;
   figcaption {
     font-size: 75%;
     line-height: 150%;

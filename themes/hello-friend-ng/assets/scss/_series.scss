@@ -1,0 +1,24 @@
+.subtitle.series a {
+    padding-right: 20px;
+}
+
+main.posts {
+    .series-photo {
+        width: 1600px;
+        figcaption {
+        font-size: 70%;
+        font-style: italic;
+        line-height: 120%;
+        }
+  }
+  figure {
+      margin: 0 10px;
+  }
+  .content {
+    flex-direction: row-reverse;
+    flex: 1 auto;
+    align-items: start;
+    justify-content: center;
+    margin: 30px 0;
+  }
+}
