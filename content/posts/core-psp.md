@@ -27,7 +27,7 @@ Although you can certainly install Core v2 on Kubernetes with RBAC enabled - the
 CloudBees recommends that you create a `namespace` specifically for Core v2 as part of the install. Additionally, CloudBees recommends establishing boundaries between your CloudBees Jenkins masters and agent workloads.
 
 ### Create and Define Cluster Network Policies
-Although CloudBees doesn't go as far as to specify Kubernetes Network Policies, CloudBees does recommend using them.
+Although CloudBees doesn't provide specific Kubernetes Network Policies, CloudBees does recommend using them.
 
 ### Run a Cluster-wide Pod Security Policy
 This is one component that is not a currently documented as part of the installation guides or best practice documentation for Core v2 and will be the focus of the rest of this post.
