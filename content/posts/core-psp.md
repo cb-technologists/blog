@@ -30,7 +30,7 @@ CloudBees recommends that you create a `namespace` specifically for Core v2 as p
 Although CloudBees doesn't provide specific Kubernetes Network Policies, CloudBees does recommend using them.
 
 ### Run a Cluster-wide Pod Security Policy
-This is one component that is not a currently documented as part of the installation guides or best practice documentation for Core v2 and will be the focus of the rest of this post.
+This is one component that is not a currently documented as part of the CloudBees installation guides for Core v2 on Kubernetes and will be the focus of the rest of this post.
 
 ## Why should you use Pod Security Policies?
 From the Kubernetes documentation on Pod Security Policies, "Pod security policy control is implemented as an optional (**but recommended**) [admission controller](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#podsecuritypolicy)." If you read any number of posts on security best practices for Kubernetes, pretty much all of them will mentions PSPs.
