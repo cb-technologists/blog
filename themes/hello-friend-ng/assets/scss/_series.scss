@@ -3,16 +3,19 @@
 }
 
 main.posts {
-    .series-photo {
-        width: 1600px;
-        figcaption {
-        font-size: 70%;
-        font-style: italic;
-        line-height: 120%;
-        }
+  .series-photo {
+    figcaption {
+      font-size: 70%;
+      font-style: italic;
+      line-height: 120%;
+    }
+    img {
+      max-width: 340px;
+    }
   }
   figure {
       margin: 0 10px;
+      float: right;
   }
   .content {
     flex-direction: row-reverse;

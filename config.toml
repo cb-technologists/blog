@@ -23,13 +23,20 @@ enableAuthor = true
 # And you can even create generic menu
 [menu]
   [[menu.main]]
-    identifier = "about"
-    name       = "About"
-    url        = "/about"
-  [[menu.main]]
     identifier = "blog"
     name       = "Blog"
     url        = "/posts"
+    weight     = 100
+  [[menu.main]]
+    identifier = "about"
+    name       = "About"
+    url        = "/about"
+    weight     = 300
+  [[menu.main]]
+    identifier = "series"
+    name       = "Series"
+    url        = "/series"
+    weight     = 200
 
 [taxonomies]
   tags = "tags"

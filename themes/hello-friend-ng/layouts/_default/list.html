@@ -17,6 +17,7 @@
                                 <span class="post-title">{{.Title}}</span>
                                 <span class="post-day">{{ if .Site.Params.dateformShort }}{{ .Date.Format .Site.Params.dateformShort }}{{ else }}{{ .Date.Format "Jan 2"}}{{ end }}</span>
                             </a>
+                            {{ if .Params.series }}<div class="series-title"><a href="{{ "series/" | relURL }}{{ index .Params.series 0 | urlize }}">{{ index .Params.series 0 }}</a> {{ if .Params.part }} Part {{.Params.part}}{{ end }}</div>{{ end }}
                         </li>
                     {{- end }}
                 </ul>
