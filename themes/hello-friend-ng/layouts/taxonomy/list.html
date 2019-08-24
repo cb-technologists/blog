@@ -1,0 +1,25 @@
+{{ define "main" }}
+    <main class="posts">
+        <h2>{{ .Title }}</h2>
+
+        {{- if .Description }}
+            <div class="content"><div>{{ if .Params.photo }}<figure class="series-photo"><img src="{{ .Params.photo }}" /><figcaption>{{ .Params.photoCaption | safeHTML }}</figcaption></figure>{{ end }}<div class="series-desc">{{ .Description | markdownify }}</div></div></div>
+        {{- end }}
+
+        {{- range .Data.Pages.GroupByDate "2006" }}
+            <div class="posts-group">
+                    {{- range .Pages }}
+                    {{ if .Params.part }} <div class="post-year">Part {{.Params.part}}</div>{{ end }}
+                    <ul class="posts-list">
+                        <li class="post-item">
+                            <a href="{{.Permalink}}">
+                                <span class="post-title">{{.Title}}</span>
+                                <span class="post-day">{{ if .Site.Params.dateformShort }}{{ .Date.Format .Site.Params.dateformShort }}{{ else }}{{ .Date.Format "Jan 2"}}{{ end }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                    {{- end }}
+            </div>
+        {{- end }}
+    </main>
+{{ end }}
