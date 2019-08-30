@@ -15,7 +15,7 @@ draft: false
 ## What are Pod Security Policies?
 Although [Kubernetes Pod Security Policies](https://kubernetes.io/docs/concepts/policy/pod-security-policy/) are still a **beta** feature of Kubernetes they are an important security feature that should not be overlooked. Pod Security Policies (PSPs) are built-in Kubernetes resources that allow you to enforce security related properties of every container in your cluster. If a container in a pod does not meet the criteria for an applicable PSP then it will not be scheduled to run.
 
-## OOTB and Documented Security Best Practices for CloudBees Core v2 on Kubernetes
+## Best Practices for CloudBees Core v2 on Kubernetes
 There are [numerous articles](https://rancher.com/blog/2019/2019-01-17-101-more-kubernetes-security-best-practices/) [on security best practices](https://www.twistlock.com/2019/06/06/5-kubernetes-security-best-practices/) for Kubernetes (to include [this one published on the CNCF blog site](https://www.cncf.io/blog/2019/01/14/9-kubernetes-security-best-practices-everyone-must-follow/)). Many of these articles include similar best practices and most, if not all, apply to running Core v2 on Kubernetes. Some of these best practices are inherent in CloudBees' documented install of Core v2 on Kubernetes, while others are documented best practices and are recommended next steps after your initial Core v2 installation. 
 
 Before we take a look at the best practices that aren't necessarily covered by the CloudBees reference architectures and best practice documentation, I will provide a quick overview of what is already available with an OOTB Core v2 install and highlight some CloudBees documentation that speaks to other best practices for running Core v2 on Kubernetes more securely.
@@ -32,7 +32,7 @@ Although CloudBees doesn't provide specific Kubernetes Network Policies, CloudBe
 ### Run a Cluster-wide Pod Security Policy
 At the time of this post, this is one component that is not documented as part of the CloudBees installation guides for Core v2 on Kubernetes and will be the focus of the rest of this post.
 
-## Why should you use Pod Security Policies?
+## [Why should you use Pod Security Policies?](/posts/build-continaer-images/)
 From the Kubernetes documentation on Pod Security Policies (PSPs): "Pod security policy control is implemented as an optional (**but recommended**) [admission controller](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#podsecuritypolicy)." If you read any number of posts on security best practices for Kubernetes, pretty much all of them will mentions PSPs.
 
 A CD platform, like CloudBees Core v2 on Kubernetes, is typically a multi-tenant service where security is of the utmost importance. In addition to multi-tenancy, when running CD workloads on a platform like Kubernetes there are typically other workloads deployed and if any workload does not have proper security configured it can impact all of the workloads running on the cluster.
@@ -59,6 +59,7 @@ metadata:
     seccomp.security.alpha.kubernetes.io/defaultProfileName:  'docker/default'
     apparmor.security.beta.kubernetes.io/defaultProfileName:  'runtime/default'
 spec:
+  # prevents container from manipulating the network stack, accessing devices on the hose and prevents ability to run DinD
   privileged: false
   fsGroup:
     rule: 'MustRunAs'
@@ -69,23 +70,26 @@ spec:
   runAsUser:
     rule: 'MustRunAs'
     ranges:
-      # Forbid adding the root group.
+      # Don't allow containers to run as ROOT
       - min: 1
         max: 65535
   seLinux:
     rule: RunAsAny
   supplementalGroups:
     rule: RunAsAny
+  # Allow core volume types. But more specifically, don't allow mounting host volumes to include the Docker socket - '/var/run/docker.sock'
   volumes:
   - 'emptyDir'
   - 'secret'
   - 'downwardAPI'
   - 'configMap'
+  # persistentVolumes are required for CJOC and Managed Master StatefulSets
   - 'persistentVolumeClaim'
   - 'projected'
   hostPID: false
   hostIPC: false
   hostNetwork: false
+  # Ensures that no child process of a container can gain more privileges than its parent
   allowPrivilegeEscalation: false
 ```
 
