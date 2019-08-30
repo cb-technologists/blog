@@ -151,6 +151,7 @@ subjects:
 ```
 
 The default Core v2 install for Kubernetes creates two `ServiceAccounts`: 
+
 1. **cjoc** for provisioning Managed Masters on your Kubernetes cluster from CJOC.
 2. **jenkins** for provisioning ephemeral Kubernetes `pod` based agents from Managed Masters.
 
