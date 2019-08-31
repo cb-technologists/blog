@@ -41,3 +41,4 @@ enableAuthor = true
 [taxonomies]
   tags = "tags"
   series = "series"
+  authors = "authors"

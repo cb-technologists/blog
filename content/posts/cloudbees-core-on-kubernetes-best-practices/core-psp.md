@@ -2,8 +2,8 @@
 title: Using Kubernetes Pod Security Policies with CloudBees Core
 series: ["CloudBees Core on Kubernetes Best Practices"]
 part: 1
-author:
-  name: "Kurt Madel"
+authors:
+  - "Kurt Madel"
 date: 2019-08-30T05:05:15-04:00
 showDate: true
 tags: ["Kubernetes","CI","CD","Core v2","security","Pod Security Policies"]
