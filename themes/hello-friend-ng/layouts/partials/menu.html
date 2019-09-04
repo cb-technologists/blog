@@ -2,7 +2,11 @@
     <ul class="menu__inner">
         {{- $currentPage := . -}}
         {{ range .Site.Menus.main -}}
-            <li><a href="{{ .URL | absLangURL }}">{{ .Name }}</a></li>
+            {{ $active := or ($currentPage.IsMenuCurrent "nav" .) ($currentPage.HasMenuCurrent "nav" .) }}
+            {{ $active = or $active (eq .Name $currentPage.Title) }}
+            {{ $active = or $active (and (eq .Name "Blog") (eq $currentPage.Section "posts")) }}
+            {{ $active = or $active (and (eq .Name "Series") (eq $currentPage.Section "series")) }}
+            <li class='menu-item{{ if $active }}-active{{ end }}'><a href="{{ .URL | absLangURL }}">{{ .Name }}</a></li>
         {{- end }}
     </ul>
 </nav>

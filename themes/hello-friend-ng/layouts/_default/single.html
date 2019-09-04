@@ -12,6 +12,7 @@
         </div>
 
         <article>
+            {{ if .Params.series }}<h3 class="subtitle"><a href="{{ "series/" | relURL }}{{ index .Params.series 0 | urlize }}">{{ index .Params.series 0 }}</a> {{ if .Params.part }} Part {{.Params.part}}{{ end }}</h3>{{ end }}
             <h2 class="post-title"><a href="{{ .Permalink }}">{{ .Title | markdownify }}</a></h2>
 
             {{- if .Params.toc }}
