@@ -1,9 +1,9 @@
 {{ define "main" }}
   <main class="posts authors">
     <h1>Authors</h1>
-    <ul>
+    <ul class="posts-list">
     {{ range .Data.Pages }}
-      <li><a href="{{ .Permalink }}">{{ .Params.name }}</a></li>
+      <li class="post-item"><a href="{{ .Permalink }}"><span class="author-name">{{ .Params.name }}</span></a></li>
     {{ end }}
     </ul>
   </main>

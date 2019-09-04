@@ -1,6 +1,6 @@
 ---
-author:
-  name: "Casey Vega"
+authors:
+  - "Casey Vega"
 title: "Safety First with Jenkins and Snyk"
 date: 2019-07-31T07:00:00-00:00
 showDate: true

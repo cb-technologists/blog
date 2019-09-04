@@ -31,12 +31,17 @@ enableAuthor = true
     identifier = "about"
     name       = "About"
     url        = "/about"
-    weight     = 300
+    weight     = 400
   [[menu.main]]
     identifier = "series"
     name       = "Series"
     url        = "/series"
     weight     = 200
+  [[menu.main]]
+    identifier = "authors"
+    name       = "Authors"
+    url        = "/authors"
+    weight     = 300
 
 [taxonomies]
   tags = "tags"

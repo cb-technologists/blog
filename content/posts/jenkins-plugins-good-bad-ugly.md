@@ -1,6 +1,6 @@
 ---
-author:
-  name: "Kurt Madel"
+authors:
+  - "Kurt Madel"
 title: "Jenkins Plugins: The Good, the Bad and the Ugly"
 date: 2019-05-30T05:50:46-04:00
 showDate: true

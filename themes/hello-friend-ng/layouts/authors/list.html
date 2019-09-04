@@ -1,7 +1,14 @@
 {{ define "main" }}
   <main class="posts authors">
-    <h1>{{ .Params.name }}</h1>
-    <h2>Bio</h2>
+    <div class="name-social">
+      {{- with .Params.social }}
+        <div class="social">
+            {{ partial "social-icons.html" . }}
+        </div>
+      {{- end }}
+      <div class="name"><h1>{{ .Params.name }}</h1></div>
+    </div>
+    <h2 class="bio-title">Bio</h2>
     <div class="content"><div>{{ if .Params.photo }}<div class="photo"><img src="{{ .Params.photo }}"  alt="{{ .Params.name }}"/></div>{{ end }}<div>{{ .Content  | markdownify }}</div></div></div>
     {{ with .Params.twitter }}
       <p>
@@ -12,9 +19,9 @@
     {{ end }}
 
     <h2>Articles</h2>
-    <ul>
+    <ul class="posts-list">
     {{ range .Data.Pages }}
-        <li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
+        <li class="post-item"><a href="{{ .Permalink }}">{{ .Title }}</a></li>
     {{ end }}
     </ul>
   </main>
