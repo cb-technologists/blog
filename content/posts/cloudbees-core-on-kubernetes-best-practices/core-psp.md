@@ -4,7 +4,7 @@ series: ["CloudBees Core on Kubernetes Best Practices"]
 part: 1
 author:
   name: "Kurt Madel"
-date: 2019-08-30T05:05:15-04:00
+date: 2019-09-04T05:05:15-04:00
 showDate: true
 tags: ["Kubernetes","CI","CD","Core v2","security","Pod Security Policies"]
 photo: "/posts/cloudbees-core-on-kubernetes-best-practices/bank.jpg"
@@ -40,9 +40,9 @@ A CD platform, like CloudBees Core v2 on Kubernetes, is typically a multi-tenant
 The combination of PSPs with Kubernetes RBAC, namespaces and workload specific node pools allows for the granular security you need to ensure there are adequate safeguards in place to greatly reduce the risk of unintentional (and intentional) actions that breaks your cluster. PSPs provide additional safeguards along with targeted node pools, namespaces and service accounts. This allows for the flexibility needed by CI/CD users while providing adequate guard rails so they don't negatively impact CD workloads or other important Kubernetes workloads by doing something stupid - accidental or otherwise.
 
 ## Using Pod Security Policies with CloudBees Core v2
-As mentioned above, Pod Security Polices are an optional Kubernetes feature (and still beta) so they are not enabled by default on most Kubernetes distributions - to include GCP GKE, AWS EKS and Azure AKS. PSPs can be created and applied to a `ClusterRole` or a `Role` resource definition without enabling the PodSecurityPolicy admission controller. This is very important, because **once you enable the PodSecurityPolicy admission controller any `pod` that does not have a PSP applied to it will not get scheduled**.
+As mentioned above, Pod Security Polices are an optional Kubernetes feature (and still beta) so they are not enabled by default on most Kubernetes distributions - to include GCP GKE, and Azure AKS. PSPs can be created and applied to a `ClusterRole` or a `Role` resource definition without enabling the PodSecurityPolicy admission controller. This is very important, because **once you enable the PodSecurityPolicy admission controller any `pod` that does not have a PSP applied to it will not get scheduled**.
 
-CloudBees defines two Kubernetes `Roles` for the Core v2 install on Kubernetes, `master-management` bound to the `cjoc` `ServiceAccount` for provisioning CJOC and Managed/Team Masters, and `pods-all` bound to the `jenkins` `ServiceAccount` for scheduling dynamic ephemeral agent pods.
+>NOTE: PSPs are enabled by default on AWS EKS 1.13 and above, but with a very permissive PSP that is the same as running EKS without PSPs.
 
 We will define two PSPs for our Core v2 cluster:
 
@@ -59,7 +59,7 @@ metadata:
     seccomp.security.alpha.kubernetes.io/defaultProfileName:  'docker/default'
     apparmor.security.beta.kubernetes.io/defaultProfileName:  'runtime/default'
 spec:
-  # prevents container from manipulating the network stack, accessing devices on the hose and prevents ability to run DinD
+  # prevents container from manipulating the network stack, accessing devices on the host and prevents ability to run DinD
   privileged: false
   fsGroup:
     rule: 'MustRunAs'
@@ -93,6 +93,35 @@ spec:
   allowPrivilegeEscalation: false
 ```
 
+Once the primary Core v2 PSP (`cb-restricted` in this case) has been created you must update the `Roles` to use it. CloudBees defines two Kubernetes `Roles` for the Core v2 install on Kubernetes, `cjoc-master-management` bound to the `cjoc` `ServiceAccount` for [provisioning Managed/Team Masters `StatefulSets` from CJOC](https://go.cloudbees.com/docs/cloudbees-core/cloud-reference-architecture/ra-for-gke/#_master_provisioning), and `cjoc-agents` bound to the `jenkins` `ServiceAccount` for scheduling dynamic ephemeral agent pods from Managed/Team Masters. The following Kubernetes configuration snippets show how this is configured:
+
+```yaml
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cjoc-master-management
+rules:
+- apiGroups: ['extensions']
+  resources: ['podsecuritypolicies']
+  verbs:     ['use']
+  resourceNames:
+  - cb-restricted
+...
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: cjoc-agents
+rules:
+- apiGroups: ['extensions']
+  resources: ['podsecuritypolicies']
+  verbs:     ['use']
+  resourceNames:
+  - cb-restricted
+...
+```
+
 - The second PSP will be almost identical except for `RunAsUser` will be set to `RunAsAny` to allow running as `root` - this is specifically to run Kaniko containers ([read more about building containers as securely as possible with Kaniko](https://kurtmadel.com/posts/native-kubernetes-continuous-delivery/building-container-images-with-kubernetes/)), but there may be some other uses cases that require containers to run as `root`:
 
 ```
@@ -100,7 +129,7 @@ spec:
     rule: 'RunAsAny'
 ```
 
-The example cluster used for this post relies on two Kubernetes services for running Core v2: **cert-manager** for TLS and **ingress-nginx** for, well, ingress. If these are installed before you enable PSPs on your cluster then the `pods` associated with them will be stopped if the associated `Roles`/`ClusterRoles` don't have PSPs applied to them. Both services are deployed to their own namespaces so an easy way to ensure that all `ServiceAccounts` associated with those services have a PSP applied is to create a `ClusterRole` with the PSP  and then bind that `ClusterRole` to all `ServiceAccounts` in the applicable `namespace`:
+The cluster used as an example for this post relies on two Kubernetes services for running Core v2: **cert-manager** for TLS and **ingress-nginx** for, well, ingress. If these are installed before you enable PSPs on your cluster then the `pods` associated with them will be stopped if the associated `Roles`/`ClusterRoles` don't have PSPs applied to them. Both services are deployed to their own namespaces so an easy way to ensure that all `ServiceAccounts` associated with those services have a PSP applied is to create a `ClusterRole` with the PSP  and then bind that `ClusterRole` to all `ServiceAccounts` in the applicable `namespace`:
 
 *`ClusterRole` with the cb-restricted PSP applied*
 ```yaml
@@ -148,38 +177,6 @@ subjects:
 - apiGroup: rbac.authorization.k8s.io
   kind: Group
   name: system:serviceaccounts
-```
-
-The default Core v2 install for Kubernetes creates two `ServiceAccounts`: 
-
-1. **cjoc** for provisioning Managed Masters on your Kubernetes cluster from CJOC.
-2. **jenkins** for provisioning ephemeral Kubernetes `pod` based agents from Managed Masters.
-
-You will need to apply the **cb-restricted** PSP to the `Roles` that are bound to those `ServiceAccounts`:
-```yaml
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  name: master-management
-rules:
-- apiGroups: ['extensions']
-  resources: ['podsecuritypolicies']
-  verbs:     ['use']
-  resourceNames:
-  - cb-restricted
-...
----
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  name: pods-all
-rules:
-- apiGroups: ['extensions']
-  resources: ['podsecuritypolicies']
-  verbs:     ['use']
-  resourceNames:
-  - cb-restricted
-...
 ```
 
 >NOTE: You can use this command `kubectl get role,clusterrole --all-namespaces` to check your cluster for any other `Roles` or `ClusterRoles` that need to have a PSP applied to them. Remember, any `pod` that is running under a `ServiceAccount` that doesn't have a PSP will be shut down as soon as you enable the Pod Security Policy Admission Controller. For GKE you don't need to apply PSPs to any `Roles` in the `kube-system` `namespace` or any **gce** or **system** `ClusterRoles` as GKE will automatically apply the necessary PSPs.
