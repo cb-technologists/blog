@@ -54,7 +54,8 @@
         <hr />
 
         <div class="post-info">
-            {{ if (and (.Author) (.Params.Author)) }}
+            {{ if .Params.authors }}
+                {{- range $index, $element := .Params.authors }}
                 <p><svg
                     width="24"
                     height="24"
@@ -71,7 +72,8 @@
                     <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
                     <path d="M2 2l7.586 7.586" />
                     <circle cx="11" cy="11" r="2" />
-                  </svg> {{ .Params.author.name }}</p>
+                  </svg><a href="/authors/{{ urlize . }}">{{ . }}</a></p>
+                  {{ end }}
             {{- end }}
             {{- with .Params.tags }}
                 <p>
