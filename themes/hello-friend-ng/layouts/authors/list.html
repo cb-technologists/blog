@@ -8,15 +8,22 @@
       {{- end }}
       <div class="name"><h1>{{ .Params.name }}</h1></div>
     </div>
+    {{ if .Content }}
     <h2 class="bio-title">Bio</h2>
-    <div class="content"><div>{{ if .Params.photo }}<div class="photo"><img src="{{ .Params.photo }}"  alt="{{ .Params.name }}"/></div>{{ end }}<div>{{ .Content  | markdownify }}</div></div></div>
-    {{ with .Params.twitter }}
-      <p>
-        <a href="https://twitter.com/{{ substr . 1 }}">
-          Follow {{ $.Params.name }} on Twitter
-        </a>
-      </p>
-    {{ end }}
+    {{- end }}
+    {{ if or .Params.photo .Content }}
+    <div class="content">
+      <div>
+        {{ if .Params.photo }}
+        <div class="photo"><img src="{{ .Params.photo }}"  alt="{{ .Params.name }}"/></div>
+        {{ end }}
+        {{ if .Content }}
+        <div>{{ .Content  | markdownify }}</div>
+        {{- end }}
+      </div>
+    </div>
+    {{- end }}
+    
 
     <h2>Articles</h2>
     <ul class="posts-list">

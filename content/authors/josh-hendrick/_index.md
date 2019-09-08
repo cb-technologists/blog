@@ -4,4 +4,3 @@ social:
   - name: email
     url:  "mailto: jhendrick@cloudbees.com"
 ---
-Bio goes here.
