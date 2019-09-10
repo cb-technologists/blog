@@ -1,12 +1,12 @@
 ---
-title: Using Kubernetes Pod Security Policies with CloudBees Core
-series: ["CloudBees Core on Kubernetes Best Practices"]
+title: Using Kubernetes Pod Security Policies with CloudBees Core - Jenkins
+series: ["Best Practices for CloudBees Core (Jenkins) on Kubernetes"]
 part: 1
 authors:
   - "Kurt Madel"
 date: 2019-09-04T05:05:15-04:00
 showDate: true
-tags: ["Kubernetes","CI","CD","Core v2","security","Pod Security Policies"]
+tags: ["Kubernetes","CI","CD","Core v2","security","Pod Security Policies","Jenkins"]
 photo: "/posts/cloudbees-core-on-kubernetes-best-practices/bank.jpg"
 photoCaption: "Wells Fargo Bank, Market Street, San Francisco, CA<br>Photograph by Kurt Madel ©2019"
 exif: "SONY RX-100 ISO 125 10.4mm ƒ/2.2 1/100"
