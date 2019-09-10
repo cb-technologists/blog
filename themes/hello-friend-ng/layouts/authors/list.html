@@ -1,0 +1,35 @@
+{{ define "main" }}
+  <main class="posts authors">
+    <div class="name-social">
+      {{- with .Params.social }}
+        <div class="social">
+            {{ partial "social-icons.html" . }}
+        </div>
+      {{- end }}
+      <div class="name"><h1>{{ .Params.name }}</h1></div>
+    </div>
+    {{ if .Content }}
+    <h2 class="bio-title">Bio</h2>
+    {{- end }}
+    {{ if or .Params.photo .Content }}
+    <div class="content">
+      <div>
+        {{ if .Params.photo }}
+        <div class="photo"><img src="{{ .Params.photo }}"  alt="{{ .Params.name }}"/></div>
+        {{ end }}
+        {{ if .Content }}
+        <div>{{ .Content  | markdownify }}</div>
+        {{- end }}
+      </div>
+    </div>
+    {{- end }}
+    
+
+    <h2>Articles</h2>
+    <ul class="posts-list">
+    {{ range .Data.Pages }}
+        <li class="post-item"><a href="{{ .Permalink }}">{{ .Title }}</a></li>
+    {{ end }}
+    </ul>
+  </main>
+{{ end }}

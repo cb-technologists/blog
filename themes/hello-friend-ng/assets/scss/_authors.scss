@@ -1,0 +1,42 @@
+main.authors {
+    span.author-name {
+        font-size: 120%;
+    }
+    .name-social {
+      flex-direction: row-reverse;
+      flex: 1 auto;
+      align-items: start;
+      justify-content: center;
+      margin: 30px 0;
+      div.social {
+        float: right;
+        text-align: center;
+        vertical-align: middle;
+        padding-top: 15px;
+      }
+    }
+    h2.bio-title {
+        clear: both;
+    }
+    .photo {
+      figcaption {
+        font-size: 70%;
+        font-style: italic;
+        line-height: 120%;
+      }
+      img {
+        max-width: 340px;
+      }
+    }
+    div.photo {
+        margin: 0 10px;
+        float: right;
+    }
+    .content {
+      flex-direction: row-reverse;
+      flex: 1 auto;
+      align-items: start;
+      justify-content: center;
+      margin: 30px 0;
+    }
+  }

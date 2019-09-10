@@ -1,6 +1,6 @@
 ---
-author:
-  name: "Kurt Madel"
+authors:
+  - "Kurt Madel"
 title: "CloudBees' Cross Team Collaboration for Asynchronous DevSecOps"
 date: 2019-06-10T07:50:46-04:00
 showDate: true

@@ -1,6 +1,6 @@
 ---
-author:
-  name: "Logan Donley"
+authors:
+  - "Logan Donley"
 title: "Introduction to GitOps - Part 1"
 date: 2019-07-16T15:00:00-04:00
 showDate: true

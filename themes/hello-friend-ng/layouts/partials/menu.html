@@ -6,6 +6,7 @@
             {{ $active = or $active (eq .Name $currentPage.Title) }}
             {{ $active = or $active (and (eq .Name "Blog") (eq $currentPage.Section "posts")) }}
             {{ $active = or $active (and (eq .Name "Series") (eq $currentPage.Section "series")) }}
+            {{ $active = or $active (and (eq .Name "Authors") (eq $currentPage.Section "authors")) }}
             <li class='menu-item{{ if $active }}-active{{ end }}'><a href="{{ .URL | absLangURL }}">{{ .Name }}</a></li>
         {{- end }}
     </ul>

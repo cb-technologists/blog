@@ -1,6 +1,6 @@
 ---
-author:
-  name: "Josh Hendrick"
+authors:
+  - "Josh Hendrick"
 title: "Extending Jenkins X for Traditional Deployments with CloudBees Flow"
 date: 2019-05-29T12:47:46-04:00
 showDate: true

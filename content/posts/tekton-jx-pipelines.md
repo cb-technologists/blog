@@ -1,6 +1,6 @@
 ---
-author:
-  name: "David Cañadillas"
+authors:
+  - "David Cañadillas"
 title: "Jenkins X Orchestration: More than Tekton on Steroids"
 date: 2019-07-28T23:44:10+01:00
 showDate: true

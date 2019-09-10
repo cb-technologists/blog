@@ -1,6 +1,6 @@
 ---
-author:
-  name: "Matt Elgin"
+authors:
+  - "Matt Elgin"
 title: "Self-Updating Jenkins: GitOps for Jenkins Configuration"
 date: 2019-07-03T17:00:00-04:00
 showDate: true
