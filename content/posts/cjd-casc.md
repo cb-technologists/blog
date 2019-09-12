@@ -12,6 +12,9 @@ In this blog post, we'll walk through creating a self-updating instance of the [
 
 We'll deploy the CJD master as a `StatefulSet` in a Kubernetes cluster, configure the master using the [Jenkins Configuration as Code plugin](https://github.com/jenkinsci/configuration-as-code-plugin), and set up a TLS certificate through [cert-manager](https://github.com/jetstack/cert-manager). Finally, we'll seed a Pipeline job that updates the master upon commit to the [Git repository](https://github.com/cb-technologists/cjd-casc) that contains the configuration - enabling GitOps for Jenkins itself.
 
+| UPD (Sep 12, 2019): Jenkins Configuration as Code plugin is now supported in [CloudBees Jenkins Distribution](https://www.cloudbees.com/products/cloudbees-jenkins-distribution) and [CloudBees Jenkins Support](https://www.cloudbees.com/products/cloudbees-jenkins-support). See [Administering CJD: Configuration as Code](https://go.cloudbees.com/docs/cloudbees-jenkins-distribution/distro-admin-guide/configuration-as-code/) for usage guidelines and quick start. You can also find an official demo [here](https://github.com/cloudbees-oss/cjd-jcasc-demo). For information about other CloudBees products, please see [this page](https://support.cloudbees.com/hc/en-us/articles/360031191471-State-of-Jenkins-Configuration-as-Code-JCasC-support-in-CloudBees-products). |
+| --- |
+
 ## Deploying CloudBees Jenkins Distribution in Kubernetes
 First, we'll need to deploy a Jenkins instance into a Kubernetes cluster. In this case, we'll use [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/) to deploy a containerized version of CJD. To provision a cluster, we'll follow the Google Cloud documentation [here](https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-cluster). (**Note:** this blog post assumes prior installation of and basic familiarity with using `kubectl` to interact with a Kubernetes cluster.)
 

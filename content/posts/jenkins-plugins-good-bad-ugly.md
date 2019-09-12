@@ -76,6 +76,9 @@ Yes, only two plugins. The reason why we only need these two plugins is because 
 
 This version of the Credentials plugin is an exception, because the recent version of the plugin with JCasC support has not been integrated into CAP yet (coming soon!).
 
+| UPD (Sep 12, 2019): Jenkins Configuration as Code plugin is now supported in [CloudBees Jenkins Distribution](https://www.cloudbees.com/products/cloudbees-jenkins-distribution) and [CloudBees Jenkins Support](https://www.cloudbees.com/products/cloudbees-jenkins-support). See the [Administering CJD: Configuration as Code](https://go.cloudbees.com/docs/cloudbees-jenkins-distribution/distro-admin-guide/configuration-as-code/) for usage guidelines and quick start. You can also find an official demo [here](https://github.com/cloudbees-oss/cjd-jcasc-demo). For information about other CloudBees products, please see [this page](https://support.cloudbees.com/hc/en-us/articles/360031191471-State-of-Jenkins-Configuration-as-Code-JCasC-support-in-CloudBees-products). |
+| --- |
+
 *Extending the CloudBees Jenkins Distribution container image with plugins and JCasC*
 ```Dockerfile
 FROM cloudbees/cloudbees-jenkins-distribution:2.164.3.2
