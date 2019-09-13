@@ -271,8 +271,10 @@ Router r = new OperationsCenterRouter();
         config.onLoaded();
 ```
 
-I'm also a big fan of the Jenkins Config-as-Code plugin. However, currently, the CloudBees' plugins for Cross Team Collaboration do not yet support [JCasC](https://github.com/jenkinsci/configuration-as-code-plugin) (but support for JCasC is coming soon).
+I'm also a big fan of the Jenkins Config-as-Code plugin. However, currently, the CloudBees' plugins for Cross Team Collaboration do not yet support [JCasC](https://github.com/jenkinsci/configuration-as-code-plugin).
 
+| UPD (Sep 12, 2019): Jenkins Configuration as Code plugin is now supported in [CloudBees Jenkins Distribution](https://www.cloudbees.com/products/cloudbees-jenkins-distribution) and [CloudBees Jenkins Support](https://www.cloudbees.com/products/cloudbees-jenkins-support). Support for CloudBees Core and Cross Team Collaboration is coming soon. For information about the current support status, please see [this page](https://support.cloudbees.com/hc/en-us/articles/360031191471-State-of-Jenkins-Configuration-as-Code-JCasC-support-in-CloudBees-products). |
+| --- |
 
 ## Add DevSecOps to Your CD with CloudBees Now
 So there's really no excuse NOT to add asynchronous container security scans to your container image CD pipelines with CloudBees Core v2, our Cross Team Collaboration feature and the Anchore **inline scan** - when it is as easy as this!
