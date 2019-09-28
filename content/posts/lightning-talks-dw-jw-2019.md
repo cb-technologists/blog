@@ -1,6 +1,6 @@
 ---
-author:
-  name: "Kurt Madel"
+authors:
+  - "Kurt Madel"
 title: "Technologists Lightning Talks for DevOps World | Jenkins World 2019 San Francisco"
 date: 2019-07-27T10:50:46-04:00
 showDate: true
