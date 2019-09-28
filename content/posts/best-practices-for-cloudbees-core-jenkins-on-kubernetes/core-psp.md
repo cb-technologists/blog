@@ -137,7 +137,7 @@ CloudBees recommends the [ingress-nginx](https://github.com/kubernetes/ingress-n
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/docs/examples/psp/psp.yaml
 ```
 
-The above command will create the following PSP, `Role` and `RoleBinding` with the primary difference from the `cb-restricted` PSP being the :
+The above command will create the following PSP, `Role` and `RoleBinding` with the primary differences from the `cb-restricted` PSP being the addition of the `NET_BIND_SERVICE` as an `allowedCapabilities` and allowing `hostPorts` of **80** to 65535:
 
 ```yaml
 apiVersion: policy/v1beta1
@@ -218,11 +218,11 @@ subjects:
   name: nginx-ingress-serviceaccount
 ```
 
->NOTE: You can also run that command after you have already installed the NGINX Ingress controller but PSP will only be applied after restarting or recreating the ingress-nginx `Deployment`.
+>NOTE: You can also run that command after you have already installed the NGINX Ingress controller but the PSP will only be applied after restarting or recreating the ingress-nginx `Deployment`.
 
 ### Pod Security Policies for Other Services
 
-The cluster used as an example for this post relies on the [**cert-manager**](https://github.com/jetstack/cert-manager) Kubernetes for automatically provisioning and managing TLS certificates for the Core v2 install on GKE. If cert-manager (or other services) are installed before you enable PSPs on your cluster then the `pods` associated with them will not run if they are restarted for any reason if the associated `Roles`/`ClusterRoles` don't have PSPs applied to them. **cert-manager** is deployed to its own namespace so an easy way to ensure that all `ServiceAccounts` associated with the **cert-manager** service have a PSP applied is to create a `ClusterRole` with the PSP  and then bind that `ClusterRole` to all `ServiceAccounts` in the applicable `namespace`:
+The cluster used as an example for this post relies on the [**cert-manager**](https://github.com/jetstack/cert-manager) Kubernetes add-on for automatically provisioning and managing TLS certificates for the Core v2 install on GKE. If cert-manager or other services are installed before you enable PSPs on your cluster then the `pods` associated with them will not run if they are restarted if the associated `Roles`/`ClusterRoles` don't have PSPs applied to them. **cert-manager** is deployed to its own namespace so an easy way to ensure that all `ServiceAccounts` associated with the **cert-manager** service have a PSP applied is to create a `ClusterRole` with the PSP  and then bind that `ClusterRole` to all `ServiceAccounts` in the applicable `namespace`:
 
 *`ClusterRole` with the cb-restricted PSP applied*
 ```yaml
@@ -286,7 +286,7 @@ gce.unprivileged-addon         false          RunAsAny   RunAsAny    RunAsAny   
 
 [AWS EKS](https://docs.aws.amazon.com/eks/latest/userguide/pod-security-policy.html) and [Azure AKS - Preview](https://docs.microsoft.com/en-us/azure/aks/use-pod-security-policies) also support Pod Security Policies.
 
-## Oh no, My Jenkins Agents Won't Start!
+## Oh no, My Jenkins Kubernetes Agents Won't Start!
 The [Jenkins Kubernetes plugin](https://github.com/jenkinsci/kubernetes-plugin) (for ephemeral K8s agents) defaults to using a K8s [`emptyDir` volume](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) type for the Jenkins agent workspace. This causes issues when using a restrictive PSP such at the **cb-restricted** PSP above. Kubernetes defaults to mounting `emptyDir` volumes as `root:root` with permissions set to `750` - as [detailed by this GitHub issue](https://github.com/kubernetes/kubernetes/issues/2630) opened way back in 2014. When using a PSP, with Jenkins K8s agent pods, that doesn't allow containers to run as `root` the containers will not be able to access the default K8s plugin workspace directory. One approach for dealing with this is to set the K8s `securityContext` for `containers` in the `pod` spec. You can do this in the K8s plugin UI via the **Raw yaml for the Pod** field:
 
 ![Raw yaml for the Pod](/posts/cloudbees-core-on-kubernetes-best-practices/raw-yaml-for-the-pod.png)
