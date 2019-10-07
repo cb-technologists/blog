@@ -42,7 +42,7 @@ pipelineConfig:
 
           - image: gcr.io/jenkinsxio/builder-go
             dir: /workspace/source/technologists.dev
-            command: jx step git credentials && git config credential.helper store && git add * && git commit --allow-empty -a -m "updated site" && git push origin
+            command: jx step git credentials && git config credential.helper store && git add * && git commit --allow-empty -a -m "updated site" && git push --set-upstream origin master
 
     pullRequest:
       pipeline:
