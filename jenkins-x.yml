@@ -37,7 +37,7 @@ pipelineConfig:
             command: hugo
             args:
               - -d
-              - cb-technologists.github.io
+              - technologists.dev
               - --enableGitInfo
 
           - image: gcr.io/jenkinsxio/builder-go
