@@ -2,22 +2,128 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>CloudBees Technologists</title>
-    <link>https://cb-technologists.github.io/</link>
+    <link>https://technologists.dev/</link>
     <description>Recent content on CloudBees Technologists</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 22 May 2019 10:29:46 -0400</lastBuildDate>
+    <lastBuildDate>Wed, 04 Sep 2019 05:05:15 -0400</lastBuildDate>
     
-	<atom:link href="https://cb-technologists.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://technologists.dev/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Using Kubernetes Pod Security Policies with CloudBees Core - Jenkins</title>
+      <link>https://technologists.dev/posts/best-practices-for-cloudbees-core-jenkins-on-kubernetes/core-psp/</link>
+      <pubDate>Wed, 04 Sep 2019 05:05:15 -0400</pubDate>
+      
+      <guid>https://technologists.dev/posts/best-practices-for-cloudbees-core-jenkins-on-kubernetes/core-psp/</guid>
+      <description>What are Pod Security Policies? Although Kubernetes Pod Security Policies are still a beta feature of Kubernetes they are an important security feature that should not be overlooked. Pod Security Policies (PSPs) are built-in Kubernetes resources that allow you to enforce security related properties of every container in your cluster. If a container in a pod does not meet the criteria for an applicable PSP then it will not be scheduled to run.</description>
+    </item>
+    
+    <item>
+      <title>Securely Building Container Images on Kubernetes</title>
+      <link>https://technologists.dev/posts/build-continaer-images/</link>
+      <pubDate>Sat, 03 Aug 2019 10:05:15 -0400</pubDate>
+      
+      <guid>https://technologists.dev/posts/build-continaer-images/</guid>
+      <description>Originally published on kurtmadel.com
+Back in 2013, before Kubernetes was a thing, Docker was making Linux containers (LXC) much more accessible and use of Docker based containers took off (and Docker quickly dropped LXC as the default execution engine for their own container runtime). At the same time continuous integration (CI) was rapidly maturing as a best practice and a necessity for efficient software delivery. The use of Docker containers with CI was quickly adopted as the best way to manage CI tools - compilers, testing tools, security scans, etc.</description>
+    </item>
+    
+    <item>
+      <title>Safety First with Jenkins and Snyk</title>
+      <link>https://technologists.dev/posts/jenkins-snyk/</link>
+      <pubDate>Wed, 31 Jul 2019 07:00:00 +0000</pubDate>
+      
+      <guid>https://technologists.dev/posts/jenkins-snyk/</guid>
+      <description>Implementing security scanning as a preventative measure in your CI pipeline. Overview Today’s developers are being empowered to expeditiously innovate, creating new software capabilities and building continuous customer value. At CloudBees, we commonly tell our customers:
+ &amp;ldquo;Every business is a software business and is under pressure to innovate constantly. This increased velocity introduces new business risks. CloudBees is building the world&amp;rsquo;s first end-to-end automated software delivery system (SDM), enabling companies to balance governance and developer freedom.</description>
+    </item>
+    
+    <item>
+      <title>Jenkins X Orchestration: More than Tekton on Steroids</title>
+      <link>https://technologists.dev/posts/tekton-jx-pipelines/</link>
+      <pubDate>Sun, 28 Jul 2019 23:44:10 +0100</pubDate>
+      
+      <guid>https://technologists.dev/posts/tekton-jx-pipelines/</guid>
+      <description>We may know Jenkins X as a new pure CI/CD cloud native implementation different than Jenkins. It is based on the use of Kubernetes Custom Resource Definitions (CRD&amp;rsquo;s) to experience a seamless execution of CI/CD pipelines. This happens by leveraging the power of Kubernetes in terms of scalability, infrastructure abstraction and velocity.
+The new main approach of Jenkins X is about a serverless experience, because there is no more traditional Jenkins engine running.</description>
+    </item>
+    
+    <item>
+      <title>Technologists Lightning Talks for DevOps World | Jenkins World 2019 San Francisco</title>
+      <link>https://technologists.dev/posts/lightning-talks-dw-jw-2019/</link>
+      <pubDate>Sat, 27 Jul 2019 10:50:46 -0400</pubDate>
+      
+      <guid>https://technologists.dev/posts/lightning-talks-dw-jw-2019/</guid>
+      <description>The Technologists will be giving a bunch of lightning talks in the DevOps Theater at this years DevOps World | Jenkins World in San Francisco. Some of the topics we will be covering include (many of which we have already blogged about):
+ Self-Updating Jenkins: GitOps for Jenkins Configuration  This Lightning Talk will explore using GitOps to automate config updates for the CloudBees Jenkins Distribution.  Jenkins Plugin Management as Code  Let’s admit it, Jenkins Plugin management can be a pain.</description>
+    </item>
+    
+    <item>
+      <title>Introduction to GitOps - Part 1</title>
+      <link>https://technologists.dev/posts/gitops-series-part-1/</link>
+      <pubDate>Tue, 16 Jul 2019 15:00:00 -0400</pubDate>
+      
+      <guid>https://technologists.dev/posts/gitops-series-part-1/</guid>
+      <description>GitOps is a concept that was first coined by Weaveworks in their GitOps - Operations by Pull Request post. The idea itself wasn&amp;rsquo;t anything particularly new, people had been doing automated operations with infrastructure-as-code for years. But now that there was a descriptive new name for this concept, the DevOps community has really started to embrace it. Especially with the ever growing prevalence of Kubernetes.
+If you haven&amp;rsquo;t already done so, I&amp;rsquo;d recommend reading that Weaveworks post since it is always good to understand the origination of a concept.</description>
+    </item>
+    
+    <item>
+      <title>Self-Updating Jenkins: GitOps for Jenkins Configuration</title>
+      <link>https://technologists.dev/posts/cjd-casc/</link>
+      <pubDate>Wed, 03 Jul 2019 17:00:00 -0400</pubDate>
+      
+      <guid>https://technologists.dev/posts/cjd-casc/</guid>
+      <description>In this blog post, we&amp;rsquo;ll walk through creating a self-updating instance of the CloudBees Jenkins Distribution, with all configuration stored as code in a GitHub repository.
+We&amp;rsquo;ll deploy the CJD master as a StatefulSet in a Kubernetes cluster, configure the master using the Jenkins Configuration as Code plugin, and set up a TLS certificate through cert-manager. Finally, we&amp;rsquo;ll seed a Pipeline job that updates the master upon commit to the Git repository that contains the configuration - enabling GitOps for Jenkins itself.</description>
+    </item>
+    
+    <item>
+      <title>CloudBees&#39; Cross Team Collaboration for Asynchronous DevSecOps</title>
+      <link>https://technologists.dev/posts/cloudbees-cross-team-and-dev-sec-ops/</link>
+      <pubDate>Mon, 10 Jun 2019 07:50:46 -0400</pubDate>
+      
+      <guid>https://technologists.dev/posts/cloudbees-cross-team-and-dev-sec-ops/</guid>
+      <description>What is Cross Team Collaboration? CloudBees&amp;rsquo; Cross Team Collaboration provides the ability to publish an event from a Jenkins job that triggers any other Jenkins job on the same master or different masters that are listening for that event. It is basically a light-weight PubSub for CloudBees Core Masters connected to CloudBees Operations Center. Jenkins has had the ability to trigger other jobs for quite a while now (and with CloudBees this is even easy to do across Masters), but it always required that the upstream job be aware of the downstream job(s) to be triggered.</description>
+    </item>
+    
+    <item>
+      <title>Jenkins Plugins: The Good, the Bad and the Ugly</title>
+      <link>https://technologists.dev/posts/jenkins-plugins-good-bad-ugly/</link>
+      <pubDate>Thu, 30 May 2019 05:50:46 -0400</pubDate>
+      
+      <guid>https://technologists.dev/posts/jenkins-plugins-good-bad-ugly/</guid>
+      <description>There are over 1600 Jenkins plugins and that is both a blessing and a curse. Of those 1600 plugins only a small percentage are well maintained and tested, and even fewer (140 of 1600+) are part of the CloudBees Assurance Program (CAP) as verified and/or compatible plugins - well tested to interoperate with the rest of the CAP plugins (and their dependencies) and with a specific LTS version of Jenkins.</description>
+    </item>
+    
+    <item>
+      <title>Extending Jenkins X for Traditional Deployments with CloudBees Flow</title>
+      <link>https://technologists.dev/posts/jenkins-x-flow-integration/</link>
+      <pubDate>Wed, 29 May 2019 12:47:46 -0400</pubDate>
+      
+      <guid>https://technologists.dev/posts/jenkins-x-flow-integration/</guid>
+      <description>Jenkins X is quickly becoming the de facto standard for high performing teams wanting to do CI/CD in a highly scalable and fault tolerant environment. For those who haven’t gotten the opportunity to try out Jenkins X, it allows teams to run CI/CD workloads natively in a Kubernetes environment while taking advantage of modern operating patterns like GitOps and serverless architectures. For teams wanting to modernize their continuous integration and continuous deployment capabilities, Jenkins X is the go to solution.</description>
+    </item>
+    
+    <item>
+      <title>Introducing the Technologists, A CloudBees Solution Architecture Team</title>
+      <link>https://technologists.dev/posts/introducing-technologists/</link>
+      <pubDate>Thu, 23 May 2019 19:10:46 -0400</pubDate>
+      
+      <guid>https://technologists.dev/posts/introducing-technologists/</guid>
+      <description>The Technologists is a new team of CloudBees Solution Architects. Technologists have a passion for emerging technologies, continuously learning and teaching through thought leadership, providing technical direction within CloudBees and the broader tech community, and driving the best technical solutions for customers.
+ Technical integrity is of the utmost importance for a Technologist - always providing the RIGHT solution. We are Technologists focused on providing best practices, solutions, and adoption paths to organizations navigating software delivery transformations with leading edge technologies.</description>
+    </item>
+    
+    <item>
       <title>About</title>
-      <link>https://cb-technologists.github.io/about/</link>
+      <link>https://technologists.dev/about/</link>
       <pubDate>Wed, 22 May 2019 10:29:46 -0400</pubDate>
       
-      <guid>https://cb-technologists.github.io/about/</guid>
-      <description>Technologists eat, sleep and breath technology, continuously learning and teaching through thought leadership, providing technical direction with integrity to the Product team and driving complex technical solutions for customers.</description>
+      <guid>https://technologists.dev/about/</guid>
+      <description>Technologists are passionate about technology, continuously learning and teaching through thought leadership, providing technical direction with integrity for Product development and driving the best technical solutions for customers.</description>
     </item>
     
   </channel>
