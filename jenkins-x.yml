@@ -27,6 +27,7 @@ pipelineConfig:
             args:
               - clone
               - https://github.com/cb-technologists/cb-technologists.github.io.git
+              - technologists.dev
 
           - image: jojomi/hugo:0.55.5
             command: hugo
@@ -42,7 +43,7 @@ pipelineConfig:
 
           - image: gcr.io/jenkinsxio/builder-go
             dir: /workspace/source/technologists.dev
-            command: jx step git credentials && git config credential.helper store && git add * && git commit --allow-empty -a -m "updated site" && git push --set-upstream origin master
+            command: jx step git credentials && git config credential.helper store && git add * && git commit --allow-empty -a -m "updated site" && git push origin
 
     pullRequest:
       pipeline:
