@@ -39,6 +39,15 @@
     </item>
     
     <item>
+      <title>Kubernetes</title>
+      <link>https://technologists.dev/tags/kubernetes/</link>
+      <pubDate>Wed, 04 Sep 2019 05:05:15 -0400</pubDate>
+      
+      <guid>https://technologists.dev/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Pod Security Policies</title>
       <link>https://technologists.dev/tags/pod-security-policies/</link>
       <pubDate>Wed, 04 Sep 2019 05:05:15 -0400</pubDate>
@@ -53,15 +62,6 @@
       <pubDate>Wed, 04 Sep 2019 05:05:15 -0400</pubDate>
       
       <guid>https://technologists.dev/tags/jenkins/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>kubernetes</title>
-      <link>https://technologists.dev/tags/kubernetes/</link>
-      <pubDate>Wed, 04 Sep 2019 05:05:15 -0400</pubDate>
-      
-      <guid>https://technologists.dev/tags/kubernetes/</guid>
       <description></description>
     </item>
     
@@ -156,7 +156,7 @@
     </item>
     
     <item>
-      <title>jenkins-x</title>
+      <title>jenkins x</title>
       <link>https://technologists.dev/tags/jenkins-x/</link>
       <pubDate>Sun, 28 Jul 2019 23:44:10 +0100</pubDate>
       
