@@ -129,7 +129,100 @@ rules:
     rule: 'RunAsAny'
 ```
 
-The cluster used as an example for this post relies on two Kubernetes services for running Core v2: **cert-manager** for TLS and **ingress-nginx** for, well, ingress. If these are installed before you enable PSPs on your cluster then the `pods` associated with them will be stopped if the associated `Roles`/`ClusterRoles` don't have PSPs applied to them. Both services are deployed to their own namespaces so an easy way to ensure that all `ServiceAccounts` associated with those services have a PSP applied is to create a `ClusterRole` with the PSP  and then bind that `ClusterRole` to all `ServiceAccounts` in the applicable `namespace`:
+### Bind Restrictive PSP Role for Ingress Nginx 
+
+CloudBees recommends the [ingress-nginx](https://github.com/kubernetes/ingress-nginx) [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) controller to manage external access to Core v2. The NGINX Ingress Controller is a top-level Kubernetes project and [provides an example](https://kubernetes.github.io/ingress-nginx/examples/psp/) for using Pod Security Policies with the ingress-nginx `Deployment`. Basically, all you have to do is run the following command before installing the NGINX Ingress controller:
+
+```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/docs/examples/psp/psp.yaml
+```
+
+The above command will create the following PSP, `Role` and `RoleBinding` with the primary differences from the `cb-restricted` PSP being the addition of the `NET_BIND_SERVICE` as an `allowedCapabilities` and allowing `hostPorts` of **80** to 65535:
+
+```yaml
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  annotations:
+    # Assumes apparmor available
+    apparmor.security.beta.kubernetes.io/allowedProfileNames: 'runtime/default'
+    apparmor.security.beta.kubernetes.io/defaultProfileName:  'runtime/default'
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: 'docker/default'
+    seccomp.security.alpha.kubernetes.io/defaultProfileName:  'docker/default'
+  name: ingress-nginx
+spec:
+  allowedCapabilities:
+  - NET_BIND_SERVICE
+  allowPrivilegeEscalation: true
+  fsGroup:
+    rule: 'MustRunAs'
+    ranges:
+    - min: 1
+      max: 65535
+  hostIPC: false
+  hostNetwork: false
+  hostPID: false
+  hostPorts:
+  - min: 80
+    max: 65535
+  privileged: false
+  readOnlyRootFilesystem: false
+  runAsUser:
+    rule: 'MustRunAsNonRoot'
+    ranges:
+    - min: 33
+      max: 65535
+  seLinux:
+    rule: 'RunAsAny'
+  supplementalGroups:
+    rule: 'MustRunAs'
+    ranges:
+    # Forbid adding the root group.
+    - min: 1
+      max: 65535
+  volumes:
+  - 'configMap'
+  - 'downwardAPI'
+  - 'emptyDir'
+  - 'projected'
+  - 'secret'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ingress-nginx-psp
+  namespace: ingress-nginx
+rules:
+- apiGroups:
+  - policy
+  resourceNames:
+  - ingress-nginx
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ingress-nginx-psp
+  namespace: ingress-nginx
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ingress-nginx-psp
+subjects:
+- kind: ServiceAccount
+  name: default
+- kind: ServiceAccount
+  name: nginx-ingress-serviceaccount
+```
+
+>NOTE: You can also run that command after you have already installed the NGINX Ingress controller but the PSP will only be applied after restarting or recreating the ingress-nginx `Deployment`.
+
+### Pod Security Policies for Other Services
+
+The cluster used as an example for this post relies on the [**cert-manager**](https://github.com/jetstack/cert-manager) Kubernetes add-on for automatically provisioning and managing TLS certificates for the Core v2 install on GKE. If cert-manager or other services are installed before you enable PSPs on your cluster then the `pods` associated with them will not run if they are restarted if the associated `Roles`/`ClusterRoles` don't have PSPs applied to them. **cert-manager** is deployed to its own namespace so an easy way to ensure that all `ServiceAccounts` associated with the **cert-manager** service have a PSP applied is to create a `ClusterRole` with the PSP  and then bind that `ClusterRole` to all `ServiceAccounts` in the applicable `namespace`:
 
 *`ClusterRole` with the cb-restricted PSP applied*
 ```yaml
@@ -147,7 +240,7 @@ rules:
   - use
 ```
 
-*`RoleBindings` for cert-manager and ingress-nginx `ServiceAccounts`*
+*`RoleBindings` for cert-manager `ServiceAccounts`*
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -162,24 +255,11 @@ subjects:
 - apiGroup: rbac.authorization.k8s.io
   kind: Group
   name: system:serviceaccounts
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: ingress-nginx-psp-restricted
-  namespace: ingress-nginx
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: psp-restricted-clusterrole
-subjects:
-- apiGroup: rbac.authorization.k8s.io
-  kind: Group
-  name: system:serviceaccounts
 ```
 
 >NOTE: You can use this command `kubectl get role,clusterrole --all-namespaces` to check your cluster for any other `Roles` or `ClusterRoles` that need to have a PSP applied to them. Remember, any `pod` that is running under a `ServiceAccount` that doesn't have a PSP will be shut down as soon as you enable the Pod Security Policy Admission Controller. For GKE you don't need to apply PSPs to any `Roles` in the `kube-system` `namespace` or any **gce** or **system** `ClusterRoles` as GKE will automatically apply the necessary PSPs.
+
+## Enable the Pod Security Policy Admission Controller
 
 Now that PSPs are applied to all the necessary `Roles` and `ClusterRoles` you can enable the Pod Security Policy Admission Controller for your GKE cluster:
 ```shell
@@ -191,7 +271,6 @@ Next, you should ensure that all `pods` are still running:
 kubectl get pods --all-namespaces
 ```
 If a `pod` that you expect to be running is not, you need to find the `Role`/`ClusterRole` that is used for the `pod`/`deployment`/`service` and apply a PSP to it.
-
 
 Default Pod Security Policies created when enabling the `pod-security-policy` feature on a GKE cluster:
 ```shell
@@ -207,7 +286,7 @@ gce.unprivileged-addon         false          RunAsAny   RunAsAny    RunAsAny   
 
 [AWS EKS](https://docs.aws.amazon.com/eks/latest/userguide/pod-security-policy.html) and [Azure AKS - Preview](https://docs.microsoft.com/en-us/azure/aks/use-pod-security-policies) also support Pod Security Policies.
 
-## Oh no, My Jenkins Agents Won't Start!
+## Oh no, My Jenkins Kubernetes Agents Won't Start!
 The [Jenkins Kubernetes plugin](https://github.com/jenkinsci/kubernetes-plugin) (for ephemeral K8s agents) defaults to using a K8s [`emptyDir` volume](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) type for the Jenkins agent workspace. This causes issues when using a restrictive PSP such at the **cb-restricted** PSP above. Kubernetes defaults to mounting `emptyDir` volumes as `root:root` with permissions set to `750` - as [detailed by this GitHub issue](https://github.com/kubernetes/kubernetes/issues/2630) opened way back in 2014. When using a PSP, with Jenkins K8s agent pods, that doesn't allow containers to run as `root` the containers will not be able to access the default K8s plugin workspace directory. One approach for dealing with this is to set the K8s `securityContext` for `containers` in the `pod` spec. You can do this in the K8s plugin UI via the **Raw yaml for the Pod** field:
 
 ![Raw yaml for the Pod](/posts/cloudbees-core-on-kubernetes-best-practices/raw-yaml-for-the-pod.png)
