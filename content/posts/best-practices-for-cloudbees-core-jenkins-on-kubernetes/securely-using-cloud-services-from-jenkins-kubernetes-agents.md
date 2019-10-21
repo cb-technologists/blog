@@ -167,7 +167,7 @@ Placing each of your Jenkins Masters into their own Kubernetes Namespaces provid
         --member "serviceAccount:core-workshop.svc.id.goog[cloud-run/cloud-run-sa]" \
         core-cloud-run@core-workshop.iam.gserviceaccount.com
       ```
-5. [Create a Managed Master in the Master sepcific Kubernetes Namespace](https://docs.cloudbees.com/docs/cloudbees-core/latest/cloud-admin-guide/managing) - here is [an example of automating this with code](https://github.com/kypseli/demo-mm-jcasc/tree/cloud-run). Here is an example of a Managed Master Kubernetes yaml configuration that specifies a unique Kubernetes Service Account - note the `serviceAccount` value matches the Kuberenes Service Account we created above:
+5. [Create a Managed Master in the Master specific Kubernetes Namespace](https://docs.cloudbees.com/docs/cloudbees-core/latest/cloud-admin-guide/managing) - here is [an example of automating this with code](https://github.com/kypseli/demo-mm-jcasc/tree/cloud-run). Here is an example of a Managed Master Kubernetes yaml configuration that specifies a unique Kubernetes Service Account - note the `serviceAccount` value matches the Kuberenes Service Account we created above:
 
       ```yaml
       ---
