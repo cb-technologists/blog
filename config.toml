@@ -1,4 +1,4 @@
-baseURL = "https://cb-technologists.github.io/"
+baseURL = "https://technologists.dev/"
 languageCode = "en-us"
 title = "CloudBees Technologists"
 theme = "hello-friend-ng"
