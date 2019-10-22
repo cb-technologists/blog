@@ -21,6 +21,7 @@
     display: flex;
     margin-bottom: 1.9em;
     line-height: normal;
+    clear: both;
 
     @media #{$media-size-tablet} {
       display: block;
@@ -47,7 +48,7 @@
       @include dimmed;
 
       @media #{$media-size-tablet} {
-        margin: -6px 0 4px;
+        margin: 6px 0 4px;
       }
     }
 
