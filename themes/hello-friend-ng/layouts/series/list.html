@@ -2,8 +2,20 @@
     <main class="posts">
         <h2>{{ .Title }}</h2>
 
+        {{ if .Params.photo }}
+        <div class="box">
+          <figure class="series-photo" itemprop="associatedMedia" itemscope="" itemtype="http://schema.org/ImageObject">
+            <div class="img">
+              <img itemprop="thumbnail" src="{{ .Params.photo }}" alt="{{ .Params.exif }}">
+            </div>
+            <a href="{{ .Params.photo }}" itemprop="contentUrl"></a>
+            <figcaption>{{ .Params.photoCaption | safeHTML }}</figcaption>
+          </figure>
+        </div>
+        {{ end }}
+
         {{- if .Description }}
-            <div class="content">{{ if .Params.photo }}<figure class="series-photo"><img src="{{ .Params.photo }}" /><figcaption>{{ .Params.photoCaption | safeHTML }}</figcaption></figure>{{ end }}<div class="series-desc">{{ .Description }}</div></div>
+        <div class="post-content">{{ .Description }}</div>
         {{- end }}
 
         {{- range .Data.Pages.GroupByDate "2006" }}
