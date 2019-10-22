@@ -21,6 +21,7 @@
     display: flex;
     margin-bottom: 1.9em;
     line-height: normal;
+    clear: both;
 
     @media #{$media-size-tablet} {
       display: block;
