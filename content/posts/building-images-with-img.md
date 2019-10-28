@@ -1,11 +1,11 @@
 ---
-title: Building Container Images with img
-author:
-  name: "Matt Elgin"
-date: 2019-10-25T00:00:00-00:00
+title: "Unprivileged Container Image Builds with img and Jenkins on Kubernetes"
+authors:
+  - "Matt Elgin"
+date: 2019-10-28T00:00:00-00:00
 showDate: true
 tags: ["kubernetes","img","docker","jenkins","containers","google kubernetes engine","workload identity"]
-draft: true
+draft: false
 ---
 
 ## Why use `img` for container builds?
@@ -15,7 +15,7 @@ The current choice for many teams is Google's [kaniko](https://github.com/Google
 
 Fortunately, efforts have been underway to create an unprivileged, non-root container builder. Jessie Frazelle introduced [`img`](https://github.com/genuinetools/img), one such tool, in her blog post ["Building Container Images Securely on Kubernetes"](https://blog.jessfraz.com/post/building-container-images-securely-on-kubernetes/). I'll leave the details of design approach and usage to her post and the GitHub project page, but there are a few points I'll highlight here:
 
-1. `img` is intended to run as an arbitrary, non-root user 1000.
+1. `img` is intended to run as a non-root user such as UID 1000.
 2. `img` can be run without requiring the `--privileged` Docker flag or the equivalent `privileged: true` security context in Kubernetes.
 3. Syntax for building, pushing, and pulling images, among other actions, largely mirror Docker's - for example, `img build -t hello-world .` and `img push hello-world` are the commands to build and push an image called `hello-world`.
 
@@ -36,6 +36,8 @@ RUN apk add python
 COPY --from=gcloud /builder/google-cloud-sdk /home/user/google-cloud-sdk
 
 USER user
+
+ENV PATH "$PATH:/home/user/google-cloud-sdk/bin/"
 ```
 
 This image will allow us to access both `img` and `gcloud` commands from the same container, which will allow us to securely authenticate to our registry.
@@ -64,36 +66,6 @@ gcloud iam service-accounts add-iam-policy-binding \
   --role roles/iam.workloadIdentityUser \
   --member "serviceAccount:melgin.svc.id.goog[img/img]" \
   img-gcr@melgin.iam.gserviceaccount.com
-```
-
-Next, we're going to attach our `img` `ServiceAccount` to a corresponding `Role` with a `RoleBinding`. This will allo us to use the custom `PodSecurityPolicy` we will create for our `img` `Pod` to use.
-```yaml
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  name: img
-rules:
-- apiGroups: ['extensions']
-  resources: ['podsecuritypolicies']
-  verbs:     ['use']
-  resourceNames:
-  - img
-- apiGroups: [""]
-  resources: ["pods"]
-  verbs: ["create","delete","get","list","patch","update","watch"]
-
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: RoleBinding
-metadata:
-  name: img
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: img
-subjects:
-- kind: ServiceAccount
-  name: img
 ```
 
 With our service accounts configured both in Google Cloud and our Kubernetes cluster, we can now create our `PodSecurityPolicy`:
@@ -147,6 +119,35 @@ There are a few details worth calling out in this policy:
 3. For `img` to run properly, both `seccomp` and `AppArmor` profiles must be set to `unconfined`, which is [required by `runc`](https://github.com/genuinetools/img#running-with-docker).
 4. We include `allowedProcMountTypes` with both `Unmasked` and `Default` as accepted values - more on this in a minute.
 
+Next, we're going to attach our `img` `ServiceAccount` to a corresponding `Role` with a `RoleBinding`. This will allow our `img` `Pod` to use the custom `PodSecurityPolicy` we just created.
+```yaml
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: img
+rules:
+- apiGroups: ['extensions']
+  resources: ['podsecuritypolicies']
+  verbs:     ['use']
+  resourceNames:
+  - img
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["create","delete","get","list","patch","update","watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  name: img
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: img
+subjects:
+- kind: ServiceAccount
+  name: img
+```
 
 Finally, here is our `Pod` definition:
 ```yaml
@@ -226,7 +227,7 @@ pipeline {
         container('img') {
           sh """
             img build -t gcr.io/melgin/img-hello-world ./hello-world
-            /home/user/google-cloud-sdk/bin/gcloud auth print-access-token | img login -u oauth2accesstoken --password-stdin https://gcr.io
+            gcloud auth configure-docker --quiet
             img push gcr.io/melgin/img-hello-world
           """
         }
@@ -239,7 +240,7 @@ pipeline {
 In this Pipeline script, we load our agent `Pod` definition from `imgPod.yaml`, described above. Our actual steps are fairly straightforward and consist of three main actions within our `sh` step:
 
 1. We use `img build` to build our `Dockerfile` located in the `hello-world` subdirectory. This is a simple example that copies a "Hello World" script into the [Docker scratch image](https://hub.docker.com/_/scratch).
-2. We use `gcloud` to print our access token (for our Workload Identity account) and pipe that directly to `img login`, following the [GCR authentication documentation](https://cloud.google.com/container-registry/docs/advanced-authentication#access_token).
+2. We use `gcloud auth configure-docker` to [set up `gcloud` as a Docker credential helper](https://cloud.google.com/container-registry/docs/advanced-authentication#gcloud_as_a_docker_credential_helper), allowing us to authenticate to GCR through Workload Identity.
 3. Finally, we use `img push` to push our newly built image to our GCR repository.
 
 ## Final Thoughts
@@ -250,6 +251,7 @@ First, `img` is running as a non-root user 1000 within a non-privileged containe
 
 However, there are security settings at the `PodSecurityPolicy`-level that require consideration, like setting `AppArmor` & `seccomp` policies to `unconfined` and allowing privilege escalation. While the default behavior in Kubernetes is to [set `seccomp` to `unconfined`](https://kubernetes.io/docs/concepts/policy/pod-security-policy/#seccomp) and to [allow privilege escalation](https://kubernetes.io/docs/concepts/policy/pod-security-policy/#privilege-escalation), more security-conscious organizations might disallow these settings by default in their `PodSecurityPolicies`.
 
-Finally, without `procMount` set to `Unmasked`, the risk of child processes killing the parent `img` process remains. However, this risk is somewhat contained when `img` is run in an ephemeral container like it is as a Jenkins pod agent. (Note that this concern will be effectively resolved if or when `allowedProcMountTypes` is promoted from its current Alpha status.)
+Finally, without `procMount` set to `Unmasked`, the risk of child processes killing the parent `img` process remains. However, this risk is somewhat contained when `img` is run in an ephemeral container like it is as a Jenkins pod agent.
+> *Note*: this concern will be effectively resolved if or when `allowedProcMountTypes` is promoted from its current Alpha status.
 
-For organizations particularly sensitive to avoiding running root or privileged workloads, `img` is a great candidate for building containers in Kubernetes.
+For organizations particularly sensitive to avoiding running root or privileged container workloads, `img` is a great candidate for building containers in Kubernetes.
