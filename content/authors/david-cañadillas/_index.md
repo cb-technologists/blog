@@ -1,6 +1,6 @@
 ---
 name: David Cañadillas
-photo: "/authors/david-cañadillas/picture-dcanadillas.jpeg"
+photo: "/authors/david-canadillas/picture-dcanadillas.jpeg"
 social:
   - name: github
     url:  "https://github.com/dcanadillas"
