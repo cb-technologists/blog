@@ -109,7 +109,7 @@ But if we go purely Kubernetes native, and we provide an architecture where ever
 
 As an example, in the image below we can see that a pipeline execution on a default Jenkins X deployment recovered just in 30 seconds to continue running after a [Pod](https://kubernetes.io/docs/concepts/workloads/pods/pod/) failure simulation. Nothing needed to be done in terms of deployment or pipeline definition. It is just its native behavior.
 
-![Jenkins X pod recovery](./jenkins-x_podrestart.png)
+![Jenkins X pod recovery](/img/cicd-ha/jenkins-x_podrestart.png)
 
 ## The message and conclusion
 
