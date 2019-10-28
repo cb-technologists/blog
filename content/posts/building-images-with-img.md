@@ -5,7 +5,7 @@ authors:
 date: 2019-10-28T00:00:00-00:00
 showDate: true
 tags: ["kubernetes","img","docker","jenkins","containers","google kubernetes engine","workload identity"]
-draft: false
+draft: true
 ---
 
 ## Why use `img` for container builds?
