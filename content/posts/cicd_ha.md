@@ -97,17 +97,17 @@ But let's see the following picture:
 
 ![Jenkins HA](/img/cicd-ha/CICD_HA_Archs.png)
 
-In a traditional deployment - like the diagram in the left - with Jenkins masters (orchestrators) and Jenkins agents (executors), we should at least work on an *Active-Passive* replication on masters to recover on time to provide a resilient platform with HA capabilities. But, if we also decouple the masters with smaller ones and deploy them natively in Kubernetes - diagram in the right -, the experience can be much more resilient without any replication method. A small master, that is running in a pod, can automatically be recovered by Kubernetes if it fails, restarting its service in a couple of minutes in the worse case. The pipeline could still be running by the way. Also, the rest of the masters are not impacted and agents are just ephemeral, only running and restarted when needed. So, no service loss is perceived as HA requirement.
+In a traditional deployment - like the diagram in the left - with Jenkins masters (orchestrators) and Jenkins agents (executors), we should at least work on an *Active-Passive* replication on masters to recover on time to provide a resilient platform with HA capabilities. But, if we also decouple the masters with smaller ones and deploy them natively in Kubernetes - diagram in the right -, the experience can be much more resilient without any replication method. A small master, that is running in a pod, can automatically be recovered by Kubernetes if it fails, restarting its service in a couple of minutes in the worse case. The pipeline could still be running by the way. Also, the rest of the masters are not impacted and agents are just ephemeral, only running and restarted when needed. So, service loss is not perceived.
 
-In a *Jenkins enterprise experience* this is a must, and that is why, for example, [CloudBees Core](https://docs.cloudbees.com/docs/cloudbees-core/latest/) provides out of the box these capabilities with master management features and Kubernetes scalability.
+In a *Jenkins enterprise experience* this is a must, and that is why for example, [CloudBees Core](https://docs.cloudbees.com/docs/cloudbees-core/latest/) (usually known as *Jenkins Enterprise*) provides out of the box these capabilities with master management features and Kubernetes scalability.
 
 ### The Cloud Native evolution (a.k.a. Jenkins X)
 
 But if we go purely Kubernetes native, and we provide an architecture where every piece of the pipeline orchestration and execution is just a state declaration object that can be recovered automatically when something goes down, then the HA and resiliency experience is event better.
 
- [Jenkins X](https://jenkins-x.io) takes these concepts and all the previous mentioned best practices of scalability and resiliency. Everything is about Kubernetes native objects definitions (based on [CRDs](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)), which are resilient by definition from Kubernetes.
+ [Jenkins X](https://jenkins-x.io) takes these concepts and all the previous mentioned best practices of scalability and resiliency. Everything is about Kubernetes native objects definitions (based on [CRDs](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)), which are resilient by nature from Kubernetes. No need to think about decoupled pipelines, infrastructure replication, or recovering scenarios. It is already out of the box from its solution architecture design. If you deploy your Kubernetes platform with some [Disaster Recovery](https://en.wikipedia.org/wiki/Disaster_recovery) configurations like Cloud cross-region availability, autoscaling pools and backup features (I think [Velero](https://velero.io/) is an interesting solution for K8s backup), it is practically impossible to completely loss the service for your CI/CD pipelines (except in the case the World is ending...).
 
-In the image below we can see that a pipeline execution on a default Jenkins X deployment recovered just in 30 seconds to continue running after a [Pod](https://kubernetes.io/docs/concepts/workloads/pods/pod/) failure simulation. Nothing needed to be done in terms of deployment or pipeline definition. It is just its native behavior.
+As an example, in the image below we can see that a pipeline execution on a default Jenkins X deployment recovered just in 30 seconds to continue running after a [Pod](https://kubernetes.io/docs/concepts/workloads/pods/pod/) failure simulation. Nothing needed to be done in terms of deployment or pipeline definition. It is just its native behavior.
 
 ![Jenkins X pod recovery](./jenkins-x_podrestart.png)
 
@@ -125,8 +125,8 @@ Funny thing is that lots of cases were not prioritizing scalability, pipeline an
 
 Most of people asking about HA is always referring to an *Active-Active* replication scenario and usually thinking of infrastructure, not the real business issue when comes to CI/CD. 
 
-So it is very important to clarify that HA for CI/CD is not a matter of infrastructure replication. It is just a matter of resilient automated pipelines execution where just 5 minutes of loss of service at some specific point is not even an issue... but you need to recover quickly and be stable on time.
+So it is very important to clarify that HA for CI/CD is not a matter of infrastructure replication. It is just a matter of resilient automated pipelines execution where usually just a couple of minutes of loss of service at some specific point is not even an issue... but you need to recover quickly and be stable on time.
 
-I cannot imagine a car manufacturer like BMW or Toyota replicating their entire manufacturing plants to support loss of service for HA. True that is not comparable in cost to run a couple more CPUs, but the same decoupling, flexibility and scalability best practices apply to get the same HA experience as CI/CD.
+I cannot imagine a car manufacturer like BMW or Toyota replicating their entire manufacturing plants to support loss of service for HA. True that is not comparable in costs to run a couple more CPUs, but the same decoupling, flexibility and scalability best practices apply to get the same HA experience as CI/CD.
 
 Let's then change our mindset. If we provide a scalable and distributed solution that deploys natively on a resilient platform, we don't even need to think about HA.
