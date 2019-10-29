@@ -63,15 +63,15 @@ One of the reasons of not working with replicated *active-active* running produc
 
 ### Resilient vs Highly Available
 
-Once said that, one of the most important features about a *Continuous Delivery* system (note that I am talking in general, not only software) to be highly available, is **resiliency**. Understood as the capacity of our system components to recover on time, producing a complete stable, durable and efficient execution that doesn't impact the overall service (e.g. my deployment or release frequency and quality of final artifacts are the same, with or without short downtimes. Just because my platform and systems are *resilient* to failures).
+Once said that, one of the most important features about a *Continuous Delivery* system (note that I am talking in general, not only software) to be highly available, is **resilience**. Understood as the capacity of our system components to recover on time, producing a complete stable, durable and efficient execution that doesn't impact the overall service (e.g. my deployment or release frequency and quality of final artifacts are the same, with or without short downtimes. Just because my platform and systems are *resilient* to failures).
 
 Let's back then to the question:
 
 > ***What platform configuration do I need for a highly available service?***
 
-To answer this question, it's very important to think about **resiliency first**, because having a resilient platform and architecture is usually enough to deliver a highly available service, being able to recover on time to not impact the final service. But in some scenarios where a couple of minutes of service blockage means loss of millions of dollars (like Amazon retail previous example), resilient solutions are not enough. In this case then you probably need to work on very restrictive HA replication infrastructures. The cost of replication complexity need to be worth it.
+To answer this question, it's very important to think about **resilience first**, because having a resilient platform and architecture is usually enough to deliver a highly available service, being able to recover on time to not impact the final service. But in some scenarios where a couple of minutes of service blockage means loss of millions of dollars (like Amazon retail previous example), resilient solutions are not enough. In this case then you probably need to work on very restrictive HA replication infrastructures. The cost of replication complexity need to be worth it.
 
-## So CI/CD HA is just Resiliency
+## So CI/CD HA is just Resilience
 
 Coming back to main topic... **YES**, it is about resilient solutions. HA in CI/CD is not about looking for an *active-active* load balancing platform that is able to orchestrate CI/CD pipelines. It is about assuring enough *availability* of my pipelines executions to deliver my software on time and covering all expectations (deployment frequency, failure recovery, lead time, quality standards, etc.).
 
@@ -83,7 +83,7 @@ What does resilient architecture mean in CI/CD pipeline orchestration? I think t
 * Rely on a **native self-healing, resilient and scalable infrastructure**. Event thought that replication is not needed, we need to recover fast from any hardware or service downtime.
 * **Decouple also pipeline execution**. Using different agent executors during pipeline execution improves availability, just the same way that *assembly lines* in the industry do.
 
-It can be pretty cool if I can access my jobs or builds all the time because my masters are all the time up and running, but it is not that cool if they are not producing the same results in terms of building and delivery software because my pipelines are not executing and recovering on time. Again... resiliency first.
+It can be pretty cool if I can access my jobs or builds all the time because my masters are all the time up and running, but it is not that cool if they are not producing the same results in terms of building and delivery software because my pipelines are not executing and recovering on time. Again... resilience first.
 
 ## Scalability and Kubernetes as HA best practice
 
@@ -103,7 +103,7 @@ In a *Jenkins enterprise experience* this is a must, and that is why for example
 
 ### The Cloud Native evolution (a.k.a. Jenkins X)
 
-But if we go purely Kubernetes native, and we provide an architecture where every piece of the pipeline orchestration and execution is just a state declaration object that can be recovered automatically when something goes down, then the HA and resiliency experience is event better.
+But if we go purely Kubernetes native, and we provide an architecture where every piece of the pipeline orchestration and execution is just a state declaration object that can be recovered automatically when something goes down, then the HA and resilient experience is event better.
 
  [Jenkins X](https://jenkins-x.io) takes these concepts and all the previous mentioned best practices of scalability and resilience. Everything is about Kubernetes native objects definitions (based on [CRDs](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)), which are resilient by nature from Kubernetes. No need to think about decoupled pipelines, infrastructure replication, or recovering scenarios. It is already out of the box from its solution architecture design. If you deploy your Kubernetes platform with some [Disaster Recovery](https://en.wikipedia.org/wiki/Disaster_recovery) configurations like Cloud cross-region availability, autoscaling pools and backup features (I think [Velero](https://velero.io/) is an interesting solution for K8s backup), it is practically impossible to completely loss the service for your CI/CD pipelines (except the case the World is ending...).
 
