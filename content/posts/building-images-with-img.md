@@ -19,10 +19,10 @@ Fortunately, efforts have been underway to create an unprivileged, non-root cont
 2. `img` can be run without requiring the `--privileged` Docker flag or the equivalent `privileged: true` security context in Kubernetes.
 3. Syntax for building, pushing, and pulling images, among other actions, largely mirror Docker's - for example, `img build -t hello-world .` and `img push hello-world` are the commands to build and push an image called `hello-world`.
 
-In this post, we'll dive into using `img` as a `Pod` within a Google Kubernetes Engine (GKE) cluster, integrating it with Google Cloud services, and running it from a Jenkins Pipeline to automate our build and push workflow. We'll also discuss some of the security implications of `img` as they relate to running in Kubernetes.
+In this post, we'll dive into using `img` within a Google Kubernetes Engine (GKE) cluster, integrating it with Google Cloud services, and running it from a Jenkins Pipeline to automate our build and push workflow. We'll also discuss some of the security implications of `img` as they relate to running in Kubernetes.
 
 ## Running `img` in Kubernetes
-Jessie's blog post includes a sample YAML manifest file (with a related [Docker container](https://r.j3ss.co/repo/img/tags)) for deploying `img` as a Kubernetes Pod, which we'll use as a starting point. However, we also want to leverage [Google Cloud's Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) to seamlessly integrate with Google Container Registry, so we'll create a custom Docker image that includes both `img` and `gcloud`. (For a deeper dive into using Workload Identity to securely tie Kubernetes Service Accounts to cloud IAM permissions, see [part 2 of Kurt's series on best practices for Jenkins in Kubernetes](/posts/best-practices-for-cloudbees-core-jenkins-on-kubernetes/securely-using-cloud-services-from-jenkins-kubernetes-agents/).)
+Jessie's blog post includes a sample YAML manifest file (with a related [Docker container](https://r.j3ss.co/repo/img/tags)) for deploying `img` as a Kubernetes `Pod`, which we'll use as a starting point. However, we also want to leverage [Google Cloud's Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) to seamlessly integrate with Google Container Registry, so we'll create a custom Docker image that includes both `img` and `gcloud`. (For a deeper dive into using Workload Identity to securely tie Kubernetes Service Accounts to cloud IAM permissions, see [part 2 of Kurt's series on best practices for Jenkins in Kubernetes](/posts/best-practices-for-cloudbees-core-jenkins-on-kubernetes/securely-using-cloud-services-from-jenkins-kubernetes-agents/).)
 
 Here's our `Dockerfile` for this combined image:
 ```Dockerfile
@@ -114,7 +114,8 @@ spec:
 ```
 
 There are a few details worth calling out in this policy:
-1. We use the `runAsUser` specification to ensure our `img` Pod runs as a non-zero/non-root user.
+
+1. We use the `runAsUser` specification to ensure our `img` `Pod` runs as a non-zero/non-root user.
 2. `privileged` is set to `false`. However, it's worth noting that `allowPrivilegeEscalation` must be set to true for `img` to execute commands properly.
 3. For `img` to run properly, both `seccomp` and `AppArmor` profiles must be set to `unconfined`, which is [required by `runc`](https://github.com/genuinetools/img#running-with-docker).
 4. We include `allowedProcMountTypes` with both `Unmasked` and `Default` as accepted values - more on this in a minute.
@@ -149,7 +150,7 @@ subjects:
   name: img
 ```
 
-Finally, here is our `Pod` definition:
+Finally, here is our `Pod` definition (which we will use as a [`podTemplate`](https://github.com/jenkinsci/kubernetes-plugin#pod-and-container-template-configuration) for our Jenkins agent):
 ```yaml
 # based on https://blog.jessfraz.com/post/building-container-images-securely-on-kubernetes/
 apiVersion: v1
@@ -193,6 +194,7 @@ spec:
 ```
 
 Again, a few items to focus on here:
+
 1. As noted above, we include annotations that set our `seccomp` and `AppArmor` to `unconfined`. 
 2. Our `Pod` `securityContext` specifies running as user 1000.
 3. On the container level, we include a `securityContext` that sets `procMount: Unmasked`. However, you'll notice that we currently have these two lines commented out.
