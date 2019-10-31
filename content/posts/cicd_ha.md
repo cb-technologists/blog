@@ -10,9 +10,9 @@ tags: ["jenkins","jenkins x", "CI/CD pipelines","High Availability"]
 
 High availability scenarios are key configurations for all mission critical software platforms and solutions at every company.
 
-But in my experience from every technology conversation I've found out that High Availability (HA from now on) is one of those terms that is usually misunderstood when talking about CI/CD. The reason? Because HA can be a subjective topic depending on who you are talking to (IT, Development, Operations, end users, etc.).
+But in my experience from every technology conversation, I've found out that High Availability (HA from now on) is one of those terms that is usually misunderstood when talking about CI/CD. The reason? Because HA can be a subjective topic depending on who you are talking to (IT, Development, Operations, end users, etc.).
 
-I am writing this post to clear things out about the "myth" of HA in CI/CD and what it means from a solution architecture point of view. So, don't expect a post with a lot code or configuration examples. It is about architecture concepts, business needs and its technical alignment to help finding out best practices for *"highly available"* CI/CD pipelines. 
+I am writing this post to clear things out about the "myth" of HA in CI/CD and what it means from a solution architecture point of view. So, don't expect a post with a lot of code or configuration examples. It is about architecture concepts, business needs and its technical alignment to help finding out the best practices for *"highly available"* CI/CD pipelines. 
 
 
 ## What is HA and why is it relative?
@@ -28,15 +28,15 @@ The words *agreed level of operational performance* show some very important top
 
 Let's use an example. If we think about the service that [Amazon retail](https://amazon.com) users are expecting, any purchase transaction using the web portal cannot be interrupted for even a few seconds. So, web services, front end applications, databases, middleware, payment channels  and other services or microservices, etc. cannot interrupt or block that user transaction. That means that every server needs to be up and running all the time, or at least to recover at the same point in a sub-second basis. 
 
-This is just because the business requires that any user transaction and interaction with the application cannot be interrupted at all, considering that an interruption is something blocked during 3 seconds or more (users don't like to wait more than 3 seconds to refresh a web page to the next step). And if that doesn't happen, I - as a user - will be doing the transaction from a different web retailer or competitor. Business then requires a very restrictive HA scenario.
+This is just because the business requires that any user transaction and interaction with the application cannot be interrupted at all, considering that an interruption is something blocked during 3 seconds or more (users don't like to wait more than 3 seconds to refresh a web page to the next step). And if that doesn't happen, I - as a user - will be doing the transaction from a different web retailer or competitor. The business then requires a very restrictive HA scenario.
 
-I am not going to enter in the differences of *"Active-Active"* or *"Active-Passive"* HA scenarios. But in the previous example a software architecture candidate usually needs to be based on an "Active-Active" replication method, where every software transaction is supported or backed-up automatically from an already running service that can re-take immediately the current step in the transaction, with no data-loss, or acting as a performant load balancer solution.
+I am not going to enter in the differences of *"Active-Active"* or *"Active-Passive"* HA scenarios. But in the previous example, a software architecture candidate usually needs to be based on an "Active-Active" replication method. So every software transaction is supported or backed-up automatically from an already running service that can re-take immediately the current step in the transaction, with no data-loss, or acting as a performant load balancer solution.
 
 But not every use case or business requires the same level of HA. In other terms, the word *High* in the *HA* term is relative. A critical service interruption can be seconds, minutes or even hours depending on the context, use case or business.
 
 ## What about HA and CI/CD?
 
-Continuous Integration and Continuous Delivery (CI/CD) is based on the concept of continuously develop, build, integrate, test, deliver and release the software, with the end goal of releasing high quality applications for demanding users. So, how should we define a highly available platform or solution to be able to do that with no *"service interruption"*?
+Continuous Integration and Continuous Delivery (CI/CD) is based on the concept of continuously developing, building, integrating, testing, delivering and releasing the software, with the end goal of producing high quality applications for demanding users. So, how should we define a highly available platform or solution to be able to do that with no *"service interruption"*?
 
 Let's see what a *service interruption* means in this case.
 
@@ -73,14 +73,14 @@ To answer this question, it's very important to think about **resilience first**
 
 ## So CI/CD HA is just Resilience
 
-Coming back to main topic... **YES**, it is about resilient solutions. HA in CI/CD is not about looking for an *active-active* load balancing platform that is able to orchestrate CI/CD pipelines. It is about assuring enough *availability* of my pipelines executions to deliver my software on time and covering all expectations (deployment frequency, failure recovery, lead time, quality standards, etc.).
+Coming back to the main topic... **YES**, it is about resilient solutions. HA in CI/CD is not about looking for an *active-active* load balancing platform that is able to orchestrate CI/CD pipelines. It is about assuring enough *availability* of my pipelines executions to deliver my software on time and covering all expectations (deployment frequency, failure recovery, lead time, quality standards, etc.).
 
-What does resilient architecture mean in CI/CD pipeline orchestration? I think that following solution architecture concepts are a must in order to offer a resilient *highly available* solution:
+What does resilient architecture mean in CI/CD pipeline orchestration? I think that the following solution architecture concepts are a must in order to offer a resilient *highly available* solution:
 
 * Orchestration layer does not have the same needs as the execution layer. Pipeline orchestrators and pipeline executors have different scalability  requirements, and because of that **decoupling execution from orchestration is a must**.
 * **Pipeline execution downtime recovery needs to be fast** and from the same execution point. Executors infrastructure can fail, even if they are replicated, so it is more important to recover from the last successful stage or status than moving the execution to another live agent executor that could restart the execution from the beginning.
 * **Decouple also the orchestration layer**. Smaller and more masters (orchestrators) are going to be more scalable and resilient to any overall failure. If one master fails it is not impacting any other orchestrator and its pipelines. So platform availability improves with scalability.
-* Rely on a **native self-healing, resilient and scalable infrastructure**. Event thought replication is not needed, we need to recover fast from any hardware or service downtime.
+* Rely on a **native self-healing, resilient and scalable infrastructure**. Event though replication is not needed, we need to recover fast from any hardware or service downtime.
 * **Decouple also pipeline execution**. Using different agent executors during pipeline execution improves availability, just the same way that *assembly lines* in the industry do.
 
 It can be pretty cool if I can access my jobs or builds all the time because my masters are all the time up and running, but it is not that cool if they are not producing the same results in terms of building and delivering software because my pipelines are not executing and recovering on time. Again... resilience first.
@@ -97,7 +97,7 @@ But let's see the following picture:
 
 ![Jenkins HA](/img/cicd-ha/CICD_HA_Archs.png)
 
-In a traditional deployment - like the diagram on the left - with Jenkins masters (orchestrators) and Jenkins agents (executors), we should at least work on an *Active-Passive* replication on masters to recover on time to provide a resilient platform with HA capabilities. But, if we also decouple the masters with smaller ones and deploy them natively in Kubernetes - diagram on the right -, the experience can be much more resilient without any replication method. A small master, that is running in a pod, can automatically be recovered by Kubernetes if it fails, restarting its service in a couple of minutes in the worse case. The pipeline could still be running by the way. Also, the rest of the masters are not impacted and agents are just ephemeral, only running and restarted when needed. So, service loss is not perceived.
+In a traditional deployment - like the diagram on the left - with Jenkins masters (orchestrators) and Jenkins agents (executors), we should at least work on an *Active-Passive* replication on masters to recover on time to provide a resilient platform with HA capabilities. But, if we also decouple the masters with smaller ones and deploy them natively in Kubernetes - diagram on the right -, the experience can be much more resilient without any replication method. A small master that is running in a pod can automatically be recovered by Kubernetes if it fails, restarting its service in a couple of minutes in the worse case. The pipeline could still be running by the way. Also, the rest of the masters are not impacted and agents are just ephemeral, only running and restarted when needed. So, service loss is not perceived.
 
 In a *Jenkins enterprise experience* this is a must, and that is why for example, [CloudBees Core](https://docs.cloudbees.com/docs/cloudbees-core/latest/) (usually known as *Jenkins Enterprise*) provides out of the box these capabilities with master management features and Kubernetes scalability.
 
@@ -121,7 +121,7 @@ I've received in the past several redundant requests from organizations like the
 
 And many more similar.
 
-Funny thing is that lots of cases were not prioritizing scalability, pipeline and master decoupling, or containerized orchestrated deployments. And then you realize that most of these requests come from IT requirements definitions in terms of HA general software architectures, no matter the nature of the service. 
+The funny thing is that lots of cases were not prioritizing scalability, pipeline and master decoupling, or containerized orchestrated deployments. And then you realize that most of these requests come from IT requirements definitions in terms of HA general software architectures, no matter the nature of the service. 
 
 Most of the people asking about HA is always referring to an *Active-Active* replication scenario and usually thinking of infrastructure, not the real business issue when comes to CI/CD. 
 
