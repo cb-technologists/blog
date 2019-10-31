@@ -2,10 +2,10 @@
 title: "Unprivileged Container Image Builds with img and Jenkins on Kubernetes"
 authors:
   - "Matt Elgin"
-date: 2019-10-28T00:00:00-00:00
+date: 2019-10-31T00:00:00-00:00
 showDate: true
 tags: ["kubernetes","img","docker","jenkins","containers","google kubernetes engine","workload identity"]
-draft: true
+draft: false
 ---
 
 ## Why use `img` for container builds?
