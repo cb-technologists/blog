@@ -1,7 +1,7 @@
 ---
 authors:
   - "David Cañadillas"
-title: "CI/CD High Availability: Misunderstanding the Concept"
+title: "CI/CD High Availability: The Real Thing"
 date: 2019-10-28T01:51:10+01:00
 showDate: true
 draft: false
@@ -28,9 +28,9 @@ The words *agreed level of operational performance* show some very important top
 
 Let's use an example. If we think about the service that [Amazon retail](https://amazon.com) users are expecting, any purchase transaction using the web portal cannot be interrupted for even a few seconds. So, web services, front end applications, databases, middleware, payment channels  and other services or microservices, etc. cannot interrupt or block that user transaction. That means that every server needs to be up and running all the time, or at least to recover at the same point in a sub-second basis. 
 
-This is just because the business requires that any user transaction and interaction with the application cannot be interrupted at all, considering that an interruption is something blocked during 3 seconds or more (users don't like to wait more than 3 seconds to refresh a web page to the next step). And if that doesn't happen, I - as a user - will be doing the transaction from a different web retailer or competitor. The business then requires a very restrictive HA scenario.
+This is just because the business requires that any user transaction and interaction with the application cannot be interrupted at all, considering that an interruption is something blocked for 3 seconds or more (users don't like to wait more than 3 seconds to refresh a web page to the next step). And if that doesn't happen, I - as a user - will be doing the transaction from a different web retailer or competitor. The business then requires a very restrictive HA scenario.
 
-I am not going to enter in the differences of *"Active-Active"* or *"Active-Passive"* HA scenarios. But in the previous example, a software architecture candidate usually needs to be based on an "Active-Active" replication method. So every software transaction is supported or backed-up automatically from an already running service that can re-take immediately the current step in the transaction, with no data-loss, or acting as a performant load balancer solution.
+I am not going to enter in the differences of *"Active-Active"* or *"Active-Passive"* HA scenarios. But in the previous example, a software architecture candidate usually needs to be based on an "Active-Active" replication method. So every software transaction is supported or backed-up automatically from an already running service that can immediately resume the current step in the transaction, with no data-loss, or acting as a performant load balancer solution.
 
 But not every use case or business requires the same level of HA. In other terms, the word *High* in the *HA* term is relative. A critical service interruption can be seconds, minutes or even hours depending on the context, use case or business.
 
@@ -46,7 +46,7 @@ I think that software development automation is taking all the learnings from th
 
 This is exactly what CI/CD is doing for software development. An [assembly line](https://en.wikipedia.org/wiki/Assembly_line) is the exact same concept for industrial manufacturing as it is for a [CI/CD pipeline](https://dzone.com/articles/learn-how-to-setup-a-cicd-pipeline-from-scratch) for software development. Just an automated sequence of stages (can be parallel or not) that execute different steps to deliver high quality products in a frequent manner.
 
-So, what about HA in manufacturing assembly pipelines? The first approach in the 1940's was to reduce the service interruption in a production line just by converting internal machine components to external (we could compare this as a decoupling method for manufacturing, similar to decouple monoliths to distributed components), so to repair a machine in the *pipeline* would impact much less in the loss of service for the entire assembly line. ([Toyota started to apply this](http://artoflean.com/index.php/2010/02/15/set-up-reduction-in-toyota/) in the 1950's for machine setup, reducing times from hours to minutes, with a huge impact in the case or restarting any *pipeline* stage in a loss of service).
+So, what about HA in manufacturing assembly pipelines? The first approach in the 1940's was to reduce the service interruption in a production line just by converting internal machine components to external (we could compare this as a decoupling method for manufacturing, similar to decoupling monoliths to distributed components), so to repair a machine in the *pipeline* would result in much less loss of service for the entire assembly line. ([Toyota started to apply this](http://artoflean.com/index.php/2010/02/15/set-up-reduction-in-toyota/) in the 1950's for machine setup, reducing times from hours to minutes, with a huge impact in the case or restarting any *pipeline* stage in a loss of service).
 
 But let's focus on how the industry faces this nowadays. Any manufacturing industry is able to assure production of hundreds or thousands of components every day from automated assembly lines just by applying different design methods in the *pipeline*. So, regarding this highly available processes, they apply things like:
 
@@ -79,9 +79,9 @@ What does resilient architecture mean in CI/CD pipeline orchestration? I think t
 
 * Orchestration layer does not have the same needs as the execution layer. Pipeline orchestrators and pipeline executors have different scalability  requirements, and because of that **decoupling execution from orchestration is a must**.
 * **Pipeline execution downtime recovery needs to be fast** and from the same execution point. Executors infrastructure can fail, even if they are replicated, so it is more important to recover from the last successful stage or status than moving the execution to another live agent executor that could restart the execution from the beginning.
-* **Decouple also the orchestration layer**. Smaller and more masters (orchestrators) are going to be more scalable and resilient to any overall failure. If one master fails it is not impacting any other orchestrator and its pipelines. So platform availability improves with scalability.
-* Rely on a **native self-healing, resilient and scalable infrastructure**. Event though replication is not needed, we need to recover fast from any hardware or service downtime.
-* **Decouple also pipeline execution**. Using different agent executors during pipeline execution improves availability, just the same way that *assembly lines* in the industry do.
+* **Decouple the orchestration layer**. Smaller and more masters (orchestrators) are going to be more scalable and resilient to any overall failure. If one master fails it is not impacting any other orchestrator and its pipelines. So platform availability improves with scalability.
+* Rely on a **native self-healing, resilient and scalable infrastructure**. Even though replication is not needed, we need to recover fast from any hardware or service downtime.
+* **Decouple pipeline execution**. Using different agent executors during pipeline execution improves availability, just the same way that *assembly lines* in the industry do.
 
 It can be pretty cool if I can access my jobs or builds all the time because my masters are all the time up and running, but it is not that cool if they are not producing the same results in terms of building and delivering software because my pipelines are not executing and recovering on time. Again... resilience first.
 
@@ -91,7 +91,7 @@ If we are looking for HA in any CI/CD solution architecture we should then think
 
 ### A traditional Jenkins example
 
-[Jenkins](https://jenkins.io) is one of the most used solutions to orchestrate CI/CD pipelines. Its internal architecture is more than 10 years old, so we might think not to be the most advanced solution. But, the truth is that it has been evolving with these resilient best practices in mind (master-agent layers, pipeline decoupling and flexibility, containerized deployment, etc.), so if you deploy and design your platform and pipelines nicely you can get a true resilient CI/CD experience, meaning a CI/CD HA platform.
+[Jenkins](https://jenkins.io) is one of the most used solutions to orchestrate CI/CD pipelines. Its internal architecture is more than 10 years old, so we might think it not to be the most advanced solution. But, the truth is that it has been evolving with these resilient best practices in mind (master-agent layers, pipeline decoupling and flexibility, containerized deployment, etc.), so if you deploy and design your platform and pipelines nicely you can get a true resilient CI/CD experience, meaning a CI/CD HA platform.
 
 But let's see the following picture:
 
