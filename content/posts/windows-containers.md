@@ -69,7 +69,7 @@ The [documentation](https://docs.microsoft.com/en-us/azure/aks/windows-container
 
 [Helm](https://helm.sh/) is the Kubernetes Package Manager and we can use it to install Jenkins using a chart([Jenkins chart](https://github.com/helm/charts/tree/master/stable/jenkins)). If you haven't installed Helm before, you can follow [these instructions](https://docs.microsoft.com/en-us/azure/aks/kubernetes-helm) to install it. Using a [nodeSelector](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) in the values file (```values.yaml```) used by the chart will allow us to specify in which nodepool Jenkins will be installed (you can find ```master.nodeSelector``` option in the Jenkins chart link). For simplicity, we are only going to configure the ```values.yaml``` file so that it deploys Jenkins using such ```nodeSelector``` option but the file can include a lot more options.  In this case, we need to make sure that Jenkins runs in the nodepool named ```masters``` (AKS assigns the nodepool name as the value of the ```agentpool``` tag, more on this in the next section)
 
-* ```values.yaml```
+* values.yaml
 
 ```
 master:
