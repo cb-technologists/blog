@@ -221,6 +221,8 @@ pipeline {
 
 - [Here](https://github.com/jenkinsci/kubernetes-plugin/blob/kubernetes-1.21.0/examples/windows.groovy) is another example on how to use a Windows container using a scripted pipeline and tested in EKS.
 
+- [Windows Containers on the Kubernetes Podcast](https://open.spotify.com/episode/0XXYzjBEj12S39rwcobJ70?si=J-tEvxR8S_qsmJcd-FGn5A)
+
  [![](/img/windows-containers/node-pools-distribution.png)](/img/windows-containers/node-pools-distribution.png)*This is a high-level diagram of the Kubernetes cluster and containers.*
 
 
