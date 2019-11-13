@@ -135,7 +135,7 @@ A Pipeline Shared Library provides reusable global variables used in the catalog
 
 By leveraging [Workload Identity for GKE](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) we are able to securely provide GCP IAM permissions without exporting service account keys (keys that don't expire for 10 years unless manually rotated). You will note that neither the [`cloudRunDeploy.groovy`](https://github.com/cloudbees-days/pipeline-library/blob/master/vars/cloudRunDeploy.groovy) nor the [`cloudRunDelete.groovy`](https://github.com/cloudbees-days/pipeline-library/blob/master/vars/cloudRunDelete.groovy) shared library scripts have any explicit Google Cloud authentication steps. That is because the Google Cloud SDK provides seamless integration with GKE Workload Identity and automatically authenticates when accessing Google Cloud APIs with a Kubernetes `ServiceAccount` that is bound to an IAM Service Account with Workload Identity. To set this up we:
 
-1. Created a GCP IAM Service Account with the most limited set of permissions for pushing and pull GCR container images and deploying, describing and deleting Cloud Run services.
+1. Created a GCP IAM Service Account with the most limited set of permissions for pushing and pulling GCR container images and deploying, describing and deleting Cloud Run services.
 2. Created a Cloud Run specific Kubernetes Namespace and Kubernetes `ServiceAccount` in our CloudBees Core GKE cluster.
    ```yaml
    apiVersion: v1
@@ -168,6 +168,7 @@ By leveraging [Workload Identity for GKE](https://cloud.google.com/kubernetes-en
          name: "kubernetes"
          namespace: "cloud-run"
    ```
+   The `k8s-cloud-run-sa`  `credentialsId` refers to a Jenkins Secret Text credential with the value being the `ServiceAccount` token of the `cloud-run-sa` Kubernetes `ServiceAccount` and only the Team Master that is configured to use this Jenkins credential will be able to provision Kubernetes agent `Pods` with the `cloud-run-sa` `ServiceAccount` thus limiting access to deploy to Cloud Run to the team with access to this Team Master.
    *from https://github.com/kypseli/demo-mm-jcasc/blob/cloud-run/jcasc.yml*
 5. Created a Jenkins Kubernetes Pod Template to run the `google/cloud-sdk:252.0.0-slim` container image.
    ```yaml
@@ -189,7 +190,7 @@ By leveraging [Workload Identity for GKE](https://cloud.google.com/kubernetes-en
        emptyDir: {}
    ```
    *from https://github.com/cloudbees-days/pipeline-library/blob/master/resources/podtemplates/cloud-run.yml*
-6. Now all you have to do is use the Google Cloud SDK from within the a Jenkins Pipeline, in this case for a shared library script and Workload Identity takes care of authenticating with the `core-cloud-run@core-workshop.iam.gserviceaccount.com` IAM service account:
+6. Use the Google Cloud SDK from within the a Jenkins Pipeline, in this case from a shared library script with Workload Identity taking care of authenticating with the `core-cloud-run@core-workshop.iam.gserviceaccount.com` IAM service account that has permissions to deploy to Cloud Run:
    ```groovy
    def call(Map config) {
      def podYaml = libraryResource 'podtemplates/cloud-run.yml'
@@ -205,6 +206,7 @@ By leveraging [Workload Identity for GKE](https://cloud.google.com/kubernetes-en
    }
    ```
    *from https://github.com/cloudbees-days/pipeline-library/blob/master/vars/cloudRunDeploy.groovy*
+7. 
 
 
 With this approach we have no long-lived GCP IAM Service Account key file, no mounting Kubernetes `Secrets`, and no Jenkins Credentials. The actual GCP service account token that is finally created for authentication is short lived and non-persistent.
