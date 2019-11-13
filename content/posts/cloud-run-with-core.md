@@ -135,85 +135,99 @@ A Pipeline Shared Library provides reusable global variables used in the catalog
 
 By leveraging [Workload Identity for GKE](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) we are able to securely provide GCP IAM permissions without exporting service account keys (keys that don't expire for 10 years unless manually rotated). You will note that neither the [`cloudRunDeploy.groovy`](https://github.com/cloudbees-days/pipeline-library/blob/master/vars/cloudRunDeploy.groovy) nor the [`cloudRunDelete.groovy`](https://github.com/cloudbees-days/pipeline-library/blob/master/vars/cloudRunDelete.groovy) shared library scripts have any explicit Google Cloud authentication steps. That is because the Google Cloud SDK provides seamless integration with GKE Workload Identity and automatically authenticates when accessing Google Cloud APIs with a Kubernetes `ServiceAccount` that is bound to an IAM Service Account with Workload Identity. To set this up we:
 
-1. Created a GCP IAM Service Account with the most limited set of permissions for pushing and pulling GCR container images and deploying, describing and deleting Cloud Run services.
-2. Created a Cloud Run specific Kubernetes Namespace and Kubernetes `ServiceAccount` in our CloudBees Core GKE cluster.
-   ```yaml
-   apiVersion: v1
-   kind: Namespace
-   metadata:
-     name: cloud-run
-   ---
-   apiVersion: v1
-   kind: ServiceAccount
-   metadata:
-     name: cloud-run-sa
-     namespace: cloud-run
-   ```
-3. Bound the IAM Service Account to a Kubernetes Service Account.
-   ```
-   gcloud iam service-accounts add-iam-policy-binding \
-     --role roles/iam.workloadIdentityUser \
-     --member "serviceAccount:core-workshop.svc.id.goog[cloud-run/cloud-run-sa]" \
-     core-cloud-run@core-workshop.iam.gserviceaccount.com
-   ```
-4. Created a Jenkins Kubernetes Cloud configured to connect to the CloudBees Core GKE cluster with the IAM bound Kubernetes `ServiceAccount` `cloud-run-sa`.
-   ```yaml
-     clouds:
-     - kubernetes:
-         connectTimeout: 5
-         containerCapStr: "10"
-         credentialsId: "k8s-cloud-run-sa"
-         defaultsProviderTemplate: "default-jnlp"
-         maxRequestsPerHostStr: "32"
-         name: "kubernetes"
-         namespace: "cloud-run"
-   ```
-   The `k8s-cloud-run-sa`  `credentialsId` refers to a Jenkins Secret Text credential with the value being the `ServiceAccount` token of the `cloud-run-sa` Kubernetes `ServiceAccount` and only the Team Master that is configured to use this Jenkins credential will be able to provision Kubernetes agent `Pods` with the `cloud-run-sa` `ServiceAccount` thus limiting access to deploy to Cloud Run to the team with access to this Team Master.
-   *from https://github.com/kypseli/demo-mm-jcasc/blob/cloud-run/jcasc.yml*
-5. Created a Jenkins Kubernetes Pod Template to run the `google/cloud-sdk:252.0.0-slim` container image.
-   ```yaml
-   kind: Pod
-   metadata:
-     name: cloud-run-pod
-   spec:
-     containers:
-     - name: gcp-sdk
-       image: google/cloud-sdk:252.0.0-slim
-       command:
-       - cat
-       tty: true
-       volumeMounts:
-         - name: gcp-logs
-           mountPath: /.config/gcloud/logs
-     volumes:
-     - name: gcp-logs
-       emptyDir: {}
-   ```
-   *from https://github.com/cloudbees-days/pipeline-library/blob/master/resources/podtemplates/cloud-run.yml*
-6. Use the Google Cloud SDK from within the a Jenkins Pipeline, in this case from a shared library script with Workload Identity taking care of authenticating with the `core-cloud-run@core-workshop.iam.gserviceaccount.com` IAM service account that has permissions to deploy to Cloud Run:
-   ```groovy
-   def call(Map config) {
-     def podYaml = libraryResource 'podtemplates/cloud-run.yml'
-     def label = "cloudrun-${UUID.randomUUID().toString()}"
-     def CLOUD_RUN_URL
-     podTemplate(name: 'cloud-run-pod', label: label, yaml: podYaml, nodeSelector: 'workload=general') {
-       node(label) {
-         container(name: 'gcp-sdk') {
-          sh "gcloud beta run deploy ${config.serviceName} --image ${config.image} --platform gke --cluster ${config.clusterName} --cluster-location ${config.region} --namespace ${config.namespace}"
-         }
-       }
-     }
-   }
-   ```
-   *from https://github.com/cloudbees-days/pipeline-library/blob/master/vars/cloudRunDeploy.groovy*
-7. 
+- Created a GCP IAM Service Account with the most limited set of permissions for pushing and pulling GCR container images and deploying, describing and deleting Cloud Run services.
+
+- Created a Cloud Run specific Kubernetes `Namespace` and Kubernetes `ServiceAccount` in our CloudBees Core GKE cluster.
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cloud-run
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cloud-run-sa
+  namespace: cloud-run
+```
+
+
+- Bound the IAM Service Account to a Kubernetes Service Account.
+
+```bash
+gcloud iam service-accounts add-iam-policy-binding \
+  --role roles/iam.workloadIdentityUser \
+  --member "serviceAccount:core-workshop.svc.id.goog[cloud-run/cloud-run-sa]" \
+  core-cloud-run@core-workshop.iam.gserviceaccount.com
+```
+
+- Created a Jenkins Kubernetes Cloud configured to connect to the CloudBees Core GKE cluster with the IAM bound Kubernetes `ServiceAccount` `cloud-run-sa`.
+   
+```yaml
+  clouds:
+  - kubernetes:
+      connectTimeout: 5
+      containerCapStr: "10"
+      credentialsId: "k8s-cloud-run-sa"
+      defaultsProviderTemplate: "default-jnlp"
+      maxRequestsPerHostStr: "32"
+      name: "kubernetes"
+      namespace: "cloud-run"
+```
+
+ The `k8s-cloud-run-sa`  `credentialsId` refers to a Jenkins Secret Text credential with the value being the `ServiceAccount` token of the `cloud-run-sa` Kubernetes `ServiceAccount` and only the Team Master that is configured to use this Jenkins credential will be able to provision Kubernetes agent `Pods` with the `cloud-run-sa` `ServiceAccount` thus limiting access to deploy to Cloud Run to the team with access to this Team Master.
+ 
+ *from https://github.com/kypseli/demo-mm-jcasc/blob/cloud-run/jcasc.yml*
+
+- Created a Jenkins Kubernetes Pod Template to run the `google/cloud-sdk:252.0.0-slim` container image.
+
+```yaml
+kind: Pod
+metadata:
+  name: cloud-run-pod
+spec:
+  containers:
+  - name: gcp-sdk
+    image: google/cloud-sdk:252.0.0-slim
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+      - name: gcp-logs
+        mountPath: /.config/gcloud/logs
+  volumes:
+  - name: gcp-logs
+    emptyDir: {}
+```
+
+*from https://github.com/cloudbees-days/pipeline-library/blob/master/resources/podtemplates/cloud-run.yml*
+
+- Use the Google Cloud SDK from within the Jenkins Pipeline, in this case from a shared library script with Workload Identity taking care of authenticating with the `core-cloud-run@core-workshop.iam.gserviceaccount.com` IAM service account that has permissions to deploy to Cloud Run:
+
+```groovy
+def call(Map config) {
+  def podYaml = libraryResource 'podtemplates/cloud-run.yml'
+  def label = "cloudrun-${UUID.randomUUID().toString()}"
+  def CLOUD_RUN_URL
+  podTemplate(name: 'cloud-run-pod', label: label, yaml: podYaml, nodeSelector: 'workload=general') {
+    node(label) {
+      container(name: 'gcp-sdk') {
+       sh "gcloud beta run deploy ${config.serviceName} --image ${config.image} --platform gke --cluster ${config.clusterName} --cluster-location ${config.region} --namespace ${config.namespace}"
+      }
+    }
+  }
+}
+```
+
+*from https://github.com/cloudbees-days/pipeline-library/blob/master/vars/cloudRunDeploy.groovy*
 
 
 With this approach we have no long-lived GCP IAM Service Account key file, no mounting Kubernetes `Secrets`, and no Jenkins Credentials. The actual GCP service account token that is finally created for authentication is short lived and non-persistent.
 
 *Check out this blog post for more details on [using Workload Identity with CloudBees Core](https://technologists.dev/posts/best-practices-for-cloudbees-core-jenkins-on-kubernetes/securely-using-cloud-services-from-jenkins-kubernetes-agents/).*
 
-We are also using [img]() along with a very restrictive [Pod Security Policy](https://kubernetes.io/docs/concepts/policy/pod-security-policy/) to provide a more secure Kubernetes CI/CD environment for container image builds.
+We are also using [img](https://blog.jessfraz.com/post/building-container-images-securely-on-kubernetes/) along with a [very restrictive](https://github.com/kypseli/demo-oc-k8s/blob/master/kustomize/cb-restricted-psp.yml) [Pod Security Policy](https://kubernetes.io/docs/concepts/policy/pod-security-policy/) to provide a more secure Kubernetes CI/CD environment for container image builds.
 
 *Checkout out this blog post for details on [using img for securely building container images on Kubernetes with Jenkins](https://technologists.dev/posts/building-images-with-img/).*
 
@@ -227,7 +241,7 @@ One useful feature of CloudBees Cross Team Collaboration is support for external
   }
 ```
 
-Then add a `Stage` to the ***Hugo Pipeline*** template configured with a conditional `when` clause on a that will only be executed when the `eventTrigger` conditions are met - a closed PR on the blog repository and only for the `master` branch (as we can't rely on other branches not being deleted). Then use the Jenkins CLI to get the Cross Team Collaboration payload and just jq to extract the PR number from the GitHub webhook payload and pass it, along with other Cloud Run specific parameters, to the `cloudRunDelete.groovy` shared library pseudo step. Here is the entire `Stage`:
+A  `PR Delete` `stage` is added to the ***Hugo Pipeline*** template configured with a conditional `when` clause that will only execute the `stage` when the `eventTrigger` conditions are met - a closed PR on the blog repository and only for the `master` branch (as we can't rely on other branches not being deleted). The Jenkins CLI is used to get the Cross Team Collaboration payload and [jq](https://stedolan.github.io/jq/) is used to extract the PR number from the GitHub webhook payload. The PR number is passed, with other Cloud Run specific parameters, to the `cloudRunDelete.groovy` shared library pseudo step. Here is the entire `stage`:
 
 ```groovy
     stage('PR Delete') {
@@ -257,5 +271,5 @@ Then add a `Stage` to the ***Hugo Pipeline*** template configured with a conditi
 
 ## Summary
 
-CloudBees Core Pipeline Templates provide the flexibility for incorporating best practices around security, compliance, performance and agent management for Jenkins Pipelines. And combining CloudBees Core with Cloud Run provides a streamlined approach for providing easily consumable developer focused deployment environments for CI/CD Pipelines. 
+CloudBees Core Pipeline Templates provide the flexibility for incorporating best practices around security, compliance, performance and streamlined management for Jenkins Pipelines. And combining CloudBees Core with Cloud Run greatly accelerates deployments of containerized web applications. 
 
