@@ -2,9 +2,10 @@
 title: Serverless Preview Environments and GitOps with CloudBees Core and Google Cloud Run
 authors:
   - "Kurt Madel"
-date: 2019-10-29T06:05:15-04:00
+  - "Logan Donley"
+date: 2019-11-13T05:05:15-04:00
 showDate: true
-tags: ["Kubernetes","containers","Cloud Run","serverless", "FaaS", "CaaS","CloudBees Core","Anthos","CI","CD","GKE","Workload Identity"]
+tags: ["Kubernetes","containers","Cloud Run","serverless","CaaS","CloudBees Core","Anthos","CI","CD","GKE","Workload Identity"]
 photo: "/posts/cloud-run-with-core/badlands-clouds.png"
 photoCaption: "Badlands National Park, SD<br>Photograph by Kurt Madel ©2019"
 exif: "SONY RX-100 ISO 125 13.75mm ƒ/6.3 1/800"
@@ -221,7 +222,7 @@ One useful feature of CloudBees Cross Team Collaboration is support for external
   }
 ```
 
-Then add a `Stage` to the ***Hugo Pipeline*** template configured with conditional `when` clause on a that will only be executed when the `eventTrigger` conditions are met - a closed PR on the blog repository and only for the `master` branch (as we can't rely on other branches not being deleted). Then use the Jenkins CLI to get the Cross Team Collaboration payload and just jq to extract the PR number from the GitHub webhook payload and pass it, along with other Cloud Run specific parameters, to the `cloudRunDelete.groovy` shared library pseudo step. Here is the entire `Stage`:
+Then add a `Stage` to the ***Hugo Pipeline*** template configured with a conditional `when` clause on a that will only be executed when the `eventTrigger` conditions are met - a closed PR on the blog repository and only for the `master` branch (as we can't rely on other branches not being deleted). Then use the Jenkins CLI to get the Cross Team Collaboration payload and just jq to extract the PR number from the GitHub webhook payload and pass it, along with other Cloud Run specific parameters, to the `cloudRunDelete.groovy` shared library pseudo step. Here is the entire `Stage`:
 
 ```groovy
     stage('PR Delete') {
