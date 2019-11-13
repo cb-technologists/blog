@@ -15,7 +15,7 @@ draft: true
 
 [Google Cloud Run](https://cloud.google.com/run/) is a Google Cloud serverless platform for stateless containerized applications that leverage HTTP and event driven workloads. Cloud Run can be fully managed or run on Cloud Run Anthos - either GKE on Google Cloud or on-premises.
 
-CloudBees Core is an enterprise version of Jenkins that provides better scalability, security and availability by running on and leveraging Kubernetes.
+CloudBees Core is an enterprise version of Jenkins that provides better scalability, manageability, security and availability by running on and leveraging Kubernetes.
 
 In this post we will explore a combination of features and best practices for using CloudBees Core on Kubernetes to deploy serverless preview development environments for GitHub Pull Requests(PR) to Cloud Run, allowing developers to review and test changes for a web application before those changes are merged to the master branch and deployed to production. After the PR is reviewed and merged to the master branch, the web application will be deployed to GKE on Google Cloud running Cloud Run for Anthos. Finally, CloudBees Core [external HTTP endpoints](https://docs.cloudbees.com/docs/cloudbees-core/latest/cloud-admin-guide/external-http-endpoints) for [CloudBees Cross Team Collaboration](https://docs.cloudbees.com/docs/cloudbees-core/latest/cloud-admin-guide/cross-team-collaboration) will be used to automatically clean up the PR Cloud Run preview environment.
 
