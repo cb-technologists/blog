@@ -17,11 +17,11 @@ draft: true
 
 CloudBees Core is an enterprise version of Jenkins that provides better scalability, security and availability by running on and leveraging Kubernetes.
 
-In this post we will explore a combination of features and best practices for using CloudBees Core on Kubernetes to deploy serverless preview development environments for GitHub Pull Requests(PR) to Cloud Run allowing developers to review and test changes for a web application before those changes are merged to the master branch and deployed to production. After the PR is reviewed and merged to the master branch, the web application will be deployed to GKE on Google Cloud running Cloud Run for Anthos. Finally, CloudBees Core [external HTTP endpoints](https://docs.cloudbees.com/docs/cloudbees-core/latest/cloud-admin-guide/external-http-endpoints) for [CloudBees Cross Team Collaboration](https://docs.cloudbees.com/docs/cloudbees-core/latest/cloud-admin-guide/cross-team-collaboration) will be used to automatically clean up the PR Cloud Run preview environment.
+In this post we will explore a combination of features and best practices for using CloudBees Core on Kubernetes to deploy serverless preview development environments for GitHub Pull Requests(PR) to Cloud Run, allowing developers to review and test changes for a web application before those changes are merged to the master branch and deployed to production. After the PR is reviewed and merged to the master branch, the web application will be deployed to GKE on Google Cloud running Cloud Run for Anthos. Finally, CloudBees Core [external HTTP endpoints](https://docs.cloudbees.com/docs/cloudbees-core/latest/cloud-admin-guide/external-http-endpoints) for [CloudBees Cross Team Collaboration](https://docs.cloudbees.com/docs/cloudbees-core/latest/cloud-admin-guide/cross-team-collaboration) will be used to automatically clean up the PR Cloud Run preview environment.
 
 
 ## Why Serverless?
-Of course serverless doesn't mean there aren't any servers. Rather serverless refers to reducing or completely removing the need to manage infrastructure for applications and making deployment of those applications easier. Cloud Run takes the auto-management of your application to a new level by providing managed autoscaling, redundancy, and TLS. And when your application isn't servicing requests, it is spun down and you pay nothing.
+Of course serverless doesn't mean there aren't any servers. Rather serverless refers to reducing or completely removing the need to manage infrastructure for applications and making deployment of those applications easier. Cloud Run takes the auto-management of your application deployment to a new level by providing managed autoscaling, redundancy, and TLS. And when your application isn't servicing requests, it is spun down and you pay nothing.
 
 ### Knative
 
@@ -82,7 +82,7 @@ status:
   url: http://hugo-cloud-run.cloud-run.knative.***.***
 ```
 
-The YAML spec for a Cloud Run services is available via the UI of the **Cloud Run > Service Details** console. You may also retrieve it with the following [Google Cloud SDK command](https://cloud.google.com/sdk/gcloud/reference/beta/run/services/describe): 
+The YAML spec for a Cloud Run services are available via the UI of the **Cloud Run > Service Details** console. You may also retrieve it with the following [Google Cloud SDK command](https://cloud.google.com/sdk/gcloud/reference/beta/run/services/describe): 
 
 ```bash
 gcloud beta run services describe hugo-cloud-run --platform gke \
@@ -104,7 +104,7 @@ CloudBees Core provides the perfect balance of flexibility and operational consi
 
 The [***Hugo Pipeline*** template](https://github.com/cloudbees-days/pipeline-template-catalog/tree/master/templates/hugo) will:
 
-1. [Be parameterized](https://github.com/cloudbees-days/pipeline-template-catalog/blob/master/templates/hugo/template.yaml) to allow deploying to the fully managed Cloud Run, Cloud Run for Anthos on Google Cloud (GKE) or Cloud Run for Anthos for GKE on-prem - and a different deployment target can be select for PRs vs master branch deployments.
+1. [Be parameterized](https://github.com/cloudbees-days/pipeline-template-catalog/blob/master/templates/hugo/template.yaml) to allow deploying to the fully managed Cloud Run, Cloud Run for Anthos on Google Cloud (GKE) or Cloud Run for Anthos for GKE on-prem - and a different deployment target can be selected for PRs vs master branch deployments.
 2. [Use Hugo to generate the static website](https://github.com/cloudbees-days/pipeline-template-catalog/blob/master/templates/hugo/Jenkinsfile#L40).
 3. [Build a container image](https://github.com/cloudbees-days/pipeline-template-catalog/blob/master/templates/hugo/Jenkinsfile#L47) using [img](https://github.com/genuinetools/img) and push to GCR with [GKE Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity).
 4. [Use the Google Cloud SDK with GKE Workload Identity to deploy the container as a Cloud Run service](https://github.com/cloudbees-days/pipeline-template-catalog/blob/master/templates/hugo/Jenkinsfile#L55) - a temporary preview environment for PRs and a production Cloud Run deployment for the master branch.
@@ -113,7 +113,7 @@ The [***Hugo Pipeline*** template](https://github.com/cloudbees-days/pipeline-te
 
 #### Pipeline Shared Libraries
 
-A Pipeline Shared Library provides reusable global variables used in the catalog template similar to built-in Pipeline steps and the shared library will provide Kubernetes Pod specs (Jenkins agent templates) for ephemeral containerized agents.  The structure and the pertinent files of the [shared library used with the ***Hugo Pipeline*** template](https://github.com/cloudbees-days/pipeline-library) are described below:
+A Pipeline Shared Library provides reusable global variables used in the catalog template that are similar in use to built-in Pipeline steps. The shared library will also provide Kubernetes Pod specs (Jenkins agent templates) for ephemeral containerized agents.  The structure and the pertinent files of the [shared library used with the ***Hugo Pipeline*** template](https://github.com/cloudbees-days/pipeline-library) are described below:
 
 ```
 +- vars
