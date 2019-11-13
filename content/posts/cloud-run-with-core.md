@@ -271,5 +271,5 @@ A  `PR Delete` `stage` is added to the ***Hugo Pipeline*** template configured w
 
 ## Summary
 
-CloudBees Core Pipeline Templates provide the flexibility for incorporating best practices around security, compliance, performance and streamlined management for Jenkins Pipelines. And combining CloudBees Core with Cloud Run greatly accelerates deployments of containerized web applications. 
+CloudBees Core Pipeline Templates provide the flexibility for incorporating best practices around security, compliance, performance and streamlined management for Jenkins Pipelines. And combining CloudBees Core with Cloud Run greatly accelerates deployments of containerized web applications - regardless if it is a temporary preview environment for PRs or a production deployment. 
 
