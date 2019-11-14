@@ -3,7 +3,7 @@ title: Serverless Preview Environments and GitOps with CloudBees Core and Google
 authors:
   - "Kurt Madel"
   - "Logan Donley"
-date: 2019-11-13T05:05:15-04:00
+date: 2019-11-14T05:05:15-04:00
 showDate: true
 tags: ["Kubernetes","containers","Cloud Run","serverless","CaaS","FaaS","CloudBees Core","Anthos","CI","CD","GKE","Workload Identity"]
 photo: "/posts/cloud-run-with-core/badlands-clouds.png"
@@ -13,7 +13,7 @@ canonicalUrl:
 draft: true
 ---
 
-[Google Cloud Run](https://cloud.google.com/run/) is a Google Cloud serverless platform for stateless containerized applications that leverage HTTP and event driven workloads. Cloud Run can be fully managed or run on Cloud Run Anthos - either GKE on Google Cloud or on-premises.
+[Google Cloud Run](https://cloud.google.com/run/) is Google Cloud's serverless platform for stateless containerized applications that leverage HTTP and event driven workloads. Cloud Run can be fully managed or you can use Cloud Run for Anthos to deploy applications in an Anthos GKE cluster running on Google Cloud or on-premises.
 
 CloudBees Core is an enterprise version of Jenkins that provides better scalability, manageability, security and availability by running on and leveraging Kubernetes.
 
@@ -24,11 +24,11 @@ In this post we will explore a combination of features and best practices for us
 Of course serverless doesn't mean there aren't any servers. Rather serverless refers to reducing or completely removing the need to manage infrastructure for applications and making deployment of those applications easier. Cloud Run takes the auto-management of your application deployment to a new level by providing managed autoscaling, redundancy, and TLS. And when your application isn't servicing requests, it is spun down and you pay nothing.
 
 ### Why Cloud Run?
-There are already a number of articles that compare Cloud Run to other serverless offerings. And just to be clear, Cloud Run is not a Function-as-a-Service (FaaS) offering. Cloud Run is more akin to a Container-as-a-Service (CaaS) and as such has several advantages over FaaS offerings. These advantages include more flexibility, better testability and portability as [outlined by this great post](https://medium.com/google-cloud/cloud-run-and-cloud-function-what-i-use-and-why-12bb5d3798e1) by Guillaume Blaquiere. In that article, Guillaume Blaquiere comes to the conclusion the he would rather use Cloud Run than Google Cloud Functions.
+There are already a number of articles that compare Cloud Run to other serverless offerings. And just to be clear, Cloud Run is not a Function-as-a-Service (FaaS) offering. Cloud Run is more akin to a Container-as-a-Service (CaaS) and as such has several advantages over FaaS offerings. These advantages include more flexibility, better testability and portability as [outlined by this great post](https://medium.com/google-cloud/cloud-run-and-cloud-function-what-i-use-and-why-12bb5d3798e1) by Guillaume Blaquiere. In that article, Guillaume Blaquiere comes to the conclusion that he would rather use Cloud Run than Google Cloud Functions for the majority of his own use cases.
 
 #### A Knative Foundation Provides Portability
 
-Cloud Run is built on top of the open source [Knative project](https://knative.dev/) that describes itself as a "platform to deploy and manage modern serverless workloads." This provides a level of portability that is atypical of most other serverless offerings from other Cloud providers. Here is the resulting Kubernetes Knative YAML manifest from deploying to the managed Cloud Run service:
+Cloud Run is built on top of the open source [Knative project](https://knative.dev/) that describes itself as a "platform to deploy and manage modern serverless workloads." This provides a level of portability that is atypical of most other serverless offerings from other cloud providers. Here is the resulting Kubernetes Knative YAML manifest from deploying to the managed Cloud Run service:
 
 ```yaml
 apiVersion: serving.knative.dev/v1
@@ -62,27 +62,6 @@ spec:
         resources: {}
         readinessProbe:
           successThreshold: 1
-status:
-  conditions:
-  - type: ConfigurationsReady
-    status: 'True'
-    lastTransitionTime: '2019-11-12T14:05:54Z'
-  - type: Ready
-    status: 'True'
-    lastTransitionTime: '2019-11-12T14:05:56Z'
-  - type: RoutesReady
-    status: 'True'
-    lastTransitionTime: '2019-11-12T14:05:56Z'
-  observedGeneration: 1
-  traffic:
-  - revisionName: hugo-cloud-run-pprqg
-    percent: 100
-    latestRevision: true
-  latestReadyRevisionName: hugo-cloud-run-pprqg
-  latestCreatedRevisionName: hugo-cloud-run-pprqg
-  address:
-    url: http://hugo-cloud-run.cloud-run.svc.cluster.local
-  url: http://hugo-cloud-run.cloud-run.knative.***.***
 ```
 
 The YAML spec for a Cloud Run services are available via the UI of the **Cloud Run > Service Details** console. You may also retrieve it with the following [Google Cloud SDK command](https://cloud.google.com/sdk/gcloud/reference/beta/run/services/describe): 
@@ -95,7 +74,7 @@ gcloud beta run services describe hugo-cloud-run --platform gke \
 
 Furthermore, the current alpha release of the Google Cloud SDK allows [creating or replacing a Cloud Run service from such a YAML specification](https://cloud.google.com/sdk/gcloud/reference/alpha/run/services/replace).
 
-## Ephemeral Preview Environments for Continuous Delivery with Cloud Run and Core
+## Ephemeral Preview Environments for Continuous Delivery with CloudBees Core and Cloud Run
 
 When developers commit deployable code they want to see it working, especially for web based applications. [Preview environments](https://jenkins-x.io/developing/preview/) for GitHub Pull Requests is a developer friendly feature that [Jenkins X](https://jenkins-x.io/) has provided for some time now but preview environments aren't limited to Jenkins X. Cloud Run provides an excellent platform for creating light-weight ephemeral preview environments for stateless containers that leverage HTTP workloads - and even better, when your application isn't receiving requests your service is scaled down to zero and you pay nothing. So even if that PR sits there for a few days, you only pay for the time your application is being used and that may only be a handful of minutes over several days. 
 
@@ -107,7 +86,7 @@ CloudBees Core provides the perfect balance of flexibility and operational consi
 
 The [***Hugo Pipeline*** template](https://github.com/cloudbees-days/pipeline-template-catalog/tree/master/templates/hugo) will:
 
-1. [Be parameterized](https://github.com/cloudbees-days/pipeline-template-catalog/blob/master/templates/hugo/template.yaml) to allow deploying to the fully managed Cloud Run, Cloud Run for Anthos on Google Cloud (GKE) or Cloud Run for Anthos for GKE on-prem - and a different deployment target can be selected for PRs vs master branch deployments.
+1. [Be parameterized](https://github.com/cloudbees-days/pipeline-template-catalog/blob/master/templates/hugo/template.yaml) to allow deploying to the fully managed Cloud Run, Cloud Run for Anthos Anthos GKE clusters running on Google Cloud or on-prem - and a different deployment target can be selected for PRs vs master branch deployments.
 2. [Use Hugo to generate the static website](https://github.com/cloudbees-days/pipeline-template-catalog/blob/master/templates/hugo/Jenkinsfile#L40).
 3. [Build a container image](https://github.com/cloudbees-days/pipeline-template-catalog/blob/master/templates/hugo/Jenkinsfile#L47) using [img](https://github.com/genuinetools/img) and push to GCR with [GKE Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity).
 4. [Use the Google Cloud SDK with GKE Workload Identity to deploy the container as a Cloud Run service](https://github.com/cloudbees-days/pipeline-template-catalog/blob/master/templates/hugo/Jenkinsfile#L55) - a temporary preview environment for PRs and a production Cloud Run deployment for the master branch.
@@ -271,5 +250,5 @@ A  `PR Delete` `stage` is added to the ***Hugo Pipeline*** template configured w
 
 ## Summary
 
-CloudBees Core Pipeline Templates provide the flexibility for incorporating best practices around security, compliance, performance and streamlined management for Jenkins Pipelines. And combining CloudBees Core with Cloud Run greatly accelerates deployments of containerized web applications - regardless if it is a temporary preview environment for PRs or a production deployment. 
+CloudBees Core Pipeline Templates provide the flexibility for incorporating best practices around security, compliance, performance and streamlined management for Jenkins Pipelines. And combining CloudBees Core with Google Cloud Run greatly accelerates deployments of containerized web applications - regardless if it is a temporary preview environment for PRs or a production deployment. 
 
