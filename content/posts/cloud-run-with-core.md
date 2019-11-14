@@ -9,7 +9,7 @@ tags: ["Kubernetes","containers","Cloud Run","serverless","CaaS","FaaS","CloudBe
 photo: "/posts/cloud-run-with-core/badlands-clouds.png"
 photoCaption: "Badlands National Park, SD<br>Photograph by Kurt Madel ©2019"
 exif: "SONY RX-100 ISO 125 13.75mm ƒ/6.3 1/800"
-canonicalUrl: 
+canonicalUrl: https://www.cloudbees.com/blog/serverless-preview-environments-and-gitops-cloudbees-core-and-google-cloud-run
 draft: true
 ---
 
