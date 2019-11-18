@@ -69,7 +69,7 @@ The [documentation](https://docs.microsoft.com/en-us/azure/aks/windows-container
 
 * values.yaml
 
-```
+```yaml
 master:
   nodeSelector:
     agentpool: masters
@@ -90,7 +90,6 @@ printf $(kubectl get secret jenkins -o jsonpath="{.data.jenkins-admin-password}"
 export SERVICE_IP=$(kubectl get svc jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
 
 echo http://$SERVICE_IP:8080/login
-
 ```
 You should be able to access Jenkins with the provided URL at this point.
 
@@ -126,7 +125,7 @@ Let's take a look at the repository structure in [```https://github.com/mluyo341
 
 - The ```dotnet-pod.yaml``` has two container definitions: a **Windows based** ```jnlp```(```jenkins/jnlp-agent:latest-windows```) and a ```windows-dotnet``` container (```mcr.microsoft.com/dotnet/core/sdk:2.1```). We need to overwrite the ```jnlp``` container in this pod since otherwise it will use the **Linux based** ```jnlp``` container defined under ```Jenkins --> Configuration --> Pod templates```. In this case, Jenkins was automatically configured with the Linux pod: ```jenkins/jnlp-slave:3.27-1```.
 
-```
+```yaml
 kind: Pod
 metadata:
   name: windows
@@ -144,7 +143,7 @@ spec:
 
 - The ```nodejs-pod.yaml``` has the ```node```(nodeJS) container definition and will use the default Linux based ```jnlp``` (```jenkins/jnlp-slave:3.27-1```) mentioned before.
 
-```
+```yaml
 kind: Pod
 metadata:
   name: nodejs-app
@@ -168,7 +167,7 @@ spec:
 
 - Jenkinsfile:
 
-```
+```groovy
 pipeline {
   agent none
   options { 
