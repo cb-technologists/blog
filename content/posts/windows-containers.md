@@ -2,7 +2,7 @@
 authors:
   - "Miguel Suarez"
 title: "Using Windows containers with Jenkins on Kubernetes 1.14"
-date: 2019-10-27T17:00:00-04:00
+date: 2019-11-18T17:00:00-04:00
 showDate: true
 draft: false
 tags: ["jenkins","kubernetes","windows", "azure", "AKS", "EKS"]
@@ -13,7 +13,7 @@ Kubernetes 1.14 was released in March 2019 and the release brought [production s
 2. Versions supported for worker nodes and containers: Windows Server 1809/Windows Server 2019
 3. **Windows containers have to be scheduled on Windows nodes** 
 
-At the time this post was written (Oct 19), [AKS](https://azure.microsoft.com/en-us/blog/announcing-the-preview-of-windows-server-containers-support-in-azure-kubernetes-service/), [GKE](https://cloud.google.com/blog/products/containers-kubernetes/how-to-deploy-a-windows-container-on-google-kubernetes-engine) and [EKS](https://aws.amazon.com/blogs/aws/amazon-eks-windows-container-support-now-generally-available/) offer some level of support for Windows based containers (EKS is the first to offer GA support for Windows based containers). The [EKS documentation](https://aws.amazon.com/blogs/aws/amazon-eks-windows-container-support-now-generally-available/) provides instructions on how to setup Windows nodes using ```eksctl``` and EKS. You might want to try that since it is GA. The following are the instructions for AKS 1.14+ (where Windows Containers are still under preview) but the example and instructions related to Jenkins we will use should be able to be used in a similar setup where Kubernetes has a Windows node pool. 
+At the time this post was written (Nov 19), [AKS](https://azure.microsoft.com/en-us/blog/announcing-the-preview-of-windows-server-containers-support-in-azure-kubernetes-service/), [GKE](https://cloud.google.com/blog/products/containers-kubernetes/how-to-deploy-a-windows-container-on-google-kubernetes-engine) and [EKS](https://aws.amazon.com/blogs/aws/amazon-eks-windows-container-support-now-generally-available/) offer some level of support for Windows based containers (EKS is the first to offer GA support for Windows based containers). The [EKS documentation](https://aws.amazon.com/blogs/aws/amazon-eks-windows-container-support-now-generally-available/) provides instructions on how to setup Windows nodes using ```eksctl``` and EKS. You might want to try that since it is GA. The following are the instructions for AKS 1.14+ (where Windows Containers are still under preview) but the example and instructions related to Jenkins we will use should be able to be used in a similar setup where Kubernetes has a Windows node pool. 
 
 ## Infrastructure Setup and Windows Nodepools
 
