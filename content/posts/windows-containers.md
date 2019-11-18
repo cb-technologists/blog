@@ -104,7 +104,7 @@ Make sure to check the version of the Kubernetes plugin installed. This example 
 
     * Definition: ```"Pipeline script from SCM"```
     * SCM: ```Git```
-    * Repository URL: ```https://github.com/mluyo3414org/pod-templates.git ```
+    * Repository URL: [```https://github.com/mluyo3414org/pod-templates.git```](https://github.com/mluyo3414org/pod-templates.git)
 
  [![](/img/windows-containers/pipeline-options.png)](/img/windows-containers/pipeline-options.png)
 
