@@ -30,14 +30,13 @@ The [documentation](https://docs.microsoft.com/en-us/azure/aks/windows-container
     * As mentioned in the document, the [Multiple Node Pool feature](https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools) is also needed to create a separate Windows node pool.
 3. Create a new resource group (if needed)
 4. Create an AKS cluster
-    * You can use ```--nodepool-name``` with ```aks create cluster``` to name your control plane node pool i.e (```default```)
+    * You can use ```--nodepool-name``` with ```aks create cluster``` to name your control plane node pool (i.e ```default```)
 5. Add a Windows Server node pool 
     * This will be a node pool for Kubernetes pod Windows agents, we can name it ```--name winage```
 
 [Node pools](https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools) give us the possibility to extend our Kubernetes cluster with more types of machines depending on our use and budget (see available [options and default values](https://docs.microsoft.com/en-us/cli/azure/ext/aks-preview/aks/nodepool?view=azure-cli-latest#ext-aks-preview-az-aks-nodepool-add)) for AKS. As an example, we are going to add two more identical pools (one for masters and one for Linux agents) but you can pick different machine sizes and node counts depending on your need (just make sure that the VMs used for Jenkins masters support Premium Storage as Jenkins requires high IOPS for better performance):
     
 * Linux Jenkins master pool example:
-
     ```    
     az aks nodepool add \ 
     --resource-group myResourceGroup \
@@ -50,7 +49,6 @@ The [documentation](https://docs.microsoft.com/en-us/azure/aks/windows-container
     ```
 
 * Linux Jenkins agent pool example:
-
     ```
     az aks nodepool add \                                                                 --resource-group myResourceGroup \
     --cluster-name eastUSAKS \
@@ -67,7 +65,7 @@ The [documentation](https://docs.microsoft.com/en-us/azure/aks/windows-container
 
 ## Jenkins installation using Helm
 
-[Helm](https://helm.sh/) is the Kubernetes Package Manager and we can use it to install Jenkins using ([ the official chart](https://github.com/helm/charts/tree/master/stable/jenkins)). If you haven't installed Helm before, you can follow [these instructions](https://docs.microsoft.com/en-us/azure/aks/kubernetes-helm) to install it. Using a [nodeSelector](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) in the values file (```values.yaml```) used by the chart will allow us to specify in which nodepool Jenkins will be installed (you can find ```master.nodeSelector``` option in the Jenkins chart link). For simplicity, we are only going to configure the ```values.yaml``` file so that it deploys Jenkins using such ```nodeSelector``` option but the file can include a lot more options.  In this case, we need to make sure that Jenkins runs in the nodepool named ```masters``` (AKS assigns the nodepool name as the value of the ```agentpool``` tag, more on this in the next section)
+[Helm](https://helm.sh/) is the Kubernetes Package Manager and we can use it to install Jenkins using the [ official chart](https://github.com/helm/charts/tree/master/stable/jenkins). If you haven't installed Helm before, you can follow [these instructions](https://docs.microsoft.com/en-us/azure/aks/kubernetes-helm) to install it. Using a [nodeSelector](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) in the values file (```values.yaml```) used by the chart will allow us to specify in which nodepool Jenkins will be installed (you can find ```master.nodeSelector``` option in the Jenkins chart link). For simplicity, we are only going to configure the ```values.yaml``` file so that it deploys Jenkins using such ```nodeSelector``` option but the file can include a lot more options.  In this case, we need to make sure that Jenkins runs in the nodepool named ```masters``` (AKS assigns the nodepool name as the value of the ```agentpool``` tag, more on this in the next section)
 
 * values.yaml
 
@@ -223,13 +221,13 @@ pipeline {
 
 ## Conclusion
 
-In this post we were able to discuss how you can take advantage of Jenkins and Kubernetes to use Windows containers as part of your CI/CD pipelines. The architecture discussed in this post is depicted by this high-level diagram of the Kubernetes cluster and some of its components.
+In this post we were able to discuss how you can take advantage of Jenkins and Kubernetes to use Windows containers as part of your CI/CD pipelines. The architecture and process discussed in this post are depicted by this high-level diagram of the Kubernetes cluster and some of its components.
 
  [![](/img/windows-containers/node-pools-distribution.png)](/img/windows-containers/node-pools-distribution.png)
 
-Listen to this podcast for more information about Kubernetes and Windows containers:
+Listen to [Windows Server Containers on the Kubernetes Podcast](https://open.spotify.com/episode/0XXYzjBEj12S39rwcobJ70?si=J-tEvxR8S_qsmJcd-FGn5A) for more information.
 
-[Windows Containers on the Kubernetes Podcast](https://open.spotify.com/episode/0XXYzjBEj12S39rwcobJ70?si=J-tEvxR8S_qsmJcd-FGn5A)
+
 
 
 
