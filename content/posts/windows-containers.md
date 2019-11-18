@@ -30,11 +30,11 @@ The [documentation](https://docs.microsoft.com/en-us/azure/aks/windows-container
     * As mentioned in the document, the [Multiple Node Pool feature](https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools) is also needed to create a separate Windows node pool.
 3. Create a new resource group (if needed)
 4. Create an AKS cluster
-    * You can use ```--nodepool-name``` with ```aks create cluster``` to name your control plane node pool i.e ```default```
+    * You can use ```--nodepool-name``` with ```aks create cluster``` to name your control plane node pool i.e (```default```)
 5. Add a Windows Server node pool 
-    * This will be a node pool for kubernetes pod Windows agents, we can name it ```--name winage```
+    * This will be a node pool for Kubernetes pod Windows agents, we can name it ```--name winage```
 
-[Node pools](https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools) give us the possibility to extend our Kubernetes cluster with more types of machines depending on our use and budget (See available [options and default values](https://docs.microsoft.com/en-us/cli/azure/ext/aks-preview/aks/nodepool?view=azure-cli-latest#ext-aks-preview-az-aks-nodepool-add)) for AKS. As an example, we are going to add two more identical pools (one for masters and one for Linux agents) but you can pick different machine sizes and node counts depending on your need (just make sure that the VMs used for Jenkins masters support Premium Storage as Jenkins requires high IOPS for better performance):
+[Node pools](https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools) give us the possibility to extend our Kubernetes cluster with more types of machines depending on our use and budget (see available [options and default values](https://docs.microsoft.com/en-us/cli/azure/ext/aks-preview/aks/nodepool?view=azure-cli-latest#ext-aks-preview-az-aks-nodepool-add)) for AKS. As an example, we are going to add two more identical pools (one for masters and one for Linux agents) but you can pick different machine sizes and node counts depending on your need (just make sure that the VMs used for Jenkins masters support Premium Storage as Jenkins requires high IOPS for better performance):
     
 * Linux Jenkins master pool example:
 
@@ -67,7 +67,7 @@ The [documentation](https://docs.microsoft.com/en-us/azure/aks/windows-container
 
 ## Jenkins installation using Helm
 
-[Helm](https://helm.sh/) is the Kubernetes Package Manager and we can use it to install Jenkins using a chart([Jenkins chart](https://github.com/helm/charts/tree/master/stable/jenkins)). If you haven't installed Helm before, you can follow [these instructions](https://docs.microsoft.com/en-us/azure/aks/kubernetes-helm) to install it. Using a [nodeSelector](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) in the values file (```values.yaml```) used by the chart will allow us to specify in which nodepool Jenkins will be installed (you can find ```master.nodeSelector``` option in the Jenkins chart link). For simplicity, we are only going to configure the ```values.yaml``` file so that it deploys Jenkins using such ```nodeSelector``` option but the file can include a lot more options.  In this case, we need to make sure that Jenkins runs in the nodepool named ```masters``` (AKS assigns the nodepool name as the value of the ```agentpool``` tag, more on this in the next section)
+[Helm](https://helm.sh/) is the Kubernetes Package Manager and we can use it to install Jenkins using ([ the official chart](https://github.com/helm/charts/tree/master/stable/jenkins)). If you haven't installed Helm before, you can follow [these instructions](https://docs.microsoft.com/en-us/azure/aks/kubernetes-helm) to install it. Using a [nodeSelector](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) in the values file (```values.yaml```) used by the chart will allow us to specify in which nodepool Jenkins will be installed (you can find ```master.nodeSelector``` option in the Jenkins chart link). For simplicity, we are only going to configure the ```values.yaml``` file so that it deploys Jenkins using such ```nodeSelector``` option but the file can include a lot more options.  In this case, we need to make sure that Jenkins runs in the nodepool named ```masters``` (AKS assigns the nodepool name as the value of the ```agentpool``` tag, more on this in the next section)
 
 * values.yaml
 
@@ -161,7 +161,7 @@ spec:
     agentpool: linage
 ```
 
-- Notice both pod yaml definitions use  ```nodeSelector``` ([nodeSelector](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)) to decide where these pods should be scheduled. If this is not specified, the Kubernetes scheduler will provision the pods following the [default behavior](https://kubernetes.io/blog/2017/03/advanced-scheduling-in-kubernetes/) which could possibly start a pod in the a node with the wrong OS. The tags used for the nodeSelectors are the default tags assigned by Azure when specifyng the nodepool name: ``` agentpool : nameOfNodePool ```. To find the node tags you can use the command: ``` kubectl get nodes --show-labels ```. Other options to prevent scheduling errors are ```taints```  ([more info] (https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/)).
+- Notice both pod yaml definitions use  ```nodeSelector``` ([nodeSelector](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)) to decide where these pods should be scheduled. If this is not specified, the Kubernetes scheduler will provision the pods following the [default behavior](https://kubernetes.io/blog/2017/03/advanced-scheduling-in-kubernetes/) which could possibly start a pod in a node with the wrong OS. The tags used for the nodeSelectors are the default tags assigned by Azure when specifying the nodepool name: ``` agentpool : nameOfNodePool ```. To find the node tags you can use the command: ``` kubectl get nodes --show-labels ```. Other options to prevent scheduling errors are ```taints```  ([more info] (https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/)).
   
 
 
@@ -212,18 +212,26 @@ pipeline {
 ```
 
 
-- This is a declarative pipeline using agent ```none```([none](https://jenkins.io/doc/book/pipeline/syntax/#agent) info) so that we can specify agents per stage. ```yamlFile``` is used to read the pod template from a file location which is also in this repo. You can either define the pod template in another file, in the same [Jenkinsfile](https://github.com/jenkinsci/kubernetes-plugin/blob/master/examples/declarative-multiple-containers.groovy) or in the Jenkins Configuration page. More info about the syntax used in this pipeline can be found [here](https://jenkins.io/doc/book/pipeline/syntax/). 
+- This is a declarative pipeline using [```agent none```](https://jenkins.io/doc/book/pipeline/syntax/#agent) so that we can specify agents per stage. ```yamlFile``` is used to read the pod template from a file location which is also in this repo. You can either define the pod template in another file, in the same [Jenkinsfile](https://github.com/jenkinsci/kubernetes-plugin/blob/master/examples/declarative-multiple-containers.groovy) or in the Jenkins Configuration page. More info about the syntax used in this pipeline can be found [here](https://jenkins.io/doc/book/pipeline/syntax/). 
 
 
-- The ```node --version``` command is executed inside the ```container``` step otherwise it will get executed inside the jnlp (Linux) container and fail as it doesn't have node installed. Similarly ```bat 'dir ``` gets executed in the jnlp (Windows) container and ```bat 'dotnet -h' ``` is executed inside the dotnet container.
+- The ```node --version``` command is executed inside the ```container``` step otherwise it will get executed inside the jnlp (Linux) container and fail as it doesn't have node installed. Similarly ```bat 'dir' ``` gets executed in the jnlp (Windows) container and ```bat 'dotnet -h' ``` is executed inside the dotnet container.
 
 
 
 - [Here](https://github.com/jenkinsci/kubernetes-plugin/blob/kubernetes-1.21.0/examples/windows.groovy) is another example on how to use a Windows container using a scripted pipeline and tested in EKS.
 
-- [Windows Containers on the Kubernetes Podcast](https://open.spotify.com/episode/0XXYzjBEj12S39rwcobJ70?si=J-tEvxR8S_qsmJcd-FGn5A)
+## Conclusion
 
- [![](/img/windows-containers/node-pools-distribution.png)](/img/windows-containers/node-pools-distribution.png)*This is a high-level diagram of the Kubernetes cluster and containers.*
+In this post we were able to discuss how you can take advantage of Jenkins and Kubernetes to use Windows containers as part of your CI/CD pipelines. The architecture discussed in this post is depicted by this high-level diagram of the Kubernetes cluster and some of its components.
+
+ [![](/img/windows-containers/node-pools-distribution.png)](/img/windows-containers/node-pools-distribution.png)
+
+Listen to this podcast for more information about Kubernetes and Windows containers:
+
+[Windows Containers on the Kubernetes Podcast](https://open.spotify.com/episode/0XXYzjBEj12S39rwcobJ70?si=J-tEvxR8S_qsmJcd-FGn5A)
+
+
 
 
 

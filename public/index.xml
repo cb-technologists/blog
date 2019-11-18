@@ -6,10 +6,48 @@
     <description>Recent content on CloudBees Technologists</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 04 Sep 2019 05:05:15 -0400</lastBuildDate>
+    <lastBuildDate>Thu, 31 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://technologists.dev/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Unprivileged Container Image Builds with img and Jenkins on Kubernetes</title>
+      <link>https://technologists.dev/posts/building-images-with-img/</link>
+      <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://technologists.dev/posts/building-images-with-img/</guid>
+      <description>Why use img for container builds? As more organizations turn to containers and Kubernetes to manage their CI/CD workloads, numerous strategies have emerged to handle the actual building of container images within these containerized environments. However, each of these approaches have not been without their security drawbacks (see Kurt Madel&amp;rsquo;s recent post on &amp;ldquo;Securely Building Container Images on Kubernetes&amp;rdquo; for a rundown of these approaches and their security implications.)</description>
+    </item>
+    
+    <item>
+      <title>CI/CD High Availability: The Real Thing</title>
+      <link>https://technologists.dev/posts/cicd_ha/</link>
+      <pubDate>Mon, 28 Oct 2019 01:51:10 +0100</pubDate>
+      
+      <guid>https://technologists.dev/posts/cicd_ha/</guid>
+      <description>High availability scenarios are key configurations for all mission critical software platforms and solutions at every company.
+But in my experience from every technology conversation, I&amp;rsquo;ve found out that High Availability (HA from now on) is one of those terms that is usually misunderstood when talking about CI/CD. The reason? Because HA can be a subjective topic depending on who you are talking to (IT, Development, Operations, end users, etc.</description>
+    </item>
+    
+    <item>
+      <title>Using Windows containers with Jenkins on Kubernetes 1.14</title>
+      <link>https://technologists.dev/posts/windows-containers/</link>
+      <pubDate>Sun, 27 Oct 2019 17:00:00 -0400</pubDate>
+      
+      <guid>https://technologists.dev/posts/windows-containers/</guid>
+      <description>Kubernetes 1.14 was released in March 2019 and the release brought production support for Windows Containers on Windows Server nodes. Before moving on, I would like to highlight a few things from the previous link:
+ Kubernetes control plane runs in Linux (and there is no plan to change that for a full Windows Kubernetes cluster) Versions supported for worker nodes and containers: Windows Server 1809/Windows Server 2019 Windows containers have to be scheduled on Windows nodes  At the time this post was written (Oct 19), AKS, GKE and EKS offer some level of support for Windows based containers (EKS is the first to offer GA support for Windows based containers).</description>
+    </item>
+    
+    <item>
+      <title>Securely Using Cloud Services from Jenkins Kubernetes Agents</title>
+      <link>https://technologists.dev/posts/best-practices-for-cloudbees-core-jenkins-on-kubernetes/securely-using-cloud-services-from-jenkins-kubernetes-agents/</link>
+      <pubDate>Sun, 20 Oct 2019 09:05:15 -0400</pubDate>
+      
+      <guid>https://technologists.dev/posts/best-practices-for-cloudbees-core-jenkins-on-kubernetes/securely-using-cloud-services-from-jenkins-kubernetes-agents/</guid>
+      <description>In the second part of this series on best practices for Jenkins (and CloudBees Core) on Kubernetes we will continue to look at security. In this post we will look at how to reduce security risk of using cloud services from Jenkins Kubernetes agents, similar to how the previous post in this series showed how Kubernetes Pod Security Policies can be used with Jenkins Kubernetes agents to limit the security risk of Jenkins agent containers.</description>
+    </item>
     
     <item>
       <title>Using Kubernetes Pod Security Policies with CloudBees Core - Jenkins</title>
