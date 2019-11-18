@@ -110,7 +110,7 @@ Make sure to check the version of the Kubernetes plugin installed. This example 
 
 - Click ```Save```
 
-Let's take a look at the repository structure in ```https://github.com/mluyo3414org/pod-templates```:
+Let's take a look at the repository structure in [```https://github.com/mluyo3414org/pod-templates.git```](https://github.com/mluyo3414org/pod-templates.git):
 
 ```
 
