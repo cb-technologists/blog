@@ -3,332 +3,447 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://technologists.dev/authors/</loc>
-    <lastmod>2019-09-28T11:09:50-04:00</lastmod>
-    <priority>0</priority>
+    <loc>https://technologists.dev/posts/building-images-with-img/</loc>
+    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/posts/cicd_ha/</loc>
+    <lastmod>2019-10-28T01:51:10+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/posts/windows-containers/</loc>
+    <lastmod>2019-10-27T17:00:00-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/posts/best-practices-for-cloudbees-core-jenkins-on-kubernetes/securely-using-cloud-services-from-jenkins-kubernetes-agents/</loc>
+    <lastmod>2019-10-20T09:05:15-04:00</lastmod>
   </url>
   
   <url>
     <loc>https://technologists.dev/series/best-practices-for-cloudbees-core-jenkins-on-kubernetes/</loc>
-    <lastmod>2019-09-10T09:14:12-04:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/cd/</loc>
-    <lastmod>2019-09-28T11:09:50-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/ci/</loc>
-    <lastmod>2019-09-28T11:09:50-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/</loc>
-    <lastmod>2019-09-28T11:09:50-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/core-v2/</loc>
-    <lastmod>2019-09-28T11:09:50-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/kubernetes/</loc>
-    <lastmod>2019-09-28T11:09:50-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/pod-security-policies/</loc>
-    <lastmod>2019-09-28T11:09:50-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/posts/</loc>
-    <lastmod>2019-09-28T11:09:50-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/series/</loc>
-    <lastmod>2019-09-28T11:09:50-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/</loc>
-    <lastmod>2019-09-28T11:09:50-04:00</lastmod>
-    <priority>0</priority>
+    <lastmod>2019-09-04T05:05:15-04:00</lastmod>
   </url>
   
   <url>
     <loc>https://technologists.dev/posts/best-practices-for-cloudbees-core-jenkins-on-kubernetes/core-psp/</loc>
-    <lastmod>2019-09-28T11:09:50-04:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/jenkins/</loc>
-    <lastmod>2019-09-28T11:09:50-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/security/</loc>
-    <lastmod>2019-09-28T11:09:50-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/dind/</loc>
-    <lastmod>2019-08-31T08:04:26-04:00</lastmod>
-    <priority>0</priority>
+    <lastmod>2019-09-04T05:05:15-04:00</lastmod>
   </url>
   
   <url>
     <loc>https://technologists.dev/posts/build-continaer-images/</loc>
-    <lastmod>2019-08-31T08:04:26-04:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/containers/</loc>
-    <lastmod>2019-09-12T12:26:59+02:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/kaniko/</loc>
-    <lastmod>2019-09-12T12:26:59+02:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/devsecops/</loc>
-    <lastmod>2019-09-12T12:26:59+02:00</lastmod>
-    <priority>0</priority>
+    <lastmod>2019-08-03T10:05:15-04:00</lastmod>
   </url>
   
   <url>
     <loc>https://technologists.dev/posts/jenkins-snyk/</loc>
-    <lastmod>2019-09-04T11:23:21-04:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/cloudbees/</loc>
-    <lastmod>2019-09-04T11:23:21-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/infosec/</loc>
-    <lastmod>2019-09-04T11:23:21-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/snyk/</loc>
-    <lastmod>2019-09-04T11:23:21-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/vulnerability/</loc>
-    <lastmod>2019-09-04T11:23:21-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/authors/david-ca%C3%B1adillas/</loc>
-    <lastmod>2019-09-04T11:23:21-04:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/ci/cd-pipelines/</loc>
-    <lastmod>2019-09-04T11:23:21-04:00</lastmod>
-    <priority>0</priority>
+    <lastmod>2019-07-31T07:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://technologists.dev/posts/tekton-jx-pipelines/</loc>
-    <lastmod>2019-09-04T11:23:21-04:00</lastmod>
+    <lastmod>2019-07-28T23:44:10+01:00</lastmod>
   </url>
   
   <url>
-    <loc>https://technologists.dev/tags/jenkins-x/</loc>
-    <lastmod>2019-09-04T11:23:21-04:00</lastmod>
+    <loc>https://technologists.dev/posts/lightning-talks-dw-jw-2019/</loc>
+    <lastmod>2019-07-27T10:50:46-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/posts/gitops-series-part-1/</loc>
+    <lastmod>2019-07-16T15:00:00-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/posts/cjd-casc/</loc>
+    <lastmod>2019-07-03T17:00:00-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/posts/cloudbees-cross-team-and-dev-sec-ops/</loc>
+    <lastmod>2019-06-10T07:50:46-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/posts/jenkins-plugins-good-bad-ugly/</loc>
+    <lastmod>2019-05-30T05:50:46-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/posts/jenkins-x-flow-integration/</loc>
+    <lastmod>2019-05-29T12:47:46-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/posts/introducing-technologists/</loc>
+    <lastmod>2019-05-23T19:10:46-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/about/</loc>
+    <lastmod>2019-05-22T10:29:46-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/authors/casey-vega/</loc>
+    <lastmod>2019-07-31T07:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/authors/david-ca%C3%B1adillas/</loc>
+    <lastmod>2019-10-28T01:51:10+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/authors/josh-hendrick/</loc>
+    <lastmod>2019-05-29T12:47:46-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/authors/kurt-madel/</loc>
+    <lastmod>2019-10-20T09:05:15-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/authors/logan-donley/</loc>
+    <lastmod>2019-07-16T15:00:00-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/authors/matt-elgin/</loc>
+    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/authors/miguel-suarez/</loc>
+    <lastmod>2019-10-27T17:00:00-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/aks/</loc>
+    <lastmod>2019-10-27T17:00:00-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://technologists.dev/tags/tekton/</loc>
-    <lastmod>2019-09-04T11:23:21-04:00</lastmod>
+    <loc>https://technologists.dev/tags/anchore/</loc>
+    <lastmod>2019-06-10T07:50:46-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/authors/</loc>
+    <lastmod>2019-07-31T07:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/aws/</loc>
+    <lastmod>2019-10-20T09:05:15-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/azure/</loc>
+    <lastmod>2019-10-27T17:00:00-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://technologists.dev/tags/casc/</loc>
-    <lastmod>2019-09-12T12:26:59+02:00</lastmod>
+    <lastmod>2019-07-27T10:50:46-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://technologists.dev/tags/gitops/</loc>
-    <lastmod>2019-09-12T12:26:59+02:00</lastmod>
+    <loc>https://technologists.dev/tags/cd/</loc>
+    <lastmod>2019-10-20T09:05:15-04:00</lastmod>
     <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/posts/lightning-talks-dw-jw-2019/</loc>
-    <lastmod>2019-08-31T08:04:26-04:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/multi-cluster/</loc>
-    <lastmod>2019-08-31T08:04:26-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/plugins/</loc>
-    <lastmod>2019-09-12T12:26:59+02:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/synk/</loc>
-    <lastmod>2019-08-31T08:04:26-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/posts/gitops-series-part-1/</loc>
-    <lastmod>2019-09-04T11:23:21-04:00</lastmod>
   </url>
   
   <url>
     <loc>https://technologists.dev/tags/cert-manager/</loc>
-    <lastmod>2019-09-12T12:26:59+02:00</lastmod>
+    <lastmod>2019-07-16T15:00:00-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://technologists.dev/tags/google-cloud-platform/</loc>
-    <lastmod>2019-09-12T12:26:59+02:00</lastmod>
+    <loc>https://technologists.dev/tags/ci/</loc>
+    <lastmod>2019-10-20T09:05:15-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://technologists.dev/posts/cjd-casc/</loc>
-    <lastmod>2019-09-12T12:26:59+02:00</lastmod>
+    <loc>https://technologists.dev/tags/ci/cd-pipelines/</loc>
+    <lastmod>2019-10-28T01:51:10+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/cloud/</loc>
+    <lastmod>2019-10-20T09:05:15-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/</loc>
+    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/cloudbees/</loc>
+    <lastmod>2019-07-31T07:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/cloudbees-core/</loc>
+    <lastmod>2019-10-20T09:05:15-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/cloudbees-flow/</loc>
+    <lastmod>2019-05-29T12:47:46-04:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
     <loc>https://technologists.dev/tags/cloudbees-jenkins-distribution/</loc>
-    <lastmod>2019-09-12T12:26:59+02:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/docker/</loc>
-    <lastmod>2019-09-12T12:26:59+02:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/posts/cloudbees-cross-team-and-dev-sec-ops/</loc>
-    <lastmod>2019-09-12T12:26:59+02:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://technologists.dev/tags/anchore/</loc>
-    <lastmod>2019-09-12T12:26:59+02:00</lastmod>
+    <lastmod>2019-07-03T17:00:00-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://technologists.dev/tags/container-scanning/</loc>
-    <lastmod>2019-09-12T12:26:59+02:00</lastmod>
+    <lastmod>2019-06-10T07:50:46-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://technologists.dev/posts/jenkins-plugins-good-bad-ugly/</loc>
-    <lastmod>2019-09-12T12:26:59+02:00</lastmod>
+    <loc>https://technologists.dev/tags/containers/</loc>
+    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://technologists.dev/posts/jenkins-x-flow-integration/</loc>
-    <lastmod>2019-09-04T11:23:21-04:00</lastmod>
+    <loc>https://technologists.dev/tags/core-v2/</loc>
+    <lastmod>2019-10-20T09:05:15-04:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://technologists.dev/tags/cloudbees-flow/</loc>
-    <lastmod>2019-09-04T11:23:21-04:00</lastmod>
+    <loc>https://technologists.dev/tags/devsecops/</loc>
+    <lastmod>2019-07-31T07:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/dind/</loc>
+    <lastmod>2019-08-03T10:05:15-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/docker/</loc>
+    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/eks/</loc>
+    <lastmod>2019-10-27T17:00:00-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/emerging-technologies/</loc>
+    <lastmod>2019-05-23T19:10:46-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://technologists.dev/tags/extending-jenkins-x/</loc>
-    <lastmod>2019-09-04T11:23:21-04:00</lastmod>
+    <lastmod>2019-05-29T12:47:46-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://technologists.dev/tags/tekon/</loc>
-    <lastmod>2019-09-04T11:23:21-04:00</lastmod>
+    <loc>https://technologists.dev/tags/gcp/</loc>
+    <lastmod>2019-10-20T09:05:15-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://technologists.dev/posts/introducing-technologists/</loc>
-    <lastmod>2019-05-23T19:11:50-04:00</lastmod>
+    <loc>https://technologists.dev/tags/gitops/</loc>
+    <lastmod>2019-07-27T10:50:46-04:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://technologists.dev/tags/emerging-technologies/</loc>
-    <lastmod>2019-05-23T19:11:50-04:00</lastmod>
+    <loc>https://technologists.dev/tags/gke/</loc>
+    <lastmod>2019-10-20T09:05:15-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/google-cloud-platform/</loc>
+    <lastmod>2019-07-16T15:00:00-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/google-kubernetes-engine/</loc>
+    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/high-availability/</loc>
+    <lastmod>2019-10-28T01:51:10+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/iam/</loc>
+    <lastmod>2019-10-20T09:05:15-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/iam-roles-for-service-accounts/</loc>
+    <lastmod>2019-10-20T09:05:15-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/img/</loc>
+    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/infosec/</loc>
+    <lastmod>2019-07-31T07:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/jenkins/</loc>
+    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/jenkins-x/</loc>
+    <lastmod>2019-10-28T01:51:10+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/kaniko/</loc>
+    <lastmod>2019-08-03T10:05:15-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/kubernetes/</loc>
+    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/multi-cluster/</loc>
+    <lastmod>2019-07-27T10:50:46-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/plugins/</loc>
+    <lastmod>2019-07-27T10:50:46-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/pod-security-policies/</loc>
+    <lastmod>2019-09-04T05:05:15-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/posts/</loc>
+    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/security/</loc>
+    <lastmod>2019-10-20T09:05:15-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/series/</loc>
+    <lastmod>2019-09-04T05:05:15-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/snyk/</loc>
+    <lastmod>2019-07-31T07:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://technologists.dev/tags/software-delivery/</loc>
-    <lastmod>2019-05-23T19:11:50-04:00</lastmod>
+    <lastmod>2019-05-23T19:10:46-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://technologists.dev/about/</loc>
-    <lastmod>2019-05-23T12:41:30-04:00</lastmod>
+    <loc>https://technologists.dev/tags/synk/</loc>
+    <lastmod>2019-07-27T10:50:46-04:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://technologists.dev/authors/casey-vega/</loc>
-    <lastmod>2019-09-08T09:02:21-04:00</lastmod>
+    <loc>https://technologists.dev/tags/</loc>
+    <lastmod>2019-10-27T17:00:00-04:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://technologists.dev/authors/josh-hendrick/</loc>
-    <lastmod>2019-09-08T09:02:21-04:00</lastmod>
+    <loc>https://technologists.dev/tags/tekon/</loc>
+    <lastmod>2019-05-29T12:47:46-04:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://technologists.dev/authors/kurt-madel/</loc>
-    <lastmod>2019-09-04T11:23:21-04:00</lastmod>
+    <loc>https://technologists.dev/tags/tekton/</loc>
+    <lastmod>2019-07-28T23:44:10+01:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://technologists.dev/authors/logan-donley/</loc>
-    <lastmod>2019-09-08T09:02:21-04:00</lastmod>
+    <loc>https://technologists.dev/tags/vulnerability/</loc>
+    <lastmod>2019-07-31T07:00:00+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://technologists.dev/authors/matt-elgin/</loc>
-    <lastmod>2019-09-08T09:02:21-04:00</lastmod>
+    <loc>https://technologists.dev/tags/windows/</loc>
+    <lastmod>2019-10-27T17:00:00-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://technologists.dev/tags/workload-identity/</loc>
+    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
 </urlset>
