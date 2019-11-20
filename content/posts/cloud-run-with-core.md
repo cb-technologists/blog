@@ -3,14 +3,14 @@ title: Serverless Preview Environments and GitOps with CloudBees Core and Google
 authors:
   - "Kurt Madel"
   - "Logan Donley"
-date: 2019-11-14T05:05:15-04:00
+date: 2019-11-20T05:05:15-04:00
 showDate: true
 tags: ["Kubernetes","containers","Cloud Run","serverless","CaaS","FaaS","CloudBees Core","Anthos","CI","CD","GKE","Workload Identity"]
 photo: "/posts/cloud-run-with-core/badlands-clouds.png"
 photoCaption: "Badlands National Park, SD<br>Photograph by Kurt Madel ©2019"
 exif: "SONY RX-100 ISO 125 13.75mm ƒ/6.3 1/800"
 canonicalUrl: https://www.cloudbees.com/blog/serverless-preview-environments-and-gitops-cloudbees-core-and-google-cloud-run
-draft: true
+draft: false
 ---
 
 [Google Cloud Run](https://cloud.google.com/run/) is Google Cloud's serverless platform for stateless containerized applications that leverage HTTP and event driven workloads. Cloud Run can be fully managed or you can use Cloud Run for Anthos to deploy applications in an Anthos GKE cluster running on Google Cloud or on-premises.
