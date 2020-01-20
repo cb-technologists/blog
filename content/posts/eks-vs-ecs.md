@@ -5,7 +5,7 @@ authors:
 date: 2020-01-13T05:05:15-04:00
 showDate: true
 tags: ["Kubernetes","aws","EKS","ECS"]
-draft: true
+draft: false
 ---
 
 A question my colleagues and I are often asked is "if I'm already using ECS is there any point in moving to EKS (or Kubernetes in general) for running CloudBees Core?" Both Amazon ECS and EKS are great products, but we have a strong preference towards Kubernetes. We'll take a look at why in this post.
